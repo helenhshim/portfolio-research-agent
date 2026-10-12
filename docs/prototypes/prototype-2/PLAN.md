@@ -1,6 +1,6 @@
 # Prototype 2 iteration plan
 
-Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan. Direction documented; implementation approval pending. Current deployed/runtime code remains unchanged.
+Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan; D64 supplies the latest candidate launch scope. Direction documented; implementation approval pending. Current deployed/runtime code remains unchanged.
 
 **User job:** A financial analyst asks a company research question, inspects a source-backed answer and continues investigation without restarting setup. Conversation directs work; artifact is the deliverable.
 
@@ -30,3 +30,7 @@ Existing [reliability/latency candidate](../../../evals/BRIEF-RELIABILITY-LATENC
 ## Differentiation checkpoint (D63)
 
 [Standalone versus ChatGPT capability assessment](DIFFERENTIATION-AND-CHATGPT.md) records a proposed evidence/thesis workflow and optional MCP embedding path. Decide which narrow analyst task should outperform the strong ChatGPT baseline before extending sources or persistence. Same-session evidence correction fits the smallest experiment; the Q1 → Q2 replay requires additional state/evaluation preparation and approval.
+
+## Recommended fast release (D64)
+
+[Candidate launch scope](RECOMMENDED-LAUNCH-SCOPE.md) recommends one profitability-thesis pressure-test task, with automatic counterevidence and bounded real actions, on the existing NVIDIA pair. This is the recommended first task to approve/evaluate; broader replay/embedding/persistence options wait. Task relevance remains a hypothesis. No implementation authorization is inferred from requesting the recommendation.

@@ -63,3 +63,7 @@ Pending execution. Preserve trial artifacts and reviewer notes; summarize failur
 ## D63 additional comparison
 
 For differentiation, add an evidence challenge/correction task; a future temporal replay must isolate first-period sources from later evidence. When an MCP integration exists, compare ChatGPT + finance tools with strong ChatGPT and the standalone harness on the same task. Current comparisons remain protocols, not results. See `docs/prototypes/prototype-2/DIFFERENTIATION-AND-CHATGPT.md`.
+
+## D64 first launch comparison
+
+Test margin persistence, cash qualification, prior/current reported execution changes, a challenge referencing earlier work, and an out-of-scope request. Instruct the strong ChatGPT baseline to compare periods and pressure-test with counterevidence without requiring the user to ask for each step. Measure corrections and total analyst checking time at comparable/better factual quality; count all failures. The candidate scope is `docs/prototypes/prototype-2/RECOMMENDED-LAUNCH-SCOPE.md`. No results exist for this new workflow.

@@ -106,3 +106,7 @@ Prototype 1 is frozen at tag `prototype-1` with the original protected Preview a
 ### D61 analyst-first intent-driven pivot
 
 Completed static V1 audit, decision memo and smallest V2 technical plan in `docs/prototypes/prototype-2/`. These supersede D60's advisor-first P2 brief hypothesis. Next: Helen reviews consequential task/source, P0/P1/session, and bounded-agent/free-text decisions; implementation starts only after approval per her handoff. P0 objective is question → source-backed artifact → contextual follow-up. Do not implement the prior preset schema as an opaque natural-language translator, or claim progressive findings/adaptive tools without building them. No new live trials or implementation changes performed for this memo.
+
+### D64 fast launch recommendation
+
+Use the candidate scope in `docs/prototypes/prototype-2/RECOMMENDED-LAUNCH-SCOPE.md`: one NVIDIA operating-profitability pressure test, automatic supported counterevidence, bounded evidence/calculation actions and a same-session revisable brief. Proposed single-controller budget reduces D61's earlier ceiling to one tool round/up to two tool executions and two model requests; evaluate quality/latency, do not force a call. Temporal replay, new data, memory/monitoring, progressive patches and MCP adapter remain later. Confirm the concrete plan before implementation per Helen's handoff.
