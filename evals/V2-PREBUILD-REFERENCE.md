@@ -117,6 +117,8 @@ Do not require a particular tool sequence when a different permitted path produc
 
 ### Coverage beyond the five core cases
 
+The [architecture/autonomy/control specification](../docs/prototypes/prototype-2/ARCHITECTURE-AND-SAFETY.md) (D69) defines C1–C9 with explicit fixtures, expected boundary behavior and grading methods. They cover injection, action/budget enforcement, lineage, semantic/financial overreach, context, execution/cancellation, privacy/secrets, rendering and access/freshness/resource limits. These are pending control tests, not completed safety coverage. E1–E5 stay the product cases; scored reference feedback is preserved separately.
+
 Before a pilot, add a few variants: explicit GAAP operating margin (no redundant clarification), ambiguous “margin” (clarify or visibly scope), explicit gross/adjusted margin (no silent substitute), unavailable/malformed tool result, unsupported/altered quote, dropped headline dependency, source-instruction injection, timeout and Stop/late response. Adversarial source variants are separately labeled synthetic fixtures, not modifications falsely presented as the frozen SEC originals. These are meaningful control/regression tests and evaluation variants; no new product scope is implied.
 
 ## How we grade and decide

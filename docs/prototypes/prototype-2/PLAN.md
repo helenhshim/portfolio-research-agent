@@ -50,3 +50,7 @@ Helen approves the worked answer. Suggested investigation ends with a specific r
 ## First scoring round (D68)
 
 Preserve [Helen's submitted scores and observations](../../../evals/V2-HELEN-REVIEW-LOG.md). E1 2 / E2 provisional 0 / E3 1 / E4 and E5 pending are reference-review labels, not live evaluation results. Next deepen the qualitative prior/current evidence and execution implications, then review a dedicated E2 answer. E4/E5 runtime tests follow implementation. Preserve the earlier scored reference and log later revisions separately.
+
+## Architecture and control checkpoint (D69)
+
+Follow [architecture/autonomy/control specification](ARCHITECTURE-AND-SAFETY.md): refine references, freeze/calibrate E1–E5 plus C1–C9, implement the single bounded controller flow, then test and deploy a separate protected pilot after gates. Existing stack and source scope remain. Current budget is one tool round/up to two tool executions and two provider requests per turn; reasoning effort is an empirical quality/latency setting, not a permission expansion. No actual safety certification or live results in this planning step.

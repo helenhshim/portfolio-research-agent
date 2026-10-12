@@ -1,6 +1,6 @@
 # Smallest viable V2 technical plan
 
-2026-10-12 · Historical D61 proposal, narrowed by the D64 launch scope approved under D65. Work within the approved scope is authorized; broader alternatives below are not blanket approval. Read [decision memo](V1-V2-PRODUCT-DECISION-MEMO.md) and [audit](V1-AUDIT.md) first.
+2026-10-12 · Historical D61 proposal, narrowed by the D64 launch scope approved under D65. D69 [architecture/autonomy/control specification](ARCHITECTURE-AND-SAFETY.md) clarifies the current boundaries and diagram. Work within the approved scope is authorized; broader alternatives below are not blanket approval. Read [decision memo](V1-V2-PRODUCT-DECISION-MEMO.md) and [audit](V1-AUDIT.md) first.
 
 ## Recommended scope and architecture
 
@@ -32,7 +32,7 @@ Keep the existing model/provider for the initial comparison. Re-evaluate effort 
 
 **Session recommendation:** active browser session state only for first release; no database, refresh recovery or long-term memory promise. A follow-up sends bounded conversation context to the server. Client history and previous model prose are untrusted context, not financial evidence: every new material claim is checked against the server-owned packet. Revalidate source/fact references; ignore client-supplied source bodies. Cross-session persistence needs a later retention/storage decision.
 
-**Free text:** public-company questions only initially; tell users not to enter client identity/account details. No raw prompt/history logging by default. Basic safeguards are not guaranteed anonymization. Confirm this policy because the old bounded-input privacy assertion no longer applies.
+**Free text:** public-company questions only initially; tell users not to enter client identity/account details. No raw prompt/history logging by default. Basic safeguards are not guaranteed anonymization. D69 records the public-company boundary and synthetic privacy/config checks; the old bounded-input privacy assertion does not apply. Actual client-data use remains outside this MVP.
 
 ## Reuse and modifications
 
@@ -48,7 +48,7 @@ Keep the existing model/provider for the initial comparison. Re-evaluate effort 
 
 Proposed optional actions: `read_approved_evidence` for allowlisted full-period evidence/paragraph IDs and `get_checked_metrics` for eligible facts/derived operating margins. Server executes these functions, validates arguments and applies their calculation rules. No arbitrary URLs, shell, web search or arbitrary formulas. Full source context remains accessible, rather than short keyword matches alone.
 
-Initial budget proposal: at most two tool executions and three provider calls per user turn; reuse source context across turns where practical. Preserve a wall-clock deadline and cancellation. Duplicate/no-progress action ends with an explicit limit. No automatic paid repair/retry; no process-local map relied on as durable session storage. Measure overhead before enabling a tool path that a direct answer can handle.
+Current D64/D69 budget: at most one tool round, two tool executions and two provider calls per user turn; this supersedes the earlier three-call proposal. Reuse source context across turns where practical. Preserve a wall-clock deadline and cancellation. Duplicate/no-progress action ends with an explicit limit. No automatic paid repair/retry; no process-local map relied on as durable session storage. Measure overhead before enabling a tool path that a direct answer can handle.
 
 ## Implementation sequence, after approval
 

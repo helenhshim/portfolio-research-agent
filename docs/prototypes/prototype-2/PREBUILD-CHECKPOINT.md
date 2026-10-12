@@ -71,3 +71,7 @@ Helen approves the worked answer and asks for an actionable end to the suggested
 ## D68 first scoring round
 
 [Helen's review log](../../../evals/V2-HELEN-REVIEW-LOG.md) records E1 2, E2 provisional 0, E3 1 and E4/E5 pending. E2 does not yet have a dedicated reviewed response; this is not a runtime failure. Keep the scored reference intact. Next revise qualitative evidence to explain the prior/current change, execution meaning and future significance criteria, and prepare a dedicated E2 example. Grade E4/E5 workflow behavior after implementation; scripted concept behavior is not model evaluation. These refinements preserve approved source/controller bounds.
+
+## D69 control coverage and architecture
+
+[Architecture, autonomy and C1–C9 control cases](ARCHITECTURE-AND-SAFETY.md) supplements E1–E5 with explicit failure/security acceptance. Controls and full V2 flow remain unimplemented/untested here. Record numeric time/token/spend/resource settings before paid testing; retain source/session scope. Next reference refinement → case calibration → approved vertical-flow build → protected pilot after product/control/semantic gates. No renewed scope approval or framework migration required.
