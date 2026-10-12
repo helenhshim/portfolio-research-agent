@@ -114,3 +114,7 @@ Use the candidate scope in `docs/prototypes/prototype-2/RECOMMENDED-LAUNCH-SCOPE
 ### D65 approval and proposed next-investigation refinement
 
 Helen approved the D64 initial release scope; the D61 approval checkpoint is resolved for that scope. Proceed with its fixtures/contracts/implementation without repeated permission. Recommend one optional evidence/intent-linked next investigation from the same synthesis, feasible against the approved catalog and initiated by user selection. This addition remains under discussion. Do not initiate related research, expand sources or add background scheduling merely because a suggestion was generated.
+
+### D66 before building
+
+Helen selected the durable-operating-profitability question as the first test and requests preparation before implementation. Review the authored reference answer/rubric and five scenarios in `evals/V2-PREBUILD-REFERENCE.md`, with the product/control/gate checklist in `docs/prototypes/prototype-2/PREBUILD-CHECKPOINT.md`. The narrow guided-next-investigation refinement is agreed; autonomous adjacent research remains deferred. No live trials/runtime changes claimed. Next implementation stays within approved scope rather than reopening its permissions.

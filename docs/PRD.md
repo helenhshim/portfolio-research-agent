@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.35. Prototype 1 frozen; initial Prototype 2 launch scope approved; next-investigation refinement proposed · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.36. Prototype 1 frozen; Prototype 2 scope and guided continuation agreed; first evaluation question selected · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -537,3 +537,9 @@ Historical replay, long-term memory/monitoring, new sources/companies, progressi
 Helen explicitly agrees with the D64 initial scope, resolving the prior implementation approval checkpoint for that scope. Record the approved NVIDIA profitability pressure-test, bounded evidence/calculations, counterevidence, checked artifact and contextual continuation. No renewed approval is required for work within that agreed scope; new data/public-access/automatic research expansion is not implied.
 
 Helen asks whether proactive related investigations should be MVP or a later iteration. Recommend a zero-or-one evidence-linked next investigation in the same response: triggered finding, relevance to original/current analyst intent, action/question and server-checked source availability. A runnable action starts a user-selected bounded follow-up and updates the artifact; absent required evidence is labeled, not silently retrieved. No separate recommendation call, mandatory suggestion, generic question menu or automatic background investigation. This refinement remains a recommendation until accepted. Later autonomous adjacent investigation requires bounded value/cost/source controls. See `docs/prototypes/prototype-2/RECOMMENDED-LAUNCH-SCOPE.md`.
+
+### Pre-build product checkpoint and first test (D66, 2026-10-12)
+
+Helen accepts the narrow guided-next-investigation direction and requests AI PM preparation before building. First evaluation question explicitly selected by Helen: “Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?” It is a founder-selected task, not validated analyst demand. Keep zero/one grounded, feasible, user-initiated next investigation; automatic adjacent work stays deferred.
+
+Prepare/review the task outcome, worked reference answer, five evaluation scenarios, model/code/tool/control boundaries and separate build/pilot/value gates. Planning pack: `docs/prototypes/prototype-2/PREBUILD-CHECKPOINT.md`; founder-authored evidence/rubric: `evals/V2-PREBUILD-REFERENCE.md`. No model/ChatGPT/practitioner trial or runtime change occurs in this checkpoint. Existing approved scope is not reopened; source/control details that materially alter it are logged separately.

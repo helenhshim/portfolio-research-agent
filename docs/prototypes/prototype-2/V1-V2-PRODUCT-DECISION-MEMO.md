@@ -1,6 +1,6 @@
 # Financial Research Agent: V1 → V2 Product Decision Memo
 
-Owner: Helen Shim · 2026-10-12 · Decision D61 · Status: initial D64 launch scope approved under D65; broader alternatives and proactive refinement remain proposals.
+Owner: Helen Shim · 2026-10-12 · Decision D61 · Status: initial D64 launch scope approved under D65; the narrow proactive refinement is agreed under D66; broader alternatives remain proposals.
 
 Basis: Helen's raw reflection and context handoff, [repository audit](V1-AUDIT.md), and existing release/debug evidence. Founder observations are not practitioner research. The frozen `prototype-1` tag remains the baseline; no V2 UI or agent implementation is claimed.
 
@@ -80,3 +80,7 @@ Helen asked whether the proposed workspace earns a distinct product or should be
 ## Approval update (D65)
 
 Helen approved the [D64 initial release scope](RECOMMENDED-LAUNCH-SCOPE.md). This resolves the initial implementation approval checkpoint. A zero-or-one evidence-linked next-investigation action is recommended as a small MVP refinement; automatic adjacent research and larger source/retention/embedding proposals remain unapproved.
+
+## Pre-build checkpoint (D66)
+
+Helen selected the durable-operating-profitability question and accepted the narrow guided continuation direction. Review the task/evidence/rubric in `evals/V2-PREBUILD-REFERENCE.md` and `PREBUILD-CHECKPOINT.md` before implementation. Source/metric inspection and authored references are not model/practitioner trials.
