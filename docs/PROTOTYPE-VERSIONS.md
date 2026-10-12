@@ -1,17 +1,17 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decision: D60.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D61.
 
-Prototype numbers identify product experiments. PRD v0.31 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.32 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
 | Prototype 1 | Can complete earnings evidence become a specific, inspectable holding explanation for an advisor's context? | Git tag `prototype-1`; exact deployed source manifest; original protected Preview linked in its release record | Frozen baseline, with known failures |
-| Prototype 2 | Does a faster, reliably completed brief help an advisor explain a holding with less checking and editing? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Discovery and candidate evaluation; no new release |
+| Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Intent-driven direction documented; implementation approval pending |
 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 
-Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). Its recommended hypothesis is a starting point for discovery, not evidence that the product direction is right.
+Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision memo](prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md) captures Helen's analyst-first pivot. Direction is documented; source/task/architecture recommendations await approval and benefit remains to be tested.
 
 ## How we will work
 

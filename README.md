@@ -4,7 +4,7 @@ An advisor-first earnings MVP: editable context → review of two complete NVIDI
 
 ## Prototype history
 
-Prototype 1 is frozen at Git tag `prototype-1` and its original protected Preview. Current work is on branch `prototype-2`, including unreleased reliability/latency experiments. Start with [version guide](docs/PROTOTYPE-VERSIONS.md), [Prototype 1 learnings](docs/prototypes/prototype-1/LEARNINGS.md) and [Prototype 2 plan](docs/prototypes/prototype-2/PLAN.md). PRD revisions and package versions are separate from prototype releases. Git is local; no remote backup is configured.
+Prototype 1 is frozen at Git tag `prototype-1` and its original protected Preview. Current work is on branch `prototype-2`, including unreleased reliability/latency experiments and the planned analyst-first intent-driven pivot. Implementation approval is pending; see [V1 → V2 decision memo](docs/prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md). Start with [version guide](docs/PROTOTYPE-VERSIONS.md), [Prototype 1 learnings](docs/prototypes/prototype-1/LEARNINGS.md) and [Prototype 2 plan](docs/prototypes/prototype-2/PLAN.md). PRD revisions and package versions are separate from prototype releases. Git is local; no remote backup is configured.
 
 ## Run locally
 

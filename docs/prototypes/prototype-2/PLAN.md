@@ -1,38 +1,24 @@
 # Prototype 2 iteration plan
 
-Status: discovery and local candidate; no Prototype 2 deployment. Updated: 2026-10-12. Decision: D60.
+Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan. Direction documented; implementation approval pending. Current deployed/runtime code remains unchanged.
 
-**Recommended user job:** A wealth advisor preparing to explain what the latest earnings evidence means for a holding's stated rationale before a client conversation. Buy-side thesis review is a separate validation task.
+**User job:** A financial analyst asks a company research question, inspects a source-backed answer and continues investigation without restarting setup. Conversation directs work; artifact is the deliverable.
 
-**Starting hypothesis:** A concise brief that reliably connects company developments to the stated context, shows supporting and qualifying evidence, and finishes quickly will reduce explanation, checking and editing work. We will revisit this after practitioner tasks; it is not an irrevocable scope decision.
+**Hypothesis:** Open-ended intent and contextual continuation reduce task-expression/refinement effort; a checked artifact reduces review/reuse effort. Progressive results may reduce time to first useful insight, but orchestration can increase total latency. Validate these separately.
 
-## Sequence
+## Completed planning
 
-1. Review Prototype 1's learnings with Helen and run the concrete practitioner tasks. Decide which user job and output is worth improving before adding sources or more agent steps.
-2. Write the task and input → useful output contract. Keep primary goal separate from holding rationale. Define an honest unresolved answer, a checked partial result and a generation failure as distinct states. Preserve the approved bounded inputs unless discovery changes the need.
-3. Evaluate the retained local candidate: evidence-first generation, bounded references, compact response and lighter reasoning. Keep complete approved releases and code-owned arithmetic. The candidate is not yet the deployed default. Capture incomplete-generation reasons and repeat the previously failing case.
-4. Improve speed only with traceable reuse: exact checked-result reuse keyed by all inputs, source hash and model/prompt/schema/config versions, labeled when served. Company-level evidence preparation plus context synthesis is a later architecture experiment if the initial candidate is still too slow; evaluate material omissions before adopting it.
-5. Test the full setup → wait → result/recovery journey. Give the output useful state and evidence hierarchy; avoid adding sections that do not help the task. If a headline fails, checked supporting content should remain usable without pretending a complete takeaway passed.
-6. Deploy a separate protected Preview after the evaluation gate, tag its exact release commit `prototype-2`, and compare with Prototype 1. Save the release configuration, outcomes, screenshots and retrospective.
+- [Helen's reflection and handoff](REFLECTION-2026-10-12.md).
+- [Static V1 audit](V1-AUDIT.md): confirms form-only input/no continuation, real SEC data/live synthesis and actual status; identifies source/metric/state gaps.
+- [Product decision memo](V1-V2-PRODUCT-DECISION-MEMO.md): evidence, hypotheses, directional decisions, alternatives, scope and approval questions.
+- [Smallest technical plan](TECHNICAL-PLAN.md): reuse, contracts, tools, budgets, checks, sequence and acceptance criteria.
 
-## Comparison cases and proposed gate
+## Next sequence
 
-Keep the same NVIDIA source pair initially to isolate changes. Freeze these fixtures: default income/dependable-income/short/low; Helen's failing income/profitable-growth/short/medium; growth/profitable-growth/long/medium; capital-preservation/resilience/short/low. Add goal-only and horizon-only variations for context relevance. Test the full accepted input space before claiming all combinations are covered; these fixtures alone are not exhaustive.
+1. Helen reviews and approves the concrete task/source, release/session and agent/free-text recommendations. Her handoff explicitly requires this before implementation.
+2. Freeze supported research tasks and expected evidence. Recommended first scope is NVIDIA operating-profitability research against the same frozen reports; other companies/10-K/news requests expose honest limits.
+3. Build approved P0: question contract and evidence-backed answer/artifact, bounded session context and contextual follow-up. Preserve facts/checks and genuine status. No forced goal/risk/rationale taxonomy for arbitrary questions.
+4. Evaluate objective completion, first useful checked insight and claim/source support, plus reviewed task time, corrections, interactions, omissions, cost and failures. Compare shared tasks with Prototype 1 and actual matched ChatGPT runs. Previous D59 timing trials are not V2 benchmarks.
+5. Deploy a separate protected Preview only after the agreed gate; record source/model/prompt/schema/config, tag `prototype-2` and save learnings. P1 adds richer execution visibility, progressive checked artifact patches and selective clarification.
 
-Suggested small release gate: three completed runs of each fixture with a useful checked assessment or a clear evidence-based unresolved answer. Include all failed/incomplete attempts in the denominator; do not rerun until the sample looks clean. No dangling finding references, unsupported rendered numbers or silently altered inputs. Manually review material claims, source completeness/counterevidence and period/accounting distinctions. A passing small gate does not establish production reliability.
-
-Provisional latency target: median server run below 45 seconds on those fixtures, with observed range and sample size reported; total browser time measured separately. Report time to useful output, not just activity indicators. Revisit the acceptable wait with practitioners. Do not call a small-sample maximum a measured p95.
-
-The product gate is separate: do users finish the explanation task with less total checking/editing effort and fewer material omissions? Compare with their existing workflow; a matched ChatGPT task can test whether guided context, evidence checks and recovery add value. A faster valid JSON response alone does not answer that question.
-
-## Agent PM questions for each change
-
-What decision does the model make? What must code guarantee? Which evidence can the system access, and when is it stale? What happens if it cannot complete or support a claim? How will we observe and evaluate the whole task? Would an extra agent/tool step improve the task enough to justify its latency and failure modes?
-
-The current flow has bounded model judgment and programmatic checking. It does not have an adaptive investigation loop. Add saved watch items or next-filing investigation only when that continuation serves the validated job; define tools, stop conditions, evidence checks and recovery before calling it implemented.
-
-## Scope to keep bounded during the first comparison
-
-One holding, the same official SEC release pair, approved context controls and protected Preview. No new licensed/login-gated data sources, arbitrary personal data, live trading/news, extra companies or scheduling until a product decision justifies the expansion. This is the recommended comparison boundary, not a rejection of rethinking the product.
-
-Technical candidate details and measured successes/failures: [reliability and latency investigation](../../../evals/BRIEF-RELIABILITY-LATENCY-2026-10-12.md).
+Existing [reliability/latency candidate](../../../evals/BRIEF-RELIABILITY-LATENCY-2026-10-12.md) remains reusable experimental work. It is neither a new released prototype nor the final open-question architecture.

@@ -1,6 +1,22 @@
-# Research-focus comparison
+# Prototype 2 comparison with ChatGPT
 
-Status: protocol prepared on 2026-10-11; no trials run. Repo contains documents only. OPENAI_API_KEY absent from current shell at check time. No connected ChatGPT execution capability has been established. Do not present author-generated examples as independent model trial results.
+Updated: 2026-10-12 · D61 · Protocol only; no new model/ChatGPT/user trials performed.
+
+Compare three experiences on the same frozen NVIDIA reports and code facts: Prototype 1's preset brief, Prototype 2's open question plus follow-up/artifact, and an actual strong ChatGPT session. Record P1's inability to express a question and the user's translation effort; do not invent a conversational V1. Blind-review answer quality where possible, with interaction effort reviewed separately.
+
+Starter task: “Analyze NVIDIA's GAAP operating-profitability changes across these reports. What supports persistence, what could weaken it, and what is not established? Use only the attached evidence, distinguish reported results from management outlook and inference, cite material claims, and show source-backed calculations. Give a concise reusable answer rather than a general company report.”
+
+Follow-up: “Which evidence most challenges that interpretation, and what would you investigate next?” Additional cases: request the source supporting a claim, correct an intended definition, ask for an unsupported company/10-K/current-price analysis, and introduce a contradictory premise. The margin task requires the approved code-derived metric in P2; do not claim it is already implemented.
+
+Give ChatGPT the same full sources/facts, strong instructions and access to available calculation/file tools. Record actual model/mode/tools and source cutoff. Do not substitute an API run and label it ChatGPT. Let ChatGPT clarify or revise the artifact naturally; judge completed task, not obedience to our internal schema. Frozen-source comparison isolates analysis/interaction; a separate end-to-end trial can measure retrieval effort and broader coverage.
+
+Primary measures: completed research objective, time to first useful checked insight and citation entailment. Also measure total reviewed time, required interactions, corrections, material omissions/counterevidence, finance definitions and cost/failures. No claim of advantage from a chat layout, polished example, token streaming or model self-grading. ChatGPT supports source-based iterative work and deliverables; our proposed differentiator needs evidence in the finance checking/reuse workflow. [Official ChatGPT prompting guidance](https://learn.chatgpt.com/docs/prompting).
+
+---
+
+# Historical research-focus comparison
+
+Historical status at protocol preparation on 2026-10-11: no trials, documents-only repository and no shell key. Those implementation facts are superseded by D57–D61; the old protocol is retained below for provenance. No actual matched ChatGPT product trial has been recorded.
 
 ## Questions
 

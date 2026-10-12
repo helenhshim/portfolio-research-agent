@@ -1,6 +1,6 @@
 # Design planning handoff
 
-Saved on 2026-10-11 at Helen's request. Visual exploration is in progress; no final font, palette, layout, or product name has been selected.
+Original handoff saved 2026-10-11. Current Prototype 2 direction (D61): a conversational research workspace plus a separate inspectable artifact, with compact credible styling. Open-ended intent is primary; optional suggestions support discoverability. Historical form/receipt directions below describe Prototype 1 and must not override this pivot. Implementation plan approval is pending.
 
 ## Prompt for the design session
 
@@ -95,3 +95,7 @@ Receipt preview now renders the reviewed live paired-quarter result: actual mode
 ## Compact deployed MVP (D57, 2026-10-12)
 
 Helen accepted the result hierarchy and requested more compact type/spacing. Implemented paper/ink receipt layout, local Inter prose and IBM Plex Mono labels/figures, native selects/disclosures, ticker-first takeaway, paired qualitative evidence, three-column financial rows and mobile stacking. Setup retains the approved income/short/low/dependable-income defaults. The saved checked growth example identifies its own context and is not presented as analysis of edited inputs. No decorative dashboard, client selector, invite gate or fake follow-up control. Desktop/mobile/error recovery fixture checks pass; the protected deployed live check completed with the income-focused takeaway.
+
+## Prototype 2 interaction direction (D61)
+
+Thread: objective, short scope/action status, useful answer, follow-up or correction. Artifact: working question, direct answer, selected metrics with label/value/implication, supporting and qualifying evidence, unresolved questions and source dates. Avoid a required questionnaire inside chat or a growing transcript as the only deliverable. Desktop can show both surfaces; mobile needs an accessible switch. P0 delivers complete checked answers/artifact revisions; progressive checked findings and richer execution are P1. Earlier “chat transcript as the entire product” avoidance means preserve an artifact, not reject Helen's new thread direction.

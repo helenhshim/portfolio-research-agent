@@ -102,3 +102,7 @@ Confirmed phantom financing/income finding references in the exact failing case.
 ### D60 prototype iteration sequence
 
 Prototype 1 is frozen at tag `prototype-1` with the original protected Preview and exact upload manifest. Continue on branch `prototype-2`. The next sequence is learning review/practitioner task → revised user job and output contract → candidate reliability/latency evaluation → UI/recovery/reuse implementation → separate preview/release gate → retrospective. See `docs/prototypes/prototype-2/PLAN.md` for the current sequence; it supersedes earlier next-step lists where they conflict. Existing local options remain experimental until evaluated and released.
+
+### D61 analyst-first intent-driven pivot
+
+Completed static V1 audit, decision memo and smallest V2 technical plan in `docs/prototypes/prototype-2/`. These supersede D60's advisor-first P2 brief hypothesis. Next: Helen reviews consequential task/source, P0/P1/session, and bounded-agent/free-text decisions; implementation starts only after approval per her handoff. P0 objective is question → source-backed artifact → contextual follow-up. Do not implement the prior preset schema as an opaque natural-language translator, or claim progressive findings/adaptive tools without building them. No new live trials or implementation changes performed for this memo.

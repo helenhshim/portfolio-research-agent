@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.31. Prototype 1 frozen; Prototype 2 discovery and local candidate evaluation · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.32. Prototype 1 frozen; analyst-first intent-driven Prototype 2 direction documented; implementation approval pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -70,6 +70,8 @@ Doing financial research well depends on context: the company's filings, the mar
 
 ## 2. Users and their problems
 
+**Prototype 2 direction (D61):** Financial analysts/equity research professionals expressing company research objectives are the first V2 exploration. The proposed job is to ask a question, inspect a source-backed answer/artifact and continue with a contextual follow-up. This changes the advisor-first D60 starting hypothesis; the table below records the shipped Prototype 1 task and its separate validation tracks. V2 data/task limits remain subject to the concrete plan approval, not a claim of general analyst coverage.
+
 | Priority | User | Immediate job | What a useful MVP delivers |
 |---|---|---|---|
 | Primary, first MVP task | Wealth advisor who discusses individual-stock holdings | Prepare a defensible explanation of an earnings report before a client conversation | A concise update tied to supplied goals and holding rationale, selected financial/qualitative evidence, material qualifications and a useful watch question |
@@ -80,6 +82,8 @@ Doing financial research well depends on context: the company's filings, the mar
 The advisor goes first because the bounded holding-explanation task fits the approved inputs and one-company source scope. Buy-side fit must be tested separately; broader goals and an enum rationale do not capture analyst expectations, models or proprietary theses. No role selector or additional input is introduced by this positioning change. Audience needs and actual time saved remain hypotheses.
 
 ## 3. Goals
+
+**Prototype 2 goal (D61):** Reduce the work of expressing, refining and verifying a financial research question through intent-driven research and a reusable evidence-backed artifact. Judge task completion, first useful checked insight and citation support; conversation alone does not establish value. The shipped first-release goals below remain the Prototype 1 baseline.
 
 **MVP user goal:** “When a stock holding reports earnings, help me explain the developments relevant to the supplied goals and reason for owning it, with the evidence and a clear question to keep watching.”
 
@@ -137,6 +141,8 @@ The hiring manager evaluates whether I can run the PM loop, not the product itse
 **Later jobs:** saved watch items, next-filing comparisons and adaptive follow-up, then additional portfolio/thesis/firm context validated against user tasks. Discovery and ongoing market monitoring are not part of the initial job.
 
 ## 7. Scope by milestone
+
+**Prototype 2 P0 (directional, implementation pending):** open-ended questions, contextual same-session follow-ups and source-backed structured answers/artifact; optional suggestions rather than required goal/risk/rationale selections. Basic truthful status/errors remain required. Recommended initial source scope: frozen NVIDIA report pair, with code-derived GAAP operating margin if approved. **P1:** richer execution visibility, independently checked progressive artifact updates and selective clarification. Multi-agent orchestration, complex memory, broad sources/forecasting and cross-session persistence are deferred or unresolved. See `docs/prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md`. The milestone table below documents earlier release/roadmap scope; D61 governs V2 planning where it differs.
 
 | Milestone | In | Out |
 |---|---|---|
@@ -379,7 +385,9 @@ Evaluation: vary one input at a time on identical company sources, inspect quest
 
 Implementation boundary: existing evidence-linked findings, interpretations and watch items provide underlying structures. Refine planning prompts and render these together; the complete revised behavior has not yet been implemented or evaluated. Follow-up execution, persistence and subsequent-filing checks remain D35 roadmap scope.
 
-## 12. Technical architecture and reasoning configuration (living section, D49-D57)
+## 12. Technical architecture and reasoning configuration (living section, D49-D61)
+
+**Proposed V2 architecture (D61, not implemented):** bounded question/session contract → server-owned full source evidence and eligible financial facts → one researcher/controller with optional allowlisted evidence/metric actions → mandatory code checks → question-specific answer and artifact revision. No mandatory separate planning call; no multi-agent framework. Current preset/rationale contracts must be replaced for arbitrary company questions. Keep source/fiscal provenance and safe numeric rendering; add operating-margin arithmetic with source lineage if approved. Conversation/history is context, never financial evidence. Active-session history and complete artifact replies are the recommended P0; incremental checked patches are P1. See `docs/prototypes/prototype-2/TECHNICAL-PLAN.md` for budgets, retention, recovery and implementation approval. The current architecture below remains the deployed Prototype 1 baseline.
 
 Update this section whenever orchestration, settings, sources or verification change. D57 implements the bounded full-release workflow below. Earlier focus/planner/lookup descriptions are retained CLI baselines; adaptive follow-up remains V1.
 
@@ -505,3 +513,9 @@ Local candidate: fixed code-defined finding identifiers, allowed financial/refer
 Successful candidate calls took 38.651–43.228s versus a 126.196s reproduced legacy failure; bounded case and bounded long-term-growth run passed without removals. Three early unbounded low-effort calls were incomplete, and stable/high timed out. The exact reasons of those earlier incomplete responses were not retained; array bounds are not a proven cure. Richer incomplete diagnostics are now instrumented. Do not claim a universal speed/quality improvement or production reliability from this small trial. 33 tests and typecheck pass. Details and artifacts: evals/BRIEF-RELIABILITY-LATENCY-2026-10-12.md.
 
 Recommended follow-on latency scope: exact successful-result reuse keyed by every input plus source/model/prompt/schema versions; optionally prepare thoroughly checked company evidence once per report pair, then synthesize for the user's context while retaining access to complete sources. Cache/state, bounded repair and rollout are scoped proposals, not implemented capabilities. This stays within the existing source/input bounds and adds no agent merely for presentation.
+
+### V1 → V2 product pivot (D61, 2026-10-12)
+
+Helen supplied a detailed handoff after reflecting that mandatory preset context does not let analysts express their real question or continue research. Static audit confirms no open-ended input/follow-up/session artifact, while correcting two overstatements: defaults permit generation without editing every field, and real execution status already exists. Dynamic live synthesis and real frozen SEC sources are implemented. Founder UX observations remain hypotheses, not practitioner findings.
+
+Direction: conversation directs research; artifact is the deliverable. P0 is open-ended intent, source-backed answer and contextual continuation. Progressive results and richer execution/clarification are P1. Analyst-first V2 differs from advisor-first P1. Planning artifacts: repository audit, decision memo, technical plan and reflection under `docs/prototypes/prototype-2/`. No implementation code changes; Helen explicitly requires approving the plan before coding. Candidate reliability/latency work is reusable evidence, not the final V2 contract.
