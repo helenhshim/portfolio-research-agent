@@ -1,0 +1,11 @@
+# Freshness versus shipping speed: scope review
+
+2026-10-11. Helen prioritizes OpenAI FinServ PM evidence, DeepMind consumer-finance evidence, and personal usefulness, while shipping an MVP quickly. She raised a gap: quarterly research alone does not provide day-to-day portfolio monitoring.
+
+Options: (1) ship verified earnings research; (2) add a recent SEC filing activity check with links, leaving broader filing-text analysis later; (3) add end-of-day market movement after access/display rights and data quality are established; (4) add news-based event research with publisher-access, relevance, duplication, and evidence constraints.
+
+Recommendation, not approved scope: ship earnings research first, ideally with a small recent-filing activity indicator if it fits the existing metadata retrieval. Position as a portfolio research brief, not daily market monitoring. Make a bounded recent-events research workflow the next substantive increment. Daily/weekly prices provide context but do not establish causes. Do not make news or prices a prerequisite for the first deployed version.
+
+Source review: SEC public research APIs require no authentication and update submissions as filings are disseminated: https://www.sec.gov/search-filings/edgar-application-programming-interfaces . Alpha Vantage requires an API key; daily adjusted endpoint is premium and intended display/use needs terms review: https://www.alphavantage.co/documentation/ and https://www.alphavantage.co/terms_of_service/ . GDELT exposes news discovery, but discovery is not proof of permission or access to original article text: https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/ . These checks are not application retrieval tests or complete source clearance. No new source or feature approved or implemented in this review.
+
+Agent-design focus: explicit objective, context-sensitive evidence selection, approved tool boundaries, justified continuation/stop decisions, evidence validation, recoverable failures, and measured outcomes. A fixed retrieval-analysis-verification pipeline is a bounded research workflow; stronger adaptive investigation remains a capability to implement and evaluate, not claim prematurely.

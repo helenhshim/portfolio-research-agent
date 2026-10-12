@@ -33,5 +33,16 @@ export function verifyQuarterPair(draft:any,packet:any,rationale:string){
  });
  const discussion=plain(advisor_discussion.text)&&linked(advisor_discussion.finding_ids)?advisor_discussion:null;
  if(!discussion)drops.push({kind:'discussion'});
- return {...result,paired_developments:developments,selected_financial_rows:rows,advisor_discussion:discussion,comparison_checks:{dropped_count:drops.length,drops,interpretation_support:'manual review required; paired quote checks do not validate change classification'}};
+ // Keep independently checked paired quotations visible with their linked finding.
+ // This consolidates existing evidence; it never creates or repairs a finding link.
+ const findings=result.findings.map((f:any)=>{
+  const evidence=[...f.evidence];
+  for(const d of developments.filter((d:any)=>d.finding_ids.includes(f.id))){
+   for(const [period,quotes] of [['prior',d.prior_evidence],['current',d.current_evidence]] as const){
+    for(const [i,e] of quotes.entries())if(!evidence.some(existing=>existing.paragraph_id===e.paragraph_id&&existing.quote===e.quote))evidence.push({id:`${d.id}_${period}_${i}`,paragraph_id:e.paragraph_id,quote:e.quote});
+   }
+  }
+  return {...f,evidence};
+ });
+ return {...result,findings,paired_developments:developments,selected_financial_rows:rows,advisor_discussion:discussion,comparison_checks:{dropped_count:drops.length,drops,interpretation_support:'manual review required; paired quote checks do not validate change classification'}};
 }

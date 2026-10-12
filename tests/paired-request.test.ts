@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {Ajv} from 'ajv';
+import {readFileSync} from 'node:fs';
+import {pairedRequest,pairedDraft} from '../src/lib/paired-research.ts';
+import {verifyQuarterPair} from '../src/lib/quarter-pair.ts';
+const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
+const inputs={primary_goal:'income',holding_period:'short',risk_tolerance:'medium',tickers:['NVDA'],holding_rationale:'profitable_growth'};
+test('stable request constrains references without accidentally constraining narrative strings',()=>{
+ const {schema,content}=pairedRequest(packet,inputs,true);
+ assert.equal(Object.keys(schema.properties)[0],'findings');
+ assert.deepEqual(schema.properties.findings.items.properties.id.enum,['f_a','f_b','f_c']);
+ assert.deepEqual(schema.properties.premise_assessment.properties.finding_ids.items.enum,['f_a','f_b','f_c']);
+ assert.equal(schema.properties.premise_assessment.properties.headline.enum,undefined);
+ assert.equal(schema.properties.findings.items.properties.evidence.items.properties.quote.enum,undefined);
+ assert.equal(schema.properties.interpretations,undefined);assert.equal(schema.properties.research_answers,undefined);
+ assert.equal(content.release.length,packet.release.paragraphs.length);
+ assert.deepEqual(content.inputs,inputs);
+ const legacy=pairedRequest(packet,inputs,false);
+ assert.equal(legacy.schema.properties.findings.items.properties.id.enum,undefined);
+});
+test('valid stable output retains its takeaway, while dangling references still fail closed',()=>{
+ const example=JSON.parse(readFileSync(new URL('../src/data/nvda-example.json',import.meta.url),'utf8'));
+ const value=structuredClone(example.result);
+ for(const key of ['checks','drops','comparison_checks','assessment_fallback'])delete value[key];
+ delete value.research_answers;delete value.interpretations;
+ const mapping=new Map(value.findings.map((f:any,i:number)=>[f.id,['f_a','f_b','f_c'][i]]));
+ for(const f of value.findings)f.id=mapping.get(f.id);
+ const remap=(o:any)=>{if(o?.finding_ids)o.finding_ids=o.finding_ids.map((id:string)=>mapping.get(id));if(o&&typeof o==='object')for(const child of Object.values(o))if(child&&typeof child==='object')remap(child);};remap(value);
+ const {schema}=pairedRequest(packet,example.inputs,true);
+ assert.equal(new Ajv({strict:false}).compile(schema)(value),true);
+ const good=verifyQuarterPair(pairedDraft(value,true),packet,'profitable_growth');assert.ok(good.premise_assessment);
+ value.premise_assessment.finding_ids=['nonexistent'];
+ assert.equal(verifyQuarterPair(pairedDraft(value,true),packet,'profitable_growth').premise_assessment,null);
+ value.findings[0].evidence[0].quote='Invented supporting quote';value.premise_assessment.finding_ids=['f_a'];
+ assert.equal(verifyQuarterPair(pairedDraft(value,true),packet,'profitable_growth').premise_assessment,null);
+});

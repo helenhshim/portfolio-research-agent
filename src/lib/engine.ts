@@ -23,7 +23,11 @@ export async function structured(name:string,schema:any,content:any,apiKey:strin
   throw new Error(`OpenAI request failed (${res.status}; ${code}); no credentials or raw response logged`);
  }
  const response=await res.json();
- if(response.status!=='completed') throw new Error(`Analysis incomplete (${response.status})`);
+ if(response.status!=='completed'){
+  const failure=new Error(`Analysis incomplete (${response.status}; ${response.incomplete_details?.reason||'unknown'})`) as Error&{diagnostics?:any};
+  failure.diagnostics={elapsed_ms:Date.now()-started,status:response.status,incomplete_details:response.incomplete_details,usage:response.usage,partial_output_text:(response.output||[]).filter((item:any)=>item.type==='message').flatMap((item:any)=>item.content||[]).filter((item:any)=>item.type==='output_text').map((item:any)=>item.text).join('')};
+  throw failure;
+ }
  const messages=response.output?.filter((item:any)=>item.type==='message')||[];
  if(messages.some((m:any)=>m.content?.some((c:any)=>c.type==='refusal'))) throw new Error('Model refused analysis');
  const text=messages.flatMap((m:any)=>m.content||[]).filter((c:any)=>c.type==='output_text').map((c:any)=>c.text).join('');
