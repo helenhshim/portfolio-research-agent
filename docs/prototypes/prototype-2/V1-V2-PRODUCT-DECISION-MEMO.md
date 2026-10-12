@@ -72,3 +72,7 @@ A matched ChatGPT trial uses identical sources, objective and follow-up with a s
 3. Approve the minimal single-agent/controller plan, source/step budgets and public-company-only free-text policy before implementation? Open-ended text removes the old guarantee that inputs cannot contain identifiers; raw prompts should not be logged by default.
 
 See [technical plan](TECHNICAL-PLAN.md) for reuse, sequencing and acceptance criteria. Review the concrete decisions before coding; document changes as evidence accumulates.
+
+## Strategic addendum (D63)
+
+Helen asked whether the proposed workspace earns a distinct product or should become a finance capability inside ChatGPT. [Differentiation and embedding assessment](DIFFERENTIATION-AND-CHATGPT.md) recommends one reusable financial evidence/calculation/state backend, tested through a focused standalone harness before optional MCP embedding. Specialist value must show reduced analyst checking/revision effort, not just a chat UI. Same-session evidence correction is the smaller differentiating experiment; a period-isolated thesis replay is a larger proposal. Existing P0/P1 source/session and implementation approvals are not silently expanded.

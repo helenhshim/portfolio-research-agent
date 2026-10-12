@@ -26,3 +26,7 @@ Existing [reliability/latency candidate](../../../evals/BRIEF-RELIABILITY-LATENC
 ## Concept preview (D62)
 
 [Interactive concept notes](UI-CONCEPT.md) record the hypothetical thread/artifact layouts and scripted journey. Helen can review the flow before implementation. No layout choice or scope approval is inferred from requesting the preview.
+
+## Differentiation checkpoint (D63)
+
+[Standalone versus ChatGPT capability assessment](DIFFERENTIATION-AND-CHATGPT.md) records a proposed evidence/thesis workflow and optional MCP embedding path. Decide which narrow analyst task should outperform the strong ChatGPT baseline before extending sources or persistence. Same-session evidence correction fits the smallest experiment; the Q1 → Q2 replay requires additional state/evaluation preparation and approval.

@@ -59,3 +59,7 @@ No invented outcome target such as a guaranteed percentage improvement. B must p
 ## Results
 
 Pending execution. Preserve trial artifacts and reviewer notes; summarize failures as model, data, workflow, or design. Do not claim differentiation from a polished example or trial design alone.
+
+## D63 additional comparison
+
+For differentiation, add an evidence challenge/correction task; a future temporal replay must isolate first-period sources from later evidence. When an MCP integration exists, compare ChatGPT + finance tools with strong ChatGPT and the standalone harness on the same task. Current comparisons remain protocols, not results. See `docs/prototypes/prototype-2/DIFFERENTIATION-AND-CHATGPT.md`.
