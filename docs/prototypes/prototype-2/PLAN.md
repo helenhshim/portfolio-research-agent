@@ -42,3 +42,7 @@ Generate zero or one evidence-linked, goal-relevant next investigation with the 
 ## Current next step: pre-build reference review (D66)
 
 Review the [pre-build checkpoint](PREBUILD-CHECKPOINT.md) and [first-task reference/rubric](../../../evals/V2-PREBUILD-REFERENCE.md). Helen selected the durable-operating-profitability question. Freeze expected task/evidence behavior, then implement the approved vertical flow. Five founder-defined scenarios are prepared; no actual V2/baseline/practitioner trials have run.
+
+## Reference accepted and evals specified (D67)
+
+Helen approves the worked answer. Suggested investigation ends with a specific runnable CTA when sources permit, preserving objective/evidence and revising the artifact; composer allows another prompt. Reference pack now defines each E1–E5/V2-01–V2-05 input, required behavior, code/human grader and pass/fail rule, plus rubric calibration and AI PM meta-evaluation. Next use strong/flawed examples to check the rubric, then implement the approved vertical flow. Do not rerun approval for the accepted answer/scope; actual model/ChatGPT/practitioner results remain pending.

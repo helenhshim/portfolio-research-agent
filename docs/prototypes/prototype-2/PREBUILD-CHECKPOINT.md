@@ -1,6 +1,6 @@
 # V2 pre-build product checkpoint
 
-2026-10-12 · D66 · Planning only; Helen explicitly asked for next steps before building. Initial D64 scope is approved. Her “great” response accepts the narrow guided-next-investigation direction from D65; autonomous adjacent research remains deferred. No application implementation or live benchmark is performed here.
+2026-10-12 · D66–D67 · Worked answer approved; CTA and eval specification clarified. Planning only; Helen explicitly asked for next steps before building. Initial D64 scope is approved. Her “great” response accepts the narrow guided-next-investigation direction from D65; autonomous adjacent research remains deferred. No application implementation or live benchmark is performed here.
 
 ## Purpose and sequence
 
@@ -60,4 +60,10 @@ Latency target stays provisional until matched task trials; document median/rang
 
 ## What is done versus still needed
 
-Completed here: scope/approval record, task hypothesis, exact frozen packet hash, authored reference answer, five fixture expectations, suggestion/failure rules and proposed gates. Not completed: practitioner task validation, actual V2/ChatGPT trials, model/latency/cost choice for the new contract, or application implementation. Helen can first review whether the reference answer's conclusion and next investigation meet her bar; use the first question Helen selected.
+Completed here: scope/approval record, task hypothesis, exact frozen packet hash, authored reference answer, five fixture expectations, suggestion/failure rules and proposed gates. Not completed: practitioner task validation, actual V2/ChatGPT trials, model/latency/cost choice for the new contract, or application implementation. Helen approved the worked answer under D67 and requested the next-investigation CTA. The reference now defines the evals explicitly. Next calibrate the scorecard against strong/flawed examples, then implement within the approved scope; actual trials remain pending.
+
+## D67 reference review outcome
+
+Helen approves the worked answer and asks for an actionable end to the suggested investigation. Use “Compare cash-flow trends” for the supported example; it initiates the contextual turn and updates the same artifact. The composer remains available for a different question. Missing-source actions offer an honest question refinement, not fabricated retrieval. The interactive concept was updated with a scripted CTA/annual-cash comparison; this is not live V2 research.
+
+“Freeze cases” is now an explicit eval specification: inputs/context, required behavior, graders and decision rules for E1–E5 (stable aliases V2-01–V2-05), with separate answer/agent/task layers, quality anchors and grader-calibration examples. Do not score tool count or clicks as quality. User approval of an example does not replace claim-support review or practitioner evaluation.

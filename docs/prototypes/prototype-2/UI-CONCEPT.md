@@ -13,3 +13,7 @@ Review questions: Can an analyst express the question without a form? Does the t
 Browser checks confirmed entry-to-research progression, answer display, artifact revision after follow-up, source disclosures, both layouts and the optional progressive state. No latency or user-benefit claim follows from scripted transitions. Deployed app/implementation files are unchanged; D61 approval checkpoint remains active.
 
 Conversation visual source: local exploratory visualization (not included in this repository).
+
+## D67 actionable CTA update
+
+The suggested investigation now ends with “Compare cash-flow trends.” Selecting it preserves the initial objective, adds a scripted Q2-versus-prior-year comparison (+56.7% YoY), and updates the artifact while distinguishing it from the sequential decline. The subsequent missing-cause question offers “Refine the question” into the composer; it does not retrieve a new filing. All transitions remain local simulation with source-derived numbers, not model/evaluation results or deployed functionality.

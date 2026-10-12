@@ -1,6 +1,6 @@
 # Recommended fast V2 launch scope
 
-2026-10-12 · D64–D65 · Helen approved the initial D64 launch scope. D66 records the agreed narrow guided-next-investigation refinement and Helen-selected first test. User demand and advantage over ChatGPT remain to be validated.
+2026-10-12 · D64–D67 · Helen approved the initial D64 launch scope. D66 records the agreed narrow guided-next-investigation refinement and Helen-selected first test. User demand and advantage over ChatGPT remain to be validated.
 
 ## One-sentence product
 
@@ -81,3 +81,7 @@ Later: selectively execute one useful adjacent investigation autonomously with e
 ## Before building (D66)
 
 Helen selected “Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?” as the first test. Review `PREBUILD-CHECKPOINT.md` and the task/rubric in `evals/V2-PREBUILD-REFERENCE.md` before implementation. This planning pass performs no live model or user trial.
+
+## Actionable continuation and evaluation contract (D67)
+
+The worked answer is approved. A supported suggested investigation ends with a specific CTA (example: “Compare cash-flow trends”) that carries original/current intent, linked checked finding and artifact/source version into a bounded turn. It updates the artifact; users can instead edit/ask in the composer. No auto research or new source access. An unavailable investigation identifies evidence needed and can offer “Refine the question.” Assess actual task advance and source feasibility, not click-through. `evals/V2-PREBUILD-REFERENCE.md` now specifies cases, required behavior, code/human graders, critical gates and AI PM review of eval quality.

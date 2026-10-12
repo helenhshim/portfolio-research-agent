@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.36. Prototype 1 frozen; Prototype 2 scope and guided continuation agreed; first evaluation question selected · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.37. Prototype 1 frozen; V2 scope/reference approved; actionable continuation and eval specification defined · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -543,3 +543,9 @@ Helen asks whether proactive related investigations should be MVP or a later ite
 Helen accepts the narrow guided-next-investigation direction and requests AI PM preparation before building. First evaluation question explicitly selected by Helen: “Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?” It is a founder-selected task, not validated analyst demand. Keep zero/one grounded, feasible, user-initiated next investigation; automatic adjacent work stays deferred.
 
 Prepare/review the task outcome, worked reference answer, five evaluation scenarios, model/code/tool/control boundaries and separate build/pilot/value gates. Planning pack: `docs/prototypes/prototype-2/PREBUILD-CHECKPOINT.md`; founder-authored evidence/rubric: `evals/V2-PREBUILD-REFERENCE.md`. No model/ChatGPT/practitioner trial or runtime change occurs in this checkpoint. Existing approved scope is not reopened; source/control details that materially alter it are logged separately.
+
+### Worked reference approval, CTA and evaluation specification (D67, 2026-10-12)
+
+Helen approves the worked answer and requests an actionable suggested-investigation CTA. For available cash comparisons: “Compare cash-flow trends” initiates the exact contextual question with original/current objective, linked finding and source/revision metadata, then revises the same brief. The ordinary composer supports further prompting. Outside-coverage steps identify missing evidence and may offer question refinement; they never imply unimplemented retrieval. The conversation mockup demonstrates a scripted annual cash update, not live research.
+
+Evaluation specification v1 in `evals/V2-PREBUILD-REFERENCE.md`: five stable cases V2-01–V2-05/E1–E5 with explicit inputs, required behavior, code/human grading and pass/fail decisions. Evaluate answers, agent action choices and full analyst task separately; use critical correctness/support gates plus anchored quality judgments. Review the evals for user-outcome relevance, discriminating power, representative coverage, held-out robustness, reviewer agreement, fair baseline and actionable failure diagnosis. Helen's example approval is not expert certification or measured superiority. No runtime changes/live model trials in this clarification.
