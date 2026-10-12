@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.46. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.47. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -617,3 +617,10 @@ At Helen’s request, remove the header “Frozen evidence” label and the thre
 A local test exhausted the 120s whole-turn deadline: the first provider request finished in 5.9s, one tool executed, then the second provider request waited 114s without a completed response. Treat the deadline as a last-resort ceiling, not acceptable expected UX. Keep full report context and all checks; prompt direct synthesis when supplied evidence suffices, replace identical tool results with references to already supplied content, and request server-side provider streaming for content-free phase timings. No unchecked text is displayed. Prompt version is `v2-public-research-2`; model/low effort/schema/call/output/time/source limits remain unchanged.
 
 A fixed public E1 CLI trial completes in 20.0s and a browser/API/provider trial completes generation in 19.2s, both one request/no tools/no check drops. These are two observations, not a reliability or semantic-quality pass. Recommended completion target: 20–40s for the bounded task, subject to multi-case/tail-latency and review-time validation. Quality review still needs claim-complete citations for qualitative findings. Results, caveats and next gates: `docs/checkpoints/V2-LATENCY-2026-10-12.md`.
+
+
+### Thread-first UX feedback and recommended sequence (D77, 2026-10-12)
+
+Helen requests timed animated action progress; checked interpretation, selected financial comparisons, supporting evidence and disclosures in the thread; an optional right-side brief opened by the user; inline evidence links; header navigation to a thread index with a new-research icon; removal of footer layout controls; and recovery that explains actual attempts without repeating questions/errors. This supersedes D73’s automatic brief-first success navigation as the desired interaction direction. No additional hidden reasoning or unverified finding stream is implied.
+
+Implementation recommendation: turn/attempt ownership plus real stage/total timing and deduplicated recovery first; compact in-thread answer/optional pane next; inline source placement and citation completeness alongside it; multi-thread index/persistence after the core flow. Current state is memory-only and stores only the latest artifact globally. Device-local history is recommended for the prototype but remains a proposed storage expansion; account sync is later. Retry must describe only changes actually executed and must not invent failure causes. See `docs/prototypes/prototype-2/UX-ITERATION-PLAN.md` for scope, dependencies and acceptance checks. This entry records feedback and prioritization, not implemented behavior or new evaluation passes.
