@@ -1,6 +1,6 @@
 # V2 architecture, autonomy and safety checkpoint
 
-2026-10-12 · D69 · Proposed V2 design and evaluation requirements, not implemented/certified controls. Initial scope remains approved: NVIDIA public-company profitability research over the frozen SEC pair, active-session continuation, protected Vercel preview. No framework migration, new sources or live trial in this checkpoint.
+2026-10-12 · D69–D70 · Proposed V2 design and evaluation requirements, not implemented/certified controls. Initial scope remains approved: NVIDIA public-company profitability research over the frozen SEC pair, active-session continuation, protected Vercel preview. No framework migration, new sources or live trial in this checkpoint.
 
 ## Immediate sequence
 
@@ -10,7 +10,32 @@
 4. Exercise meaningful automated control/fact/state tests and repeated real model E1–E5 runs. Review semantic support and omissions manually, including the business evidence requirement. Freeze model/effort/source/prompt/schema/budget versions and a finite trial spend cap before paid runs. Retain incomplete/failed results.
 5. Deploy a separate protected preview after the pilot gate. Helen grades E4/E5 on the real flow; compare actual strong ChatGPT and, when available, analyst review effort. Do not infer superiority from a mockup or a small clean batch.
 
-## High-level proposed V2 architecture
+## Condensed V2 agent-system view (D70)
+
+**One research model, two code tools, zero subagents in the MVP.** The implementation view below contains separate safety/state boxes, not separate models or mandatory model requests.
+
+```mermaid
+flowchart LR
+  U[User: sets the research question] --> M[One research model: selects evidence and explains implications]
+  M <-->|Optional tool requests and results| T[Code tools: approved reports and financial calculations]
+  M --> C[Code: checks references and enforces limits]
+  C --> B[Brief: answer, evidence and next investigation]
+```
+
+The model decides which comparisons/passages matter, weighs support and qualifications, states what remains unresolved and proposes zero/one useful next investigation. Code supplies authoritative source context, owns arithmetic, validates tool requests/results and enforces permissions/budgets. The user sets/corrects the objective and starts any suggested follow-up. Source/number matching does not automatically certify interpretive support.
+
+The two tools are functions, not financial and qualitative subagents. A subagent would be another model task with its own instructions/context and coordination work. None is currently proposed for this narrow two-report job. Reasoning complexity can increase within one model request without adding more agents.
+
+### Simple execution with quality preserved
+
+- Supply the full approved report pair and relevant code-prepared facts/context. When sufficient, one model request selects evidence, examines qualifications and writes the concise answer/next suggestion; mandatory code checks follow without another model call.
+- If an allowed action is needed, the same model requests it and synthesizes from the validated results: maximum one tool round/two tool executions/two provider requests. No separate planner, formatter, critic or recommendation model by default.
+- Keep output concise while preserving full evidence and support/counterevidence review. Do not replace full context with keyword snippets merely for speed. Measure total reviewed task time as well as model latency.
+- Add a specialist only for an observed failure that a simpler source/prompt/tool fix does not resolve. A future counterevidence reviewer is an experiment for demonstrated omissions; independent per-company research could run in parallel if broader issuer coverage is later approved. Neither is current MVP scope, and either requires reviewing the call budget.
+
+More sequential model stages add round-trip latency; parallel independent work can reduce elapsed time but still adds tokens, coordination and synthesis. More code validation boxes need not add model calls. The initial single-model design remains an empirical quality/latency hypothesis. [Official latency guidance](https://developers.openai.com/api/docs/guides/latency-optimization), [official guidance on independent subagent tasks](https://developers.openai.com/api/docs/guides/agents-api/multi-agent).
+
+## Detailed V2 implementation view
 
 ```mermaid
 flowchart TD

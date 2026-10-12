@@ -54,3 +54,7 @@ Preserve [Helen's submitted scores and observations](../../../evals/V2-HELEN-REV
 ## Architecture and control checkpoint (D69)
 
 Follow [architecture/autonomy/control specification](ARCHITECTURE-AND-SAFETY.md): refine references, freeze/calibrate E1–E5 plus C1–C9, implement the single bounded controller flow, then test and deploy a separate protected pilot after gates. Existing stack and source scope remain. Current budget is one tool round/up to two tool executions and two provider requests per turn; reasoning effort is an empirical quality/latency setting, not a permission expansion. No actual safety certification or live results in this planning step.
+
+## Simple execution preference (D70)
+
+Use the condensed model/code/user view in the architecture specification: one research model, two deterministic tools, no subagents or mandatory planner/critic/formatter calls. One request when the supplied evidence suffices; two at most when a bounded tool round is needed. This clarifies the existing design without removing safety checks or adding specialists. Evaluate usefulness/omissions and reviewed task time before extending orchestration.

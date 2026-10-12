@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D69.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D70.
 
-Prototype numbers identify product experiments. PRD v0.39 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.40 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
