@@ -1,6 +1,6 @@
 # Financial Research Agent: V1 → V2 Product Decision Memo
 
-Owner: Helen Shim · 2026-10-12 · Decision D61 · Status: directional decisions recorded; implementation plan awaiting Helen's approval.
+Owner: Helen Shim · 2026-10-12 · Decision D61 · Status: initial D64 launch scope approved under D65; broader alternatives and proactive refinement remain proposals.
 
 Basis: Helen's raw reflection and context handoff, [repository audit](V1-AUDIT.md), and existing release/debug evidence. Founder observations are not practitioner research. The frozen `prototype-1` tag remains the baseline; no V2 UI or agent implementation is claimed.
 
@@ -8,7 +8,7 @@ Basis: Helen's raw reflection and context handoff, [repository audit](V1-AUDIT.m
 
 Change the primary interaction from preset investment context → fixed earnings brief to research objective → contextual investigation → reusable, source-backed artifact. The conversation directs the work; the artifact is the deliverable. Helen's handoff establishes an analyst-first exploration for V2, replacing the advisor-first starting hypothesis from D60 while preserving advisor tasks as a separate later validation track.
 
-The smallest recommended V2 demonstrates one open-ended question and a contextual follow-up using the existing NVIDIA evidence. It does not promise arbitrary companies or financial workflows. Progressive findings and more autonomous investigation follow only when they improve the task. No implementation begins before Helen approves the concrete plan.
+The smallest recommended V2 demonstrates one open-ended question and a contextual follow-up using the existing NVIDIA evidence. It does not promise arbitrary companies or financial workflows. Progressive findings and more autonomous investigation follow only when they improve the task. Helen has approved the narrowed initial launch scope in D64/D65; the historical alternatives below are not blanket approval for broader work.
 
 ## 2. V1 observations
 
@@ -76,3 +76,7 @@ See [technical plan](TECHNICAL-PLAN.md) for reuse, sequencing and acceptance cri
 ## Strategic addendum (D63)
 
 Helen asked whether the proposed workspace earns a distinct product or should become a finance capability inside ChatGPT. [Differentiation and embedding assessment](DIFFERENTIATION-AND-CHATGPT.md) recommends one reusable financial evidence/calculation/state backend, tested through a focused standalone harness before optional MCP embedding. Specialist value must show reduced analyst checking/revision effort, not just a chat UI. Same-session evidence correction is the smaller differentiating experiment; a period-isolated thesis replay is a larger proposal. Existing P0/P1 source/session and implementation approvals are not silently expanded.
+
+## Approval update (D65)
+
+Helen approved the [D64 initial release scope](RECOMMENDED-LAUNCH-SCOPE.md). This resolves the initial implementation approval checkpoint. A zero-or-one evidence-linked next-investigation action is recommended as a small MVP refinement; automatic adjacent research and larger source/retention/embedding proposals remain unapproved.

@@ -70,4 +70,4 @@ Use period-definition traps, unanswered evidence questions, user corrections, co
 
 ## Decisions still open
 
-Whether thesis tracking or immediate question-answering best fits practitioners; whether the first next experiment is same-session evidence correction or the larger historical replay; standalone-first versus an early MCP integration; source/retention/access boundaries. D61 implementation approval remains pending. D63 adds recommendations and evaluation questions, not a new build authorization.
+Whether thesis tracking or immediate question-answering best fits practitioners; whether the first next experiment is same-session evidence correction or the larger historical replay; standalone-first versus an early MCP integration; source/retention/access boundaries. D65 records approval of the initial D64 launch scope. This D63 strategy adds recommendations/evaluation questions, not authorization for the larger replay, persistence or embedding proposals.

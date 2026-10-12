@@ -1,6 +1,6 @@
 # Smallest viable V2 technical plan
 
-2026-10-12 · D61 · Proposal only. No implementation changes authorized yet. Read [decision memo](V1-V2-PRODUCT-DECISION-MEMO.md) and [audit](V1-AUDIT.md) first.
+2026-10-12 · Historical D61 proposal, narrowed by the D64 launch scope approved under D65. Work within the approved scope is authorized; broader alternatives below are not blanket approval. Read [decision memo](V1-V2-PRODUCT-DECISION-MEMO.md) and [audit](V1-AUDIT.md) first.
 
 ## Recommended scope and architecture
 

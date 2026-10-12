@@ -1,6 +1,6 @@
 # Prototype 2 iteration plan
 
-Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan; D64 supplies the latest candidate launch scope. Direction documented; implementation approval pending. Current deployed/runtime code remains unchanged.
+Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan; D64 supplies the launch scope, approved by Helen under D65. Guided next-investigation refinement is proposed. Current deployed/runtime code remains unchanged.
 
 **User job:** A financial analyst asks a company research question, inspects a source-backed answer and continues investigation without restarting setup. Conversation directs work; artifact is the deliverable.
 
@@ -15,7 +15,7 @@ Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan; D64 s
 
 ## Next sequence
 
-1. Helen reviews and approves the concrete task/source, release/session and agent/free-text recommendations. Her handoff explicitly requires this before implementation.
+1. D65 records Helen's approval of the initial launch scope; proceed within it without requesting the same approval again. Resolve consequential expansions separately. The one-suggestion proactive refinement is currently recommended, not yet accepted.
 2. Freeze supported research tasks and expected evidence. Recommended first scope is NVIDIA operating-profitability research against the same frozen reports; other companies/10-K/news requests expose honest limits.
 3. Build approved P0: question contract and evidence-backed answer/artifact, bounded session context and contextual follow-up. Preserve facts/checks and genuine status. No forced goal/risk/rationale taxonomy for arbitrary questions.
 4. Evaluate objective completion, first useful checked insight and claim/source support, plus reviewed task time, corrections, interactions, omissions, cost and failures. Compare shared tasks with Prototype 1 and actual matched ChatGPT runs. Previous D59 timing trials are not V2 benchmarks.
@@ -34,3 +34,7 @@ Existing [reliability/latency candidate](../../../evals/BRIEF-RELIABILITY-LATENC
 ## Recommended fast release (D64)
 
 [Candidate launch scope](RECOMMENDED-LAUNCH-SCOPE.md) recommends one profitability-thesis pressure-test task, with automatic counterevidence and bounded real actions, on the existing NVIDIA pair. This is the recommended first task to approve/evaluate; broader replay/embedding/persistence options wait. Task relevance remains a hypothesis. No implementation authorization is inferred from requesting the recommendation.
+
+## Proactive continuation recommendation (D65)
+
+Generate zero or one evidence-linked, goal-relevant next investigation with the answer. Server checks feasibility; analyst selection starts a new bounded follow-up using the same artifact/context. Label missing sources and omit weak/redundant suggestions. Keep automatic adjacent research for a later evaluated iteration. This recommendation refines the approved watch-question/continuation capability; acceptance is pending.

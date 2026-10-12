@@ -110,3 +110,7 @@ Completed static V1 audit, decision memo and smallest V2 technical plan in `docs
 ### D64 fast launch recommendation
 
 Use the candidate scope in `docs/prototypes/prototype-2/RECOMMENDED-LAUNCH-SCOPE.md`: one NVIDIA operating-profitability pressure test, automatic supported counterevidence, bounded evidence/calculation actions and a same-session revisable brief. Proposed single-controller budget reduces D61's earlier ceiling to one tool round/up to two tool executions and two model requests; evaluate quality/latency, do not force a call. Temporal replay, new data, memory/monitoring, progressive patches and MCP adapter remain later. Confirm the concrete plan before implementation per Helen's handoff.
+
+### D65 approval and proposed next-investigation refinement
+
+Helen approved the D64 initial release scope; the D61 approval checkpoint is resolved for that scope. Proceed with its fixtures/contracts/implementation without repeated permission. Recommend one optional evidence/intent-linked next investigation from the same synthesis, feasible against the approved catalog and initiated by user selection. This addition remains under discussion. Do not initiate related research, expand sources or add background scheduling merely because a suggestion was generated.

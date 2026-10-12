@@ -1,6 +1,6 @@
 # Recommended fast V2 launch scope
 
-2026-10-12 · D64 · Recommendation requested by Helen; implementation approval remains pending. This is a candidate scope to test, not validated user demand or a claim that it outperforms ChatGPT.
+2026-10-12 · D64–D65 · Helen approved the initial D64 launch scope. The guided next-investigation addition below is a recommendation under discussion. User demand and advantage over ChatGPT remain to be validated.
 
 ## One-sentence product
 
@@ -50,7 +50,7 @@ Design financial/evidence functions so an MCP adapter can expose them later. Do 
 
 ## Build sequence and acceptance
 
-1. Freeze five supported/limitation tasks and source expectations; confirm this scope and public-company active-session policy before coding.
+1. Freeze five supported/limitation tasks and source expectations; use the approved public-company/active-session scope and record any consequential expansion separately.
 2. Implement generic question/claim/revision contracts and margin facts; retain reference/number/source regressions. Remove forced profile dependencies without weakening checks.
 3. Implement bounded selected evidence/calculation actions, question-specific synthesis and automatic counterevidence. Output stays compact; keep invalid/missing references out of the checked artifact.
 4. Wire the selected Research workspace concept to genuine status, contextual follow-up, artifact revisions and Stop. No schema/planner internals as product filler.
@@ -64,4 +64,16 @@ Pilot with two analysts if available, using public questions and no client ident
 
 ## Portfolio evidence
 
-Show the transition from founder observations to a narrow task, model/code/tool boundaries, real failure/recovery, a fair ChatGPT comparison and evidence-led scope changes. The prototype tests the product hypothesis; its UI and code alone do not prove it. Implementation approval under D61 remains pending.
+Show the transition from founder observations to a narrow task, model/code/tool boundaries, real failure/recovery, a fair ChatGPT comparison and evidence-led scope changes. The prototype tests the product hypothesis; its UI and code alone do not prove it. Helen approved the initial launch scope under D65, resolving the D61 approval checkpoint for that scope. Guided next-investigation suggestions remain a proposed refinement, not a new source or automatic research authorization.
+
+## Proposed MVP refinement: one next useful investigation (D65)
+
+Recommend one optional next investigation generated with the same synthesis response, not a separate recommender call. This turns the existing watch-next question into a goal-linked continuation: the exact finding that triggered it, why it matters to the original objective, the proposed question/action and evidence availability. Return none if nothing material/useful is supported; do not add generic engagement suggestions.
+
+Example: original objective is durable profitability; the checked finding is that cash flow declined while operating profitability improved. Suggest “Compare cash generation with operating profit,” explaining that this separates profitability from cash conversion. The action uses the available report pair and code facts, carries original intent plus the linked finding into a follow-up, and updates the same artifact when the analyst selects it. It does not promise to explain cash drivers not present in the evidence.
+
+Availability is checked against the server-owned source/metric catalog. If the decisive next step requires a 10-Q cash reconciliation, calls, prices or another issuer, label “Needs additional evidence” and identify the source; do not render a runnable investigation that fabricates access. Zero or one action keeps the UI compact and preserves the work budget. The click initiates a new bounded user turn; generating the suggestion does not initiate research.
+
+Evaluate goal linkage, supporting finding validity, distinctiveness from the completed answer, source feasibility and usefulness. Click-through alone is not success; record accepted subsequent work and prompting/review effort. Ignore/remove invalid suggestions without suppressing a valid main answer. Analyst redirection updates the current objective; do not cling to an obsolete inferred goal.
+
+Later: selectively execute one useful adjacent investigation autonomously with explicit source/cost/stop limits; add scheduled/new-report continuation only after source acquisition and persistence are built. Generic suggested questions are replicable in ChatGPT. The intended advantage is a specific, grounded and executable continuation connected to the analyst's objective.

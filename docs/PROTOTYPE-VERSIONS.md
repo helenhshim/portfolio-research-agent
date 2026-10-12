@@ -1,17 +1,17 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D64.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D65.
 
-Prototype numbers identify product experiments. PRD v0.34 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.35 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
 | Prototype 1 | Can complete earnings evidence become a specific, inspectable holding explanation for an advisor's context? | Git tag `prototype-1`; exact deployed source manifest; original protected Preview linked in its release record | Frozen baseline, with known failures |
-| Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Intent-driven direction documented; implementation approval pending |
+| Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Initial launch scope approved; proactive refinement proposed; no new release |
 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 
-Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision memo](prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md) captures Helen's analyst-first pivot. Direction is documented; source/task/architecture recommendations await approval and benefit remains to be tested.
+Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision memo](prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md) captures Helen's analyst-first pivot. Direction is documented; the initial D64 launch scope is approved under D65, and benefit remains to be tested.
 
 ## How we will work
 
