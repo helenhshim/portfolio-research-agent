@@ -1,0 +1,12 @@
+
+.env*
+!.env.example
+.research-data/
+
+node_modules/
+.next/
+.research-runs/
+.vercel/
+*.tsbuildinfo
+test-results/
+playwright-report/

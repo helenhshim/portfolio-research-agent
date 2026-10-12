@@ -1,0 +1,207 @@
+{
+  "prototype": "prototype-1",
+  "deployment_id": "dpl_G6JTjBBTzXu8cfCbbBea3sQc8tLE",
+  "deployment_url": "https://portfolio-research-agent-asaf2pel7-helenhshims-projects.vercel.app",
+  "released_on": "2026-10-12",
+  "source_manifest_kind": "Exact 36-file uploaded application; SHA-1 content digests checked against recovered bytes",
+  "runtime": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "prompt_version": "context-v1",
+    "source": "Frozen NVIDIA FY2027 Q2/Q1 SEC earnings releases",
+    "max_output_tokens": 12000,
+    "provider_timeout_seconds": 180,
+    "route_duration_seconds": 240
+  },
+  "environment": {
+    "target": "Preview",
+    "required_secret_names": [
+      "OPENAI_API_KEY"
+    ],
+    "secret_values_included": false,
+    "production_live_calls": false,
+    "access": "Vercel Authentication"
+  },
+  "files": [
+    {
+      "file": "package.json",
+      "sha": "5127c3858c66039de4c42435fc8f7eb4f11c37eb",
+      "size": 952
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "cd7982ce78782f32c712f0e7fe7b339312861cb9",
+      "size": 60591
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "a90f219f91d3b61b8077953cc2e1f3cb71a5a24f",
+      "size": 531
+    },
+    {
+      "file": "next.config.ts",
+      "sha": "24fcc750ced2f2bb0184838ee3e80b2101256b3b",
+      "size": 161
+    },
+    {
+      "file": "next-env.d.ts",
+      "sha": "915946e261450f4fb6aab2ca862c8b440b748240",
+      "size": 288
+    },
+    {
+      "file": "src/app/api/research/route.ts",
+      "sha": "0df8c007d02a5d0f921fba3111c4ba1d75713174",
+      "size": 3101
+    },
+    {
+      "file": "src/app/globals.css",
+      "sha": "b761317952c59f50ab3d202ce07a9dd58d337f6b",
+      "size": 5832
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "sha": "d6f5150d8c75e0e565bed596aae107f6363364d2",
+      "size": 434
+    },
+    {
+      "file": "src/app/page.tsx",
+      "sha": "585600f0f3e81ee4cfb4b081a7561c70cd8b8fcf",
+      "size": 578
+    },
+    {
+      "file": "src/components/research-workspace.tsx",
+      "sha": "4ac287d651f8c2eb0fedbd86e1d3380db354e562",
+      "size": 13308
+    },
+    {
+      "file": "src/data/nvda-example.json",
+      "sha": "8deefadda3c3b02fe25851352e3a69a42e31dd7a",
+      "size": 12013
+    },
+    {
+      "file": "src/data/nvda-quarter-pair.json",
+      "sha": "7583897f3eae9a475ed7053f88d713ab70ae2846",
+      "size": 103987
+    },
+    {
+      "file": "src/lib/contracts.ts",
+      "sha": "7cbd4c624e1a5e0242f03e8ddb5bce7380b3114b",
+      "size": 3298
+    },
+    {
+      "file": "src/lib/engine.ts",
+      "sha": "2a5ddc7d76cf025977ba152dfb5bbdbe3f68357b",
+      "size": 11618
+    },
+    {
+      "file": "src/lib/financials.ts",
+      "sha": "ea5ce7133ca23f4b708172b13e355e5874513417",
+      "size": 8247
+    },
+    {
+      "file": "src/lib/paired-research.ts",
+      "sha": "8c9ad3d4a31cc4a4675f11e56341f8d70fe4be71",
+      "size": 3427
+    },
+    {
+      "file": "src/lib/quarter-pair.ts",
+      "sha": "b35267a2d8074073ddcfe0a434c8d812132cca40",
+      "size": 3465
+    },
+    {
+      "file": "src/lib/release.ts",
+      "sha": "61ec0afa285baa2d59a42febbb9ecb60925bb858",
+      "size": 1486
+    },
+    {
+      "file": "src/lib/sec.ts",
+      "sha": "91b60d152b414d5ed1c47bd3009079f9cea14d30",
+      "size": 3162
+    },
+    {
+      "file": "src/lib/verifier.ts",
+      "sha": "6babd809d2be67eb8d58d46bee65c091ed5aff7b",
+      "size": 5768
+    },
+    {
+      "file": "src/lib/view-model.ts",
+      "sha": "3f1cc85a4769df9bf2734c53558b965371e7572f",
+      "size": 1411
+    },
+    {
+      "file": "scripts/build-packets.ts",
+      "sha": "ce84d38d4ddb56f57722e2463b2cd32ce68886b6",
+      "size": 3657
+    },
+    {
+      "file": "scripts/compare-engine.ts",
+      "sha": "a2f50e7f5253f4d6162d77077c8f0bf85ee5c301",
+      "size": 2911
+    },
+    {
+      "file": "scripts/compare-reasoning.ts",
+      "sha": "6eceb2687febbc8da68b58c9da39c30e92022dc8",
+      "size": 2104
+    },
+    {
+      "file": "scripts/prepare-comparison.ts",
+      "sha": "08a826c2135601ace03d3bb173f127f47a263c2a",
+      "size": 2098
+    },
+    {
+      "file": "scripts/prepare-quarter-pair.ts",
+      "sha": "a5502ca5a823a9ad24901817c43478a58a8904a4",
+      "size": 5675
+    },
+    {
+      "file": "scripts/research.ts",
+      "sha": "970c4a5991e26b3f60f589445f595b66c9721abb",
+      "size": 1573
+    },
+    {
+      "file": "scripts/resume-trials.ts",
+      "sha": "fd8c36c436af03b374c7bf13df0c433fce092589",
+      "size": 2349
+    },
+    {
+      "file": "scripts/sec-data-probe.mjs",
+      "sha": "1158e8da35dfeef56dbc1450a0706eb563cd9e6c",
+      "size": 3858
+    },
+    {
+      "file": "scripts/sec-preflight.mjs",
+      "sha": "381e3370f1736a84859dc225204d86c01589585a",
+      "size": 936
+    },
+    {
+      "file": "scripts/test-quarter-pair.ts",
+      "sha": "625f3448ad565a3a9e75be346aa1124b3cce77dd",
+      "size": 3658
+    },
+    {
+      "file": "scripts/test-rationale.ts",
+      "sha": "1ff25e80f2f846e9b68697ebe46d266c4c4f0284",
+      "size": 1560
+    },
+    {
+      "file": "public/fonts/inter-latin.woff2",
+      "sha": "1dc044f4824fd5af6bfed67fee48be70fa069f3f",
+      "size": 48432
+    },
+    {
+      "file": "public/fonts/plex-mono.woff2",
+      "sha": "3a2668b94b5c1388efd18384670b82eb191e506d",
+      "size": 10060
+    },
+    {
+      "file": "public/fonts/INTER-LICENSE.txt",
+      "sha": "174b037934980ddcad39144da3ce7b0f9d73546c",
+      "size": 4380
+    },
+    {
+      "file": "public/fonts/PLEX-LICENSE.txt",
+      "sha": "0ae1afdcc6d9bc8ed3195c89cbcba5fcd3dda1db",
+      "size": 4456
+    }
+  ]
+}
