@@ -48,6 +48,8 @@ Cash references: `NVDA:operating_cash_flow:current`, `:prior_quarter`, `:prior_y
 
 ## Evaluation specification v1: what exactly are the evals?
 
+For a practical PM review routine, case-by-case questions and useful/partial/failing teaching examples, see [PM grading walkthrough](V2-PM-GRADING-WALKTHROUGH.md). It clarifies this specification without changing scope or gates; authored examples are not trial results.
+
 An eval is **a realistic input/context + required behavior + a grading method + a decision rule**. A list of prompts alone is a dataset, not a complete evaluation. The worked answer is one reference for expected behavior; exact sentence matching is not the goal.
 
 **Product hypothesis under test:** On supported profitability tasks, V2 reduces corrective prompting and analyst checking/editing while preserving financial/claim accuracy. Relevant next investigations should advance the task, not merely create engagement.
