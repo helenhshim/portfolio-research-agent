@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.45. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.46. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -610,3 +610,10 @@ One subsequent E1 live validation timed out at the 120-second deadline after one
 ### Quieter header and composer (D75, 2026-10-12)
 
 At Helen’s request, remove the header “Frozen evidence” label and the three lines beneath the composer (issuer/period/cutoff, frozen source/calculation basis, and public-company privacy reminder). Source dates, cutoff and calculation basis remain inspectable in the brief and source tabs. Keep saved-reference provenance, partial/failure notices, session-loss notice and backend input/privacy checks. This overrides D73’s composer placement without changing research scope or source freshness.
+
+
+### Latency failure and measured candidate (D76, 2026-10-12)
+
+A local test exhausted the 120s whole-turn deadline: the first provider request finished in 5.9s, one tool executed, then the second provider request waited 114s without a completed response. Treat the deadline as a last-resort ceiling, not acceptable expected UX. Keep full report context and all checks; prompt direct synthesis when supplied evidence suffices, replace identical tool results with references to already supplied content, and request server-side provider streaming for content-free phase timings. No unchecked text is displayed. Prompt version is `v2-public-research-2`; model/low effort/schema/call/output/time/source limits remain unchanged.
+
+A fixed public E1 CLI trial completes in 20.0s and a browser/API/provider trial completes generation in 19.2s, both one request/no tools/no check drops. These are two observations, not a reliability or semantic-quality pass. Recommended completion target: 20–40s for the bounded task, subject to multi-case/tail-latency and review-time validation. Quality review still needs claim-complete citations for qualitative findings. Results, caveats and next gates: `docs/checkpoints/V2-LATENCY-2026-10-12.md`.

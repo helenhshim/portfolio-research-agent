@@ -69,6 +69,13 @@ test('Responses adapter carries exact tool call IDs into synthesis and requires 
  assert.equal(validates(draft()),true,JSON.stringify(validates.errors));
  assert.equal(traces[0].schema_version,'v2-brief-schema-2');assert.match(traces[0].schema_hash,/^[a-f0-9]{64}$/);
  assert.equal(traces[0].request_id,'req_public_fixture');assert.equal(traces[0].http_status,200);assert.equal(typeof traces[0].response_received_ms,'number');assert.equal(typeof traces[0].body_read_ms,'number');
+ assert.equal(bodies[0].stream,true);
+ const prior=JSON.parse(bodies[1].input.at(-1).output);
+ assert.deepEqual(prior.paragraphs,[]);assert.ok(prior.paragraph_ids_in_source_context.includes('NVDA:prior_p45'));
+ const initial=JSON.parse(bodies[0].input[0].content).source_context;
+ assert.equal(initial.paragraphs.length,packet.release.paragraphs.length);
+ assert.match(initial.paragraphs.find((p:any)=>p.id==='NVDA:prior_p45').text,/./);
+ assert.ok(bodies[1].input.at(-1).output.length<JSON.stringify(initial.paragraphs.filter((p:any)=>p.source_period==='prior')).length/4);
 });
 test('Responses adapter rejects exhausted spend budget before fetch',async()=>{
  let calls=0;const provider=createV2Provider('fake-test-credential',{ledger:new V2SpendLedger(0),fetch:async()=>{calls++;throw Error('must not call');}});
@@ -90,4 +97,46 @@ test('HTTP stream cancellation aborts in-flight provider work and releases concu
  const response=await handler(request());await response.body!.cancel();await new Promise(resolve=>setImmediate(resolve));
  assert.equal(aborted,true);assert.equal(diagnostics[0].status,'stopped');
  const second=await handler(request());assert.equal(second.status,200);await second.body!.cancel();
+});
+
+function sse(events:unknown[]){
+ const encoded=new TextEncoder().encode(events.map(event=>`data: ${JSON.stringify(event)}\r\n\r\n`).join(''));
+ // Deliberately split framing, UTF-8 and JSON across network chunks.
+ return new Response(new ReadableStream({start(controller){for(let i=0;i<encoded.length;i+=7)controller.enqueue(encoded.slice(i,i+7));controller.close();}}),{headers:{'content-type':'text/event-stream','x-request-id':'req_stream_fixture'}});
+}
+test('Provider SSE publishes only the completed draft, measures first text and preserves checks',async()=>{
+ const traces:V2Trace[]=[],drafts:unknown[]=[];
+ const provider=createV2Provider('fake-test-credential',{onDraft:d=>drafts.push(d),onTrace:t=>traces.push(t),fetch:async()=>sse([
+  {type:'response.created',response:{status:'in_progress'}},
+  {type:'response.output_text.delta',delta:'unverified draft fragment ·'},
+  {type:'response.completed',response:{status:'completed',usage:{input_tokens:100,output_tokens:200,output_tokens_details:{reasoning_tokens:40}},output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(draft())}]}]}}
+ ])});
+ const result=await runV2ControlledTurn({question:envelope.question},packet,provider);
+ assert.equal(result.status,'complete');assert.deepEqual(drafts,[draft()]);
+ assert.equal(typeof traces[0].first_event_ms,'number');assert.equal(typeof traces[0].first_text_ms,'number');
+ assert.equal(traces[0].output_chars,'unverified draft fragment ·'.length);assert.equal(traces[0].usage?.reasoning_tokens,40);
+ assert.doesNotMatch(JSON.stringify(traces),/unverified draft fragment/);
+});
+test('Incomplete or truncated SSE never turns partial text into a checked answer',async()=>{
+ for(const terminal of [[],[{type:'response.incomplete',response:{status:'incomplete',incomplete_details:{reason:'max_output_tokens'},usage:{input_tokens:100,output_tokens:8192},output:[]}}]]){
+  let drafts=0;const provider=createV2Provider('fake-test-credential',{onDraft:()=>drafts++,fetch:async()=>sse([{type:'response.output_text.delta',delta:JSON.stringify(draft())},...terminal])});
+  const result=await runV2ControlledTurn({question:envelope.question},packet,provider);
+  assert.equal(result.status,'failed');assert.equal(result.error_code,'provider_incomplete');assert.equal(drafts,0);
+ }
+});
+test('Streamed tool completion preserves reasoning and call identity through bounded continuation',async()=>{
+ const bodies:any[]=[];
+ const provider=createV2Provider('fake-test-credential',{fetch:async(_url,init)=>{
+  const body=JSON.parse(String(init?.body));bodies.push(body);
+  return sse([{type:'response.completed',response:{status:'completed',output:bodies.length===1?
+   [{type:'reasoning',encrypted_content:'opaque-public-test-state'},
+    {type:'function_call',call_id:'call-streamed',name:'get_checked_metrics',arguments:JSON.stringify({metric_ids:['operating_margin']})}]:
+   [{type:'message',content:[{type:'output_text',text:JSON.stringify(draft())}]}]}}]);
+ }});
+ const result=await runV2ControlledTurn({question:envelope.question},packet,provider);
+ assert.equal(result.status,'complete');assert.equal(result.counts.provider_calls,2);
+ assert.ok(bodies[1].input.some((item:any)=>item.encrypted_content==='opaque-public-test-state'));
+ assert.equal(bodies[1].input.at(-1).call_id,'call-streamed');
+ const tool=JSON.parse(bodies[1].input.at(-1).output);
+ assert.deepEqual(tool.facts,[]);assert.ok(tool.fact_ids_in_source_context.includes('NVDA:operating_margin:current'));
 });
