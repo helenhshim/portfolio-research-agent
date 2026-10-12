@@ -12,6 +12,8 @@ Packet: `src/data/nvda-quarter-pair.json`. File-byte SHA-256: `4c68ec8c203967197
 
 ## One worked reference answer
 
+Helen's first scoring round and requested qualitative-evidence refinements are preserved in [the review log](V2-HELEN-REVIEW-LOG.md) (D68). The answer below remains the artifact she scored; her E2 observation is not a runtime failure, and E4/E5 remain unscored.
+
 **Question:** “Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?”
 
 **Direct answer:** The report strengthens the current operating-performance part of the premise. It does not establish that the profitability will persist. Operating margin improved modestly while revenue grew; product-cycle execution advanced, but cash conversion and future product economics still need scrutiny.

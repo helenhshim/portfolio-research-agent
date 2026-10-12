@@ -67,3 +67,7 @@ Completed here: scope/approval record, task hypothesis, exact frozen packet hash
 Helen approves the worked answer and asks for an actionable end to the suggested investigation. Use “Compare cash-flow trends” for the supported example; it initiates the contextual turn and updates the same artifact. The composer remains available for a different question. Missing-source actions offer an honest question refinement, not fabricated retrieval. The interactive concept was updated with a scripted CTA/annual-cash comparison; this is not live V2 research.
 
 “Freeze cases” is now an explicit eval specification: inputs/context, required behavior, graders and decision rules for E1–E5 (stable aliases V2-01–V2-05), with separate answer/agent/task layers, quality anchors and grader-calibration examples. Do not score tool count or clicks as quality. User approval of an example does not replace claim-support review or practitioner evaluation.
+
+## D68 first scoring round
+
+[Helen's review log](../../../evals/V2-HELEN-REVIEW-LOG.md) records E1 2, E2 provisional 0, E3 1 and E4/E5 pending. E2 does not yet have a dedicated reviewed response; this is not a runtime failure. Keep the scored reference intact. Next revise qualitative evidence to explain the prior/current change, execution meaning and future significance criteria, and prepare a dedicated E2 example. Grade E4/E5 workflow behavior after implementation; scripted concept behavior is not model evaluation. These refinements preserve approved source/controller bounds.

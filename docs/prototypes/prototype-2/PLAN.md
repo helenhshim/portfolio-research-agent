@@ -46,3 +46,7 @@ Review the [pre-build checkpoint](PREBUILD-CHECKPOINT.md) and [first-task refere
 ## Reference accepted and evals specified (D67)
 
 Helen approves the worked answer. Suggested investigation ends with a specific runnable CTA when sources permit, preserving objective/evidence and revising the artifact; composer allows another prompt. Reference pack now defines each E1–E5/V2-01–V2-05 input, required behavior, code/human grader and pass/fail rule, plus rubric calibration and AI PM meta-evaluation. Next use strong/flawed examples to check the rubric, then implement the approved vertical flow. Do not rerun approval for the accepted answer/scope; actual model/ChatGPT/practitioner results remain pending.
+
+## First scoring round (D68)
+
+Preserve [Helen's submitted scores and observations](../../../evals/V2-HELEN-REVIEW-LOG.md). E1 2 / E2 provisional 0 / E3 1 / E4 and E5 pending are reference-review labels, not live evaluation results. Next deepen the qualitative prior/current evidence and execution implications, then review a dedicated E2 answer. E4/E5 runtime tests follow implementation. Preserve the earlier scored reference and log later revisions separately.
