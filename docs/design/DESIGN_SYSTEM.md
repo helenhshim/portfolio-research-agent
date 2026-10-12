@@ -248,7 +248,7 @@ The canvas designs used placeholder content. In `portfolio-research-agent`, the 
 - Terminal states: complete, partial, unresolved, out of scope, failed, stopped. Each gets a one-line `text-meta` status label plus plain-language copy. Failed uses `--down` square plus text. Signal orange is never used for errors.
 - Limitation notice for partial results and excluded claims: hairline panel, 4px radius, `text-secondary`. No warning colors or icons beyond a status square.
 - Claim types must be distinguishable without color: label `Reported`, `Calculated`, `Interpretation`, `Assumption`, `Management outlook` in `text-meta` before or beside the claim.
-- Coverage and basis line (F2): issuer, source dates, cutoff, GAAP operating-margin basis, in `text-meta` near the composer scope line.
+- Coverage and basis (F2, placement revised by D75): issuer, source dates, cutoff and GAAP operating-margin basis remain in the brief/source tabs and calculation details. Do not show the three-line composer scope block or the header “Frozen evidence” badge.
 - Checked example (F11): clearly labeled as saved output with frozen dates.
 - "Reference checks passed" wording only; never imply semantic verification.
 
@@ -280,3 +280,7 @@ Approved by Helen after the pre-code use-case mapping on 2026-10-12. Product sco
 - Source text is verbatim evidence. Original em dashes in SEC quotations remain unchanged to preserve quote fidelity; newly authored interface copy has no em dashes or emoji. This resolves the quote-integrity versus UI-copy conflict.
 - The core does not expose an inferred working-question or detailed claim-kind classification. Display the submitted research question, label synthesis as Interpretation, and identify source excerpts as Reported issuer statements. Do not invent semantic classifications. A small optional `answer_kind` field distinguishes analysis, source-limited, out-of-scope and clarification responses; live provider output requires it. Coverage/clarification replies preserve the previous useful artifact.
 - Top-level financial rows remain at most three; complete cash components are disclosed separately. No sparkline is forced onto a two-quarter comparison. No additional agent, source, export or persistence is introduced.
+
+### Composer · optional scope (D75)
+
+Helen requests removing the repeated composer helper copy and header evidence badge. Composer reuses the existing question input, Text, Button and error state; scope content is optional, and accessibility descriptions reference only rendered scope/error elements. Empty, running, stopped and error behavior remains unchanged. This is a placement override; source provenance remains in the brief and source tabs.

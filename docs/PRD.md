@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.44. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.45. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -605,3 +605,8 @@ Helen asks how to debug failed reference checks. A deterministic wire-request in
 The strengthened provider regression fails on the old request and passes on the corrected one. Validate mocked output against the actual serialized schema, not just the application verifier. Preserve historical failures and separate upstream defects from downstream takeaway removal. Default logs remain content-free; add schema fingerprints, safe request IDs, header/body timing and incomplete reasons. Opt-in `scripts/debug-v2.ts` captures only the fixed public E1 evaluation with a $1 cap; local replay checks source hash and spends no API credits.
 
 One subsequent E1 live validation timed out at the 120-second deadline after one request and no tools, without a completed draft. The schema fix is demonstrated; successful live synthesis and latency are still unproven. No source/model/autonomy expansion, weakened checker, extra automatic retry or release is implied. Full evidence and validation: `docs/checkpoints/V2-REFERENCE-DEBUG-2026-10-12.md`.
+
+
+### Quieter header and composer (D75, 2026-10-12)
+
+At Helen’s request, remove the header “Frozen evidence” label and the three lines beneath the composer (issuer/period/cutoff, frozen source/calculation basis, and public-company privacy reminder). Source dates, cutoff and calculation basis remain inspectable in the brief and source tabs. Keep saved-reference provenance, partial/failure notices, session-loss notice and backend input/privacy checks. This overrides D73’s composer placement without changing research scope or source freshness.

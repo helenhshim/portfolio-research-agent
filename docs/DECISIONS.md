@@ -125,3 +125,5 @@
 
 
 | D74 | 2026-10-12 | Debug reference failures at the serialized API-schema boundary. Fix shared-object enum aliasing with independent JSON expansion; version the schema and validate mocks against the actual wire schema. Add opt-in public-fixture capture/replay and content-free provider timing/version metadata. | Helen asks how to debug the failure. A deterministic test proves the API was forcing metric names into fact/finding reference fields; prompted retries could not resolve a contradictory schema. Preserve the verifier and historical failures. | 75 tests/typecheck/build pass; one $1-capped live E1 attempt times out without a draft; reference-schema defect fixed, live reliability/pilot gates still pending. |
+
+| D75 | 2026-10-12 | Remove the header evidence badge and three composer helper lines; make Composer scope content optional with valid conditional accessibility descriptions. | Helen requests a quieter interface. Keep provenance in the brief/source tabs and existing backend privacy controls. | UI copy/placement updated; scope, models, checks and release gates unchanged. |
