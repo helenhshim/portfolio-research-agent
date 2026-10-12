@@ -48,6 +48,8 @@ Keep the existing model/provider for the initial comparison. Re-evaluate effort 
 
 Proposed optional actions: `read_approved_evidence` for allowlisted full-period evidence/paragraph IDs and `get_checked_metrics` for eligible facts/derived operating margins. Server executes these functions, validates arguments and applies their calculation rules. No arbitrary URLs, shell, web search or arbitrary formulas. Full source context remains accessible, rather than short keyword matches alone.
 
+D71: include a fixed code-owned operating-cash-flow bridge in `get_checked_metrics`, prepared from the existing releases' quarter columns, with signs/units/fiscal headers/lineage and all-row reconciliation. [Offline reference](../../../evals/V2-CASH-BRIDGE-REFERENCE.json) is not runtime data yet. Accounting contributors can be explained; their business causes remain separately bounded. No new source/tool/model round. See [build-ready contracts](BUILD-READY.md).
+
 Current D64/D69 budget: at most one tool round, two tool executions and two provider calls per user turn; this supersedes the earlier three-call proposal. Reuse source context across turns where practical. Preserve a wall-clock deadline and cancellation. Duplicate/no-progress action ends with an explicit limit. No automatic paid repair/retry; no process-local map relied on as durable session storage. Measure overhead before enabling a tool path that a direct answer can handle.
 
 ## Implementation sequence, after approval

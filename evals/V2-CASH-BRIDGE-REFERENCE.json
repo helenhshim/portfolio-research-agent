@@ -1,0 +1,114 @@
+{
+  "kind": "offline_reference_accounting_reconciliation",
+  "prepared_at": "2026-10-12",
+  "packet_sha256": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+  "not_runtime_facts": true,
+  "not_model_or_practitioner_evaluation": true,
+  "unit": "USD millions",
+  "column_selection": "First numeric column: current quarter in each release; not year-to-date or prior-year columns",
+  "current_period_end": "2026-07-26",
+  "prior_period_end": "2026-04-26",
+  "current_total_usd_millions": 24077,
+  "prior_total_usd_millions": 50344,
+  "change_total_usd_millions": -26267,
+  "rows": [
+    {
+      "name": "net_income",
+      "current_paragraph_id": "p156",
+      "prior_paragraph_id": "prior_p151",
+      "current_usd_millions": 59688,
+      "prior_usd_millions": 58321,
+      "change_usd_millions": 1367
+    },
+    {
+      "name": "stock_based_compensation",
+      "current_paragraph_id": "p159",
+      "prior_paragraph_id": "prior_p154",
+      "current_usd_millions": 2027,
+      "prior_usd_millions": 1928,
+      "change_usd_millions": 99
+    },
+    {
+      "name": "depreciation_amortization",
+      "current_paragraph_id": "p160",
+      "prior_paragraph_id": "prior_p156",
+      "current_usd_millions": 1127,
+      "prior_usd_millions": 997,
+      "change_usd_millions": 130
+    },
+    {
+      "name": "deferred_income_taxes",
+      "current_paragraph_id": "p161",
+      "prior_paragraph_id": "prior_p155",
+      "current_usd_millions": -602,
+      "prior_usd_millions": 1584,
+      "change_usd_millions": -2186
+    },
+    {
+      "name": "equity_security_gains_adjustment",
+      "current_paragraph_id": "p162",
+      "prior_paragraph_id": "prior_p157",
+      "current_usd_millions": -7771,
+      "prior_usd_millions": -15936,
+      "change_usd_millions": 8165
+    },
+    {
+      "name": "other_adjustments",
+      "current_paragraph_id": "p163",
+      "prior_paragraph_id": "prior_p158",
+      "current_usd_millions": 315,
+      "prior_usd_millions": -94,
+      "change_usd_millions": 409
+    },
+    {
+      "name": "accounts_receivable_adjustment",
+      "current_paragraph_id": "p165",
+      "prior_paragraph_id": "prior_p160",
+      "current_usd_millions": -22346,
+      "prior_usd_millions": -2243,
+      "change_usd_millions": -20103
+    },
+    {
+      "name": "inventory_adjustment",
+      "current_paragraph_id": "p166",
+      "prior_paragraph_id": "prior_p161",
+      "current_usd_millions": -5784,
+      "prior_usd_millions": -4420,
+      "change_usd_millions": -1364
+    },
+    {
+      "name": "prepaid_other_assets_adjustment",
+      "current_paragraph_id": "p167",
+      "prior_paragraph_id": "prior_p162",
+      "current_usd_millions": -5497,
+      "prior_usd_millions": -983,
+      "change_usd_millions": -4514
+    },
+    {
+      "name": "accounts_payable_adjustment",
+      "current_paragraph_id": "p168",
+      "prior_paragraph_id": "prior_p163",
+      "current_usd_millions": 1915,
+      "prior_usd_millions": 2210,
+      "change_usd_millions": -295
+    },
+    {
+      "name": "accrued_current_liabilities_adjustment",
+      "current_paragraph_id": "p169",
+      "prior_paragraph_id": "prior_p164",
+      "current_usd_millions": 252,
+      "prior_usd_millions": 7763,
+      "change_usd_millions": -7511
+    },
+    {
+      "name": "other_long_term_liabilities_adjustment",
+      "current_paragraph_id": "p170",
+      "prior_paragraph_id": "prior_p165",
+      "current_usd_millions": 753,
+      "prior_usd_millions": 1217,
+      "change_usd_millions": -464
+    }
+  ],
+  "check": "Each quarter sums to its reported operating cash flow; sum of row changes equals quarterly total change. Stored source inspected; not independent source reacquisition.",
+  "interpretation_limit": "Accounting contributions do not establish why receivables or liabilities changed, future collection or durable profitability."
+}

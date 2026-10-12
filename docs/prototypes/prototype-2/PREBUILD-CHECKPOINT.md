@@ -1,6 +1,6 @@
 # V2 pre-build product checkpoint
 
-2026-10-12 · D66–D67 · Worked answer approved; CTA and eval specification clarified. Planning only; Helen explicitly asked for next steps before building. Initial D64 scope is approved. Her “great” response accepts the narrow guided-next-investigation direction from D65; autonomous adjacent research remains deferred. No application implementation or live benchmark is performed here.
+2026-10-12 · D66–D71 · Reference revision 2 and named control cases prepared; ready for approved implementation. Initial D64 scope is approved. Narrow guided-next-investigation direction accepted; autonomous adjacent research remains deferred. No application implementation or live benchmark is performed in this preparation.
 
 ## Purpose and sequence
 
@@ -59,6 +59,8 @@ Use the existing concept to inspect these behaviors; do not add a new design exp
 Latency target stays provisional until matched task trials; document median/range/sample and do not call a tiny sample a p95. Define a finite live-evaluation spend cap before running paid trials; do not read credentials into logs. Reuse existing Preview/access configuration; public paid access is a separate decision. No new external source or publication is implied.
 
 ## What is done versus still needed
+
+**Current D71 outcome:** [Build-ready checkpoint](BUILD-READY.md) supersedes the earlier preparation to-do list below. Revised qualitative references, dedicated E2/checked offline cash bridge, authored calibration anchors and named control fixtures are prepared. Further general scope/architecture approval is not a coding gate. Exact schema/resource/model settings are settled while implementing; actual trials/control passes and Helen's E4/E5 grades are pilot gates, not prerequisites to writing their implementation. Earlier notes below preserve the sequence/history.
 
 Completed here: scope/approval record, task hypothesis, exact frozen packet hash, authored reference answer, five fixture expectations, suggestion/failure rules and proposed gates. Not completed: practitioner task validation, actual V2/ChatGPT trials, model/latency/cost choice for the new contract, or application implementation. Helen approved the worked answer under D67 and requested the next-investigation CTA. The reference now defines the evals explicitly. Next calibrate the scorecard against strong/flawed examples, then implement within the approved scope; actual trials remain pending.
 

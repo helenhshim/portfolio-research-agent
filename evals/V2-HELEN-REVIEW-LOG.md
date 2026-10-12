@@ -29,3 +29,7 @@ Qualitative findings should give the same interpretive clarity as financial find
 Explain terms such as production ramping using source-backed specifics where available. Preserve the difference between company-reported progress, interpretation and evidence still needed. Do not invent shipment volume, deployment completion, production yield, product margin or repeat demand when the source does not establish them. A future watch criterion is not an observed result or a promise that this MVP can obtain new evidence.
 
 Next reference revision should address E1/E3 feedback and include a dedicated E2 example. Keep this scoring entry tied to the earlier answer. Actual E4/E5 workflow grading remains pending implementation/test; the approved source and controller bounds remain unchanged.
+
+## Revision prepared — 2026-10-12, D71 (not a scoring round)
+
+[Reference revision 2](V2-REFERENCE-REVISION-2.md) adds explicit Rubin prior/current execution meaning and future-evidence criteria, plus a dedicated E2 response. Inspection identified cash-flow components already in the releases; the offline accounting bridge reconciles both quarter totals. Business causes remain bounded. New reference and control fixtures are prepared; no revised Helen scores, reviewer agreement or actual V2 results have been recorded. Review 1 above is preserved.

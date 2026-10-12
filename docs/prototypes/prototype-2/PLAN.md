@@ -58,3 +58,7 @@ Follow [architecture/autonomy/control specification](ARCHITECTURE-AND-SAFETY.md)
 ## Simple execution preference (D70)
 
 Use the condensed model/code/user view in the architecture specification: one research model, two deterministic tools, no subagents or mandatory planner/critic/formatter calls. One request when the supplied evidence suffices; two at most when a bounded tool round is needed. This clarifies the existing design without removing safety checks or adding specialists. Evaluate usefulness/omissions and reviewed task time before extending orchestration.
+
+## Ready for approved implementation (D71)
+
+[Build-ready checkpoint](BUILD-READY.md) records completed design preparation and the build order. [Revised references](../../../evals/V2-REFERENCE-REVISION-2.md) deepen qualitative evidence and supply E2; existing cash tables allow an offline reconciled accounting bridge, to be prepared in the code metric tool. [Named control/autonomy fixtures](../../../evals/V2-CONTROL-FIXTURES.v1.json) remain pending actual tests. Original Helen scores are preserved. Next implement generic contracts/facts, bounded server flow, thread/artifact/revisions/Stop, then live product/control/semantic evaluations. No additional broad approval or pre-code requirement for tests that need the implementation.

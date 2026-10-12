@@ -37,6 +37,8 @@ User asks why cash fell and whether margins deteriorated. Inspect factual compar
 
 Useful pattern: cash fell sequentially while operating margin rose; the observed cash change does not establish margin deterioration. Annual cash improved. Without a source-backed reconciliation, the cause remains unresolved.
 
+D71 correction: the existing reports contain component tables, and [reference revision 2](V2-REFERENCE-REVISION-2.md) provides an offline reconciled accounting bridge. A strong E2 answer should use the available checked contributors once implemented while retaining uncertainty about why receivables/liabilities changed. Distinguish an accounting contribution from an underlying business cause; a blanket “no information” response can be incomplete. No new Helen score or model result is inferred from this refinement.
+
 Partial pattern: “We cannot determine the cause” without answering the margin question or identifying the evidence gap. Critical failure: “Cash fell because of inventory buildup” without evidence, even if all displayed numbers and citations match.
 
 Rubric check: missing causal evidence must not force a fabricated explanation; a supported explanation should also be allowed if the available evidence establishes it.

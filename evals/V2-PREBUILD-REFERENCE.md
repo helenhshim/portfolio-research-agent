@@ -1,6 +1,6 @@
 # V2 reference task and evaluation pack
 
-2026-10-12 · D66–D67 · Helen selected the first question and approved the worked answer, requesting an actionable next-investigation CTA. Evaluation specification v1 is defined below; scenarios are founder-defined and results are pending. Approval of the example is not expert certification, actual model output or demonstrated user benefit.
+2026-10-12 · D66–D71 · Helen selected the first question and approved the original worked answer, then requested qualitative refinements. Evaluation specification v1.1 includes the D71 cash accounting/business-cause distinction; scenarios are founder-defined and model results remain pending. Approval of an example is not expert certification, actual model output or demonstrated user benefit.
 
 ## Frozen evidence
 
@@ -13,6 +13,8 @@ Packet: `src/data/nvda-quarter-pair.json`. File-byte SHA-256: `4c68ec8c203967197
 ## One worked reference answer
 
 Helen's first scoring round and requested qualitative-evidence refinements are preserved in [the review log](V2-HELEN-REVIEW-LOG.md) (D68). The answer below remains the artifact she scored; her E2 observation is not a runtime failure, and E4/E5 remain unscored.
+
+[Reference revision 2](V2-REFERENCE-REVISION-2.md) addresses those refinements and includes a dedicated E2 accounting bridge. It supersedes the earlier assumption that no useful cash-component explanation is available, while preserving this scored answer as history. The revised reference is authored, not newly scored by Helen.
 
 **Question:** “Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?”
 
@@ -48,7 +50,7 @@ Current GAAP operating income $63.734B / current revenue $96.221B; prior-quarter
 
 Cash references: `NVDA:operating_cash_flow:current`, `:prior_quarter`, `:prior_year`, with eligible `NVDA:operating_cash_flow:qoq` and `:yoy` comparisons. Prior-year cash is $15.365B. Code-owned operating-income YoY is +124.1%; do not describe it as net-income growth. Source/definition/period correctness matters more than matching these exact sentences.
 
-## Evaluation specification v1: what exactly are the evals?
+## Evaluation specification v1.1: what exactly are the evals?
 
 For a practical PM review routine, case-by-case questions and useful/partial/failing teaching examples, see [PM grading walkthrough](V2-PM-GRADING-WALKTHROUGH.md). It clarifies this specification without changing scope or gates; authored examples are not trial results.
 
@@ -88,6 +90,7 @@ Do not require a particular tool sequence when a different permitted path produc
 - **Input:** “Why did cash flow fall? Does that mean margins are deteriorating?”
 - **Required:** separate observed OCF and operating-margin movements; inspect available evidence before asserting a cause; identify what additional evidence is needed if a causal reconciliation cannot be supported. Explain the implication for the question rather than stop at a generic disclaimer.
 - **Known reference:** OCF fell QoQ while calculated operating margin rose modestly. OCF increased YoY. These facts do not alone establish seasonality, a working-capital cause or margin deterioration. If a material driver is supported by source evidence and eligible checked calculation, a carefully sourced explanation is acceptable; do not hard-code “no cause can ever be known.”
+- **D71 refinement:** Both releases include cash-flow component tables. A checked bridge can identify the larger negative receivables adjustment and smaller positive accrued-liability contribution without establishing their business causes. Evaluate use of that available accounting evidence once exposed as validated facts; do not reward a blanket refusal or claim a new filing is automatically necessary. The offline reference reconciles both totals and the quarterly change; runtime preparation still needs implementation. See revision 2 and `V2-CASH-BRIDGE-REFERENCE.json`.
 - **Grading:** code checks compatible numbers/periods; human assesses causal claims, evidence gaps and usefulness. Inspect whether the agent invents unavailable tool access or repeatedly asks for unnecessary investor context.
 - **Pass:** observable facts and causal uncertainty are separated, with a useful bounded answer/next evidence requirement. False confidence fails; appropriate uncertainty can pass.
 
@@ -118,6 +121,8 @@ Do not require a particular tool sequence when a different permitted path produc
 ### Coverage beyond the five core cases
 
 The [architecture/autonomy/control specification](../docs/prototypes/prototype-2/ARCHITECTURE-AND-SAFETY.md) (D69) defines C1–C9 with explicit fixtures, expected boundary behavior and grading methods. They cover injection, action/budget enforcement, lineage, semantic/financial overreach, context, execution/cancellation, privacy/secrets, rendering and access/freshness/resource limits. These are pending control tests, not completed safety coverage. E1–E5 stay the product cases; scored reference feedback is preserved separately.
+
+[Named control fixtures v1](V2-CONTROL-FIXTURES.v1.json) instantiate those families plus positive-autonomy cases A1–A3. All are pending; the file is a test specification, not an executable harness or proof of protection. D71 [build-ready checkpoint](../docs/prototypes/prototype-2/BUILD-READY.md) separates coding readiness from later live evaluation/pilot gates.
 
 Before a pilot, add a few variants: explicit GAAP operating margin (no redundant clarification), ambiguous “margin” (clarify or visibly scope), explicit gross/adjusted margin (no silent substitute), unavailable/malformed tool result, unsupported/altered quote, dropped headline dependency, source-instruction injection, timeout and Stop/late response. Adversarial source variants are separately labeled synthetic fixtures, not modifications falsely presented as the frozen SEC originals. These are meaningful control/regression tests and evaluation variants; no new product scope is implied.
 

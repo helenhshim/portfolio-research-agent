@@ -4,6 +4,8 @@
 
 ## Immediate sequence
 
+D71 preparation completed steps 1–2 as specifications: [revised references](../../../evals/V2-REFERENCE-REVISION-2.md), [named pending control fixtures](../../../evals/V2-CONTROL-FIXTURES.v1.json), authored calibration anchors and [build contract](BUILD-READY.md). Reviewer agreement and runtime behavior remain unmeasured. Current next step is the approved vertical-flow implementation. The metric tool will include a fixed cash accounting bridge from existing reports, with code lineage/reconciliation; no new source or subagent.
+
 1. Revise the qualitative worked reference as requested in D68, preserving the scored original; prepare a dedicated E2 cash/margin response. Record the new reference version and subsequent grades.
 2. Freeze the E1–E5 product cases plus the explicit C1–C9 control cases below. Calibrate a few good/partial/misleading authored examples; do not keep polishing every hypothetical until perfect.
 3. Implement one vertical path: open question → bounded evidence/metric actions → checked answer/artifact → user-selected follow-up → revised artifact. Reuse the established Next.js/Vercel/provider stack. Inspect local Next.js guides before implementation.
