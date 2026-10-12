@@ -2,11 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createV2Handler} from '../src/lib/v2-http.ts';
-import {createV2Provider,V2SpendLedger} from '../src/lib/v2-provider.ts';
+import {createV2Provider,V2SpendLedger,type V2Trace} from '../src/lib/v2-provider.ts';
 import {runV2ControlledTurn} from '../src/lib/v2-controller.ts';
 import {plainArtifactText} from '../src/lib/v2-display.ts';
 import {verifyV2Draft} from '../src/lib/v2-verifier.ts';
 import {createV2Toolbox} from '../src/lib/v2-safety.ts';
+import {Ajv} from 'ajv';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
 const identity={session_id:'session-one',turn_id:'turn-one',revision:1};
 const envelope={question:'Does operating profitability look durable?',history:[],identity};
@@ -53,10 +54,21 @@ test('HTTP concurrency cap rejects overlap and releases its slot after completio
  const third=await handler(request());assert.equal(third.status,200);resolve({kind:'answer',draft:draft()});await events(third);
 });
 test('Responses adapter carries exact tool call IDs into synthesis and requires outcome classification',async()=>{
- const bodies:any[]=[];const provider=createV2Provider('fake-test-credential',{fetch:async(_url,init)=>{
-  bodies.push(JSON.parse(String(init?.body)));return Response.json({status:'completed',usage:{input_tokens:100,output_tokens:100},output:bodies.length===1?[{type:'function_call',call_id:'call-real-id',name:'read_approved_evidence',arguments:JSON.stringify({period:'prior',paragraph_ids:null})}]:[{type:'message',content:[{type:'output_text',text:JSON.stringify(draft())}]}]});
- },ledger:new V2SpendLedger(3)});
+ const bodies:any[]=[],traces:V2Trace[]=[];const provider=createV2Provider('fake-test-credential',{fetch:async(_url,init)=>{
+  bodies.push(JSON.parse(String(init?.body)));return Response.json({status:'completed',usage:{input_tokens:100,output_tokens:100},output:bodies.length===1?[{type:'function_call',call_id:'call-real-id',name:'read_approved_evidence',arguments:JSON.stringify({period:'prior',paragraph_ids:null})}]:[{type:'message',content:[{type:'output_text',text:JSON.stringify(draft())}]}]},{headers:{'x-request-id':'req_public_fixture'}});
+ },ledger:new V2SpendLedger(3),onTrace:trace=>traces.push(trace)});
  const result=await runV2ControlledTurn({question:envelope.question},packet,provider);assert.equal(result.status,'complete');assert.equal(bodies.length,2);assert.equal(bodies[0].store,false);assert.ok(bodies[0].text.format.schema.required.includes('answer_kind'));assert.equal(bodies[1].tool_choice,'none');assert.equal(bodies[1].input.at(-1).call_id,'call-real-id');assert.match(bodies[1].input.at(-1).output,/prior_p45/);
+ const schema=bodies[0].text.format.schema,ids=['finding_1','finding_2','finding_3'];
+ assert.deepEqual(schema.properties.takeaway.properties.finding_ids.items.enum,ids);
+ assert.deepEqual(schema.properties.financial_rows.items.properties.finding_ids.items.enum,ids);
+ assert.deepEqual(schema.properties.next_investigation.anyOf[1].properties.finding_ids.items.enum,ids);
+ assert.ok(schema.properties.findings.items.properties.fact_ids.items.enum.includes('NVDA:operating_margin:current'));
+ assert.ok(!schema.properties.findings.items.properties.fact_ids.items.enum.includes('operating_margin'));
+ assert.ok(schema.properties.next_investigation.anyOf[1].properties.metric_ids.items.enum.includes('operating_margin'));
+ const validates=new Ajv({strict:false}).compile(schema);
+ assert.equal(validates(draft()),true,JSON.stringify(validates.errors));
+ assert.equal(traces[0].schema_version,'v2-brief-schema-2');assert.match(traces[0].schema_hash,/^[a-f0-9]{64}$/);
+ assert.equal(traces[0].request_id,'req_public_fixture');assert.equal(traces[0].http_status,200);assert.equal(typeof traces[0].response_received_ms,'number');assert.equal(typeof traces[0].body_read_ms,'number');
 });
 test('Responses adapter rejects exhausted spend budget before fetch',async()=>{
  let calls=0;const provider=createV2Provider('fake-test-credential',{ledger:new V2SpendLedger(0),fetch:async()=>{calls++;throw Error('must not call');}});

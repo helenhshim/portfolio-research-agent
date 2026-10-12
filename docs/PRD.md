@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.43. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.44. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -596,3 +596,12 @@ Reuse frozen SEC data and the existing V2 controller/financial/verifier/revision
 Wire a V2 NDJSON route, bounded direct-provider adapter, real stage reporting and Stop/retry. Add optional answer-kind classification to distinguish coverage/clarification responses from a useful analysis; the strict live-provider schema requires it. Coverage/clarification and failed/stopped attempts preserve the last useful brief. The submitted question is visible; a separately inferred working-question contract remains unimplemented. Synthesis is labeled Interpretation and exact issuer excerpts Reported, without invented semantic claim labels.
 
 Local/protected-preview calls use the existing Sol model at low effort, one optional tool round/two tools/two provider requests, 8,192 output-token ceiling and 120-second turn deadline. The route has a 150-second ceiling, one concurrent run per instance and a $1 per-instance ledger (reduced from the original $3 development cap) with conservative reservations. These are local controls, not a deployment-wide spend/rate cap. Production live calls remain disabled; no new deployment or public-access expansion. Actual model/browser/semantic results must be recorded separately from scripted tests before a pilot release.
+
+
+### Reference-schema defect and debugging discipline (D74, 2026-10-12)
+
+Helen asks how to debug failed reference checks. A deterministic wire-request inspection found shared schema object identities: `structuredClone` preserved aliases between fact-ID, finding-ID and metric-ID arrays, so path-specific enum assignments overwrote one another. The live API constrained all these arrays to incompatible metric names while the verifier expected actual fact/finding IDs. Expand to an independent JSON tree before assigning enums; retain all existing verification, source, number, quote and budget rules. Schema version is `v2-brief-schema-2`; model, prompt, effort and full evidence scope remain unchanged.
+
+The strengthened provider regression fails on the old request and passes on the corrected one. Validate mocked output against the actual serialized schema, not just the application verifier. Preserve historical failures and separate upstream defects from downstream takeaway removal. Default logs remain content-free; add schema fingerprints, safe request IDs, header/body timing and incomplete reasons. Opt-in `scripts/debug-v2.ts` captures only the fixed public E1 evaluation with a $1 cap; local replay checks source hash and spends no API credits.
+
+One subsequent E1 live validation timed out at the 120-second deadline after one request and no tools, without a completed draft. The schema fix is demonstrated; successful live synthesis and latency are still unproven. No source/model/autonomy expansion, weakened checker, extra automatic retry or release is implied. Full evidence and validation: `docs/checkpoints/V2-REFERENCE-DEBUG-2026-10-12.md`.
