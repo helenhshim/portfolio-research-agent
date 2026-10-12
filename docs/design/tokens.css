@@ -1,0 +1,94 @@
+/* A3 design tokens · v1.0 MVP · light mode only */
+/* Fonts: load Geist + Geist Mono locally (public/fonts) or via next/font, as the repo bundles fonts with license notices. */
+
+:root {
+  /* Color */
+  --bg: #FFFFFF;
+  --surface: #F7F7F6;
+  --surface-hover: #EFEFED;
+  --border: #EAEAE8;
+  --border-strong: #D4D4D1;
+  --ink: #111111;
+  --ink-2: #5C5C5C;
+  --ink-3: #767676;
+  --accent: #2F5BEA;   /* citations, source links, focus ring */
+  --signal: #E8590C;   /* marks only, never text: logo, caret, live step, one key value */
+  --up: #0F7B3F;
+  --down: #C8341F;
+  --mark: #FFF1B8;     /* highlighted cited passage */
+
+  /* Type */
+  --font-sans: var(--geist-sans, 'Geist'), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--geist-mono, 'Geist Mono'), ui-monospace, monospace;
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 48px;
+
+  /* Radius */
+  --radius-0: 0;     /* status squares, logo mark */
+  --radius-cite: 1px;
+  --radius: 2px;     /* default: buttons, inputs, chips, composer, rail items */
+  --radius-panel: 4px;
+
+  /* Lines */
+  --hairline: 1px solid var(--border);
+  --ink-rule: 1px solid var(--ink);
+  --signal-underline: inset 0 -2px 0 var(--signal);
+
+  /* Layout */
+  --header-h: 44px;
+  --rail-w: 220px;
+  --pane-min-w: 360px;
+  --answer-max-w: 680px;
+  --control-h: 28px;
+  --chip-h: 22px;
+
+  /* Approved implementation additions, D73: A3 geometry and accessible controls. */
+  --workspace-min-w: 560px;
+  --hit-area: 44px;
+  --status-size: 6px;
+  --logo-size: 10px;
+  --caret-w: 2px;
+  --caret-h: 16px;
+  --tab-h: 40px;
+  --stroke: 1px;
+  --focus-w: 2px;
+  --focus-offset: 2px;
+  --cite-pad: 3px;
+  --spark-inline-w: 36px;
+  --spark-inline-h: 10px;
+  --spark-table-w: 96px;
+  --spark-table-h: 20px;
+  --spark-stroke: 1.25;
+  --spark-mark: 4px;
+  --pulse-dur: 1s;
+  --sr-size: 1px;
+  --sr-offset: -1px;
+  --opacity-disabled: .5;
+  --opacity-pulse: .35;
+  --opacity-primary-hover: .85;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 120ms;
+}
+
+/* Type tokens */
+.text-display   { font: 500 22px/28px var(--font-sans); letter-spacing: -0.02em; color: var(--ink); }
+.text-title     { font: 500 15px/20px var(--font-sans); letter-spacing: -0.01em; color: var(--ink); }
+.text-strong    { font: 500 13px/18px var(--font-sans); color: var(--ink); }
+.text-body      { font: 400 13px/18px var(--font-sans); color: var(--ink); }
+.text-secondary { font: 400 12px/16px var(--font-sans); color: var(--ink-2); }
+.text-data      { font: 400 12px/16px var(--font-mono); font-variant-numeric: tabular-nums; }
+.text-meta      { font: 400 11px/16px var(--font-mono); color: var(--ink-3); }
+.text-cite      { font: 400 10px/14px var(--font-mono); color: var(--accent); border: var(--stroke) solid var(--accent); border-radius: var(--radius-cite); padding: 0 var(--cite-pad); }
+
+html, body { background: var(--bg); color: var(--ink); font: 400 13px/18px var(--font-sans); -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: var(--focus-w) solid var(--accent); outline-offset: var(--focus-offset); border-radius: 0; }

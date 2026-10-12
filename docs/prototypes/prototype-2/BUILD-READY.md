@@ -44,3 +44,10 @@ Control pass/fail results, actual E1–E5 outputs, E4 contextual action/revision
 5. Deploy a separate protected preview only after product/control/semantic gates; compare useful reviewed task completion with a strong baseline. Unrun or failing critical controls prevent pilot release, not starting their implementation.
 
 No further general scope/architecture approval is needed before coding within this agreed design. Reference revision 2 can be reviewed/iterated during implementation; it is not a new approval gate.
+
+
+## D73 implementation update
+
+A3 is implemented at `/v2` with all three layouts, the reusable kit, actual frozen facts, saved-reference disclosure, source tabs, cash-bridge/margin detail and same-session Stop/recovery. V1 stays at `/` with a separate root layout. Provider/HTTP integration now exists; D72’s “no hookup” status above is historical. A small outcome classification preserves the current brief on outside-coverage/clarification replies. The submitted question is shown; a separately inferred working-question field is still absent.
+
+See [A3 implementation and trial record](../../checkpoints/A3-FRONTEND-2026-10-12.md) for actual browser/tests/model failures. Scripted tests and the saved authored reference do not establish live answer reliability. Keep the protected-pilot gate closed until E1–E5/control/semantic evaluation passes; no deployment or release tag in D73.

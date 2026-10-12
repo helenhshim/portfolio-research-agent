@@ -17,23 +17,26 @@ function controlledWait<T>(work:(signal:AbortSignal)=>Promise<T>,budget:V2RunBud
   },error=>finish(error));
  });
 }
-export async function runV2ControlledTurn(input:unknown,packet:any,provider:V2Provider,options:{signal?:AbortSignal;deadlineMs?:number}={}){
+export async function runV2ControlledTurn(input:unknown,packet:any,provider:V2Provider,options:{signal?:AbortSignal;deadlineMs?:number;onStage?:(stage:string)=>void}={}){
  const budget=new V2RunBudget(options);
  try{
-  const request=validateV2Request(input);budget.assertActive();const toolbox=createV2Toolbox(packet);
+  const request=validateV2Request(input);budget.assertActive();options.onStage?.('preparing');const toolbox=createV2Toolbox(packet);
   let toolResults:unknown[]=[];
   for(let attempt=0;attempt<2;attempt++){
    budget.reserveProvider();
+   options.onStage?.('researching');
    const result:any=await controlledWait(signal=>provider({request:structuredClone(request),source_context:toolbox.sourceContext(),tool_results:structuredClone(toolResults),schema:structuredClone(v2DraftSchema)},signal),budget,options.signal);
    budget.assertActive();exactKeys(result,['kind','draft','calls']);
    if(result.kind==='answer'){
     if(!Object.hasOwn(result,'draft')||Object.hasOwn(result,'calls'))throw new V2PolicyError('invalid_provider_result');
-    const output=verifyV2Draft(result.draft,toolbox);return {status:output.status,output,counts:budget.counts};
+    options.onStage?.('checking');
+    const output=verifyV2Draft(result.draft,toolbox);
+    return {status:output.status,output:{...output,facts:[...toolbox.facts.values()],sources:toolbox.sourceContext().sources,source_cutoff:packet.source_cutoff},counts:budget.counts};
    }
    if(result.kind!=='tools'||Object.hasOwn(result,'draft')||!Object.hasOwn(result,'calls'))throw new V2PolicyError('invalid_provider_result');
    // A final model request cannot start another tool round or hidden third request.
    if(attempt===1)throw new V2PolicyError('tool_limit');
-   toolResults=toolbox.executeRound(result.calls as V2ToolCall[],budget);
+   options.onStage?.('investigating');toolResults=toolbox.executeRound(result.calls as V2ToolCall[],budget);
   }
   throw new V2PolicyError('provider_limit');
  }catch(error){

@@ -1,0 +1,132 @@
+/* A3 uses only the token file for visual values. No legacy styles enter this root layout. */
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body { margin: 0; }
+button, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: var(--opacity-disabled); }
+p, h1, h2, h3, blockquote { margin: 0; }
+a { color: var(--ink); }
+hr { margin: 0; border: 0; }
+ul { padding: 0; margin: 0; list-style: none; }
+.text-data { color: var(--ink); }
+.a3-app { min-height: 100dvh; display: flex; flex-direction: column; }
+.a3-header { min-height: var(--header-h); padding: 0 var(--space-5); border-bottom: var(--hairline); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+.a3-brand, .a3-header-actions, .a3-step-summary, .a3-steps li { display: flex; align-items: center; gap: var(--space-2); }
+.a3-logo { width: var(--logo-size); height: var(--logo-size); background: var(--signal); flex-shrink: 0; }
+.a3-button { position: relative; isolation: isolate; border: 0; background: transparent; min-height: var(--hit-area); padding: var(--space-2) var(--space-3); max-width: 100%; }
+.a3-button::before { content: ''; position: absolute; z-index: -1; inset: var(--space-2) 0; border-radius: var(--radius); transition: background var(--dur) var(--ease); }
+.a3-button-primary { color: var(--bg); }
+.a3-button-primary::before { background: var(--ink); }
+.a3-button-primary:hover::before { opacity: var(--opacity-primary-hover); }
+.a3-button-outline::before { border: var(--ink-rule); }
+.a3-button-quiet { color: var(--ink-2); }
+.a3-button-quiet::before { border: var(--hairline); }
+.a3-button-quiet:hover::before, .a3-button-outline:hover::before, .a3-button-icon:hover::before { background: var(--surface-hover); }
+.a3-button-link { color: var(--ink-2); text-decoration: underline; padding-inline: 0; }
+.a3-button-icon { width: var(--hit-area); color: var(--ink-2); }
+.a3-chip { border: var(--hairline); border-radius: var(--radius); padding: 0 var(--space-2); min-height: var(--chip-h); display: inline-flex; align-items: center; gap: var(--space-1); }
+.a3-square { width: var(--status-size); height: var(--status-size); display: inline-block; flex-shrink: 0; background: var(--ink-3); }
+.a3-square-live { background: var(--signal); animation: a3-pulse var(--pulse-dur) var(--ease) infinite; }
+.a3-square-done { background: var(--up); }
+.a3-square-failed { background: var(--down); }
+@keyframes a3-pulse { 50% { opacity: var(--opacity-pulse); } }
+.a3-rule { border-top: var(--hairline); }
+.a3-rule-ink { border-top: var(--ink-rule); }
+.a3-thread-layout { width: 100%; max-width: var(--answer-max-w); margin-inline: auto; padding: var(--space-7) var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-6); flex: 1; }
+.a3-empty { padding-block: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); }
+.a3-empty .text-display { max-width: var(--workspace-min-w); text-wrap: balance; }
+.a3-empty .text-secondary { max-width: var(--workspace-min-w); }
+.a3-examples { display: flex; flex-direction: column; align-items: start; margin-top: var(--space-4); }
+.a3-examples button { text-align: left; }
+.a3-composer-wrap { margin-top: auto; padding-top: var(--space-4); }
+.a3-composer { display: flex; align-items: start; gap: var(--space-2); border: var(--ink-rule); border-radius: var(--radius); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); }
+.a3-composer-q { padding-top: var(--space-2); }
+.a3-caret { display: none; width: var(--caret-w); height: var(--caret-h); margin-top: var(--space-2); background: var(--signal); flex-shrink: 0; }
+.a3-composer:focus-within .a3-caret { display: block; }
+.a3-composer textarea { background: transparent; border: 0; border-radius: var(--radius); resize: vertical; flex: 1; min-width: 0; padding: var(--space-2) var(--space-1); field-sizing: content; max-height: 8lh; min-height: var(--hit-area); }
+.a3-composer textarea::placeholder { color: var(--ink-2); }
+.a3-composer .a3-button { margin-top: 0; flex-shrink: 0; }
+.a3-scope { margin-top: var(--space-2); overflow-wrap: anywhere; }
+.a3-qa { display: flex; flex-direction: column; gap: var(--space-6); scroll-margin-top: var(--space-5); }
+.a3-q, .a3-a { display: grid; grid-template-columns: var(--space-6) minmax(0,1fr); gap: var(--space-2); }
+.a3-q { padding-bottom: var(--space-3); border-bottom: var(--hairline); }
+.a3-answer-content, .a3-brief, .a3-findings { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.a3-answer-content p { overflow-wrap: anywhere; }
+.a3-step-log { color: var(--ink-3); }
+.a3-step-summary { flex-wrap: wrap; }
+.a3-steps { display: flex; flex-direction: column; gap: var(--space-2); margin-block: var(--space-2); }
+.a3-workspace-layout { display: flex; flex: 1; min-height: 0; }
+.a3-thread-pane { flex: 1 1 var(--pane-min-w); min-width: 0; padding: var(--space-5) var(--space-4) var(--space-4); border-right: var(--hairline); display: flex; flex-direction: column; gap: var(--space-6); }
+.a3-brief-pane { flex: 999 1 var(--workspace-min-w); min-width: 0; }
+.a3-brief-panel { padding: var(--space-6); max-width: calc(var(--answer-max-w) + var(--space-8)); margin-inline: auto; }
+.a3-brief-header { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-4); border-bottom: var(--ink-rule); }
+.a3-takeaway { display: flex; flex-direction: column; gap: var(--space-2); }
+.a3-findings article { padding-block: var(--space-3); border-top: var(--hairline); display: flex; flex-direction: column; gap: var(--space-2); }
+.a3-evidence-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.a3-citation { min-width: var(--hit-area); min-height: var(--hit-area); display: inline-flex; justify-content: center; align-items: center; background: transparent; border: 0; position: relative; text-decoration: none; }
+.a3-citation::before { content: ''; position: absolute; inset: var(--space-3); border: var(--stroke) solid var(--accent); border-radius: var(--radius-cite); }
+.a3-source-list { display: flex; flex-direction: column; }
+.a3-source-list > div { display: flex; align-items: center; }
+.a3-source-button { border: 0; background: none; padding: var(--space-2) 0; min-height: var(--hit-area); text-align: left; color: var(--accent); }
+.a3-source-link { color: var(--accent); }
+.a3-table-scroll { max-width: 100%; overflow-x: auto; }
+.a3-table { width: 100%; min-width: var(--workspace-min-w); border-collapse: collapse; border-top: var(--ink-rule); table-layout: fixed; }
+.a3-table thead th { color: var(--ink-3); text-align: left; }
+.a3-table th, .a3-table td { padding: var(--space-2) var(--space-3) var(--space-2) 0; vertical-align: top; border-bottom: var(--hairline); overflow-wrap: anywhere; }
+.a3-table th { font-weight: 400; }
+.a3-table tbody th { text-align: left; }
+.a3-table th:first-child { width: 26%; }
+.a3-table th:nth-child(2) { width: 32%; text-align: right; }
+.a3-table td:nth-child(2) { text-align: right; }
+.a3-table td:last-child { padding-right: 0; }
+.a3-comparison { color: var(--ink-2); }
+.a3-positive { color: var(--up); }
+.a3-negative { color: var(--down); }
+.a3-key-fact { box-shadow: var(--signal-underline); padding-bottom: var(--space-1); }
+.a3-tabs { display: flex; align-items: stretch; gap: var(--space-5); min-height: var(--tab-h); border-bottom: var(--hairline); padding-inline: var(--space-6); overflow-x: auto; }
+.a3-tab { border: 0; border-bottom: var(--focus-w) solid transparent; border-radius: 0; background: transparent; color: var(--ink-2); min-height: var(--hit-area); padding: var(--space-2) 0; white-space: nowrap; display: flex; align-items: center; gap: var(--space-2); }
+.a3-tab-active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+.a3-passage { border: var(--hairline); border-radius: var(--radius-panel); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); scroll-margin-top: var(--space-5); }
+.a3-passage header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2); }
+.a3-passage blockquote { overflow-wrap: anywhere; }
+.a3-passage mark { background: var(--mark); color: var(--ink); }
+.a3-passage mark .text-data { color: inherit; }
+.a3-detail summary { min-height: var(--hit-area); cursor: pointer; display: list-item; padding-block: var(--space-3); }
+.a3-detail { border-top: var(--hairline); }
+.a3-detail-content { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-4); }
+.a3-limit { border: var(--hairline); border-radius: var(--radius-panel); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
+.a3-limit-status { display: flex; align-items: center; gap: var(--space-2); }
+.a3-unanswered { display: flex; flex-direction: column; gap: var(--space-3); padding-block: var(--space-3); border-top: var(--hairline); }
+.a3-next { padding-top: var(--space-4); border-top: var(--hairline); display: flex; flex-direction: column; align-items: start; gap: var(--space-2); }
+.a3-command-layout { display: flex; flex: 1; }
+.a3-rail { flex: 0 0 var(--rail-w); min-width: 0; border-right: var(--hairline); padding: var(--space-3) var(--space-2); display: flex; flex-direction: column; gap: var(--space-5); }
+.a3-command-main { flex: 1; min-width: 0; display: flex; }
+.a3-rail-item { width: 100%; min-height: var(--hit-area); border: 0; border-radius: var(--radius); background: transparent; text-align: left; padding: var(--space-2); overflow-wrap: anywhere; }
+.a3-rail-item:hover { background: var(--surface); }
+.a3-rail-active { background: var(--surface); color: var(--ink); font-weight: 500; }
+.a3-coverage-row { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-2); }
+.a3-mobile-switch { display: none; }
+.a3-footer { padding: var(--space-3) var(--space-5); border-top: var(--hairline); display: flex; gap: var(--space-4); justify-content: space-between; flex-wrap: wrap; }
+.a3-command-hints { display: flex; gap: var(--space-4); }
+.a3-spark { width: var(--spark-inline-w); height: var(--spark-inline-h); overflow: visible; }
+.a3-spark-table { width: var(--spark-table-w); height: var(--spark-table-h); }
+.a3-spark polyline { stroke: var(--ink-2); stroke-width: var(--spark-stroke); fill: none; }
+.a3-spark-mark { width: var(--spark-mark); height: var(--spark-mark); fill: var(--signal); }
+.a3-sr { position: absolute; width: var(--sr-size); height: var(--sr-size); margin: var(--sr-offset); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+/* DESIGN-DECISION: Responsive threshold is calculated from token widths via ResizeObserver;
+   CSS variables cannot be used in media-query conditions. No second breakpoint source. */
+.a3-app[data-narrow='true'] .a3-mobile-switch { display: block; }
+.a3-app[data-narrow='false'] .a3-thread-pane { position: sticky; top: 0; align-self: flex-start; height: calc(100dvh - var(--header-h)); overflow-y: auto; }
+.a3-app[data-narrow='true'] .a3-mobile-thread .a3-brief-pane, .a3-app[data-narrow='true'] .a3-mobile-brief .a3-thread-pane { display: none; }
+.a3-app[data-narrow='true'] .a3-thread-pane { border-right: 0; }
+.a3-app[data-narrow='true'] .a3-brief-panel { padding: var(--space-4); }
+.a3-app[data-narrow='true'] .a3-command-layout { flex-direction: column; }
+.a3-app[data-narrow='true'] .a3-rail { flex-basis: auto; border-right: 0; border-bottom: var(--hairline); }
+.a3-app[data-narrow='true'] .a3-header { padding-inline: var(--space-4); }
+.a3-app[data-narrow='true'] .a3-header-actions { width: 100%; justify-content: space-between; }
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+.a3-table-bridge th:not(:first-child), .a3-table-bridge td { text-align: right; }
+.a3-table-bridge th:nth-child(2) { width: auto; }
+.a3-table-bridge th:first-child { width: 34%; }
