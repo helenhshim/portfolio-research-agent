@@ -22,3 +22,7 @@ Updated: 2026-10-12 · D61 supersedes the advisor-first D60 starting plan. Direc
 5. Deploy a separate protected Preview only after the agreed gate; record source/model/prompt/schema/config, tag `prototype-2` and save learnings. P1 adds richer execution visibility, progressive checked artifact patches and selective clarification.
 
 Existing [reliability/latency candidate](../../../evals/BRIEF-RELIABILITY-LATENCY-2026-10-12.md) remains reusable experimental work. It is neither a new released prototype nor the final open-question architecture.
+
+## Concept preview (D62)
+
+[Interactive concept notes](UI-CONCEPT.md) record the hypothetical thread/artifact layouts and scripted journey. Helen can review the flow before implementation. No layout choice or scope approval is inferred from requesting the preview.
