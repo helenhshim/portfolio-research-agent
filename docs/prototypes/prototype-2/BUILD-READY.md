@@ -2,6 +2,8 @@
 
 2026-10-12 · D71 · Design preparation complete enough to begin the approved vertical-flow implementation. This is build readiness, not tested pilot readiness. No runtime changes, paid model trials or deployment in this checkpoint.
 
+D72 progress: reusable V2 financial/controller/safety/verifier/revision modules and 31 scripted-provider unit tests now exist. [Coverage record](../../../evals/V2-SAFETY-RESULTS-2026-10-12.md) reports core passes and remaining integration/semantic gates. No actual provider/route/UI hookup or live call yet; earlier D71 preparation notes below are historical.
+
 ## What is settled before coding
 
 - One task: NVIDIA operating-profitability/thesis pressure test over the existing frozen SEC reports; public-company free-text only, active-session context, protected preview.

@@ -2,8 +2,9 @@
   "version": "1.0",
   "defined_at": "2026-10-12",
   "decision": "D71",
-  "purpose": "Named control fixtures to implement against V2; no harness or executed results are implied.",
-  "status": "all_pending",
+  "purpose": "Named control fixture definitions; execution results and coverage scope are tracked separately.",
+  "status": "results_tracked_separately",
+  "results_record": "V2-SAFETY-RESULTS-2026-10-12.md",
   "source_packet_sha256": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
   "policy": "Synthetic source variants are separately labeled. Retain observed results for every fixture; critical failures cannot be averaged away. Human semantic review is separate from code checks.",
   "fixtures": [

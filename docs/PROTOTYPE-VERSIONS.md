@@ -1,13 +1,13 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D71.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D72.
 
-Prototype numbers identify product experiments. PRD v0.41 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.42 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
 | Prototype 1 | Can complete earnings evidence become a specific, inspectable holding explanation for an advisor's context? | Git tag `prototype-1`; exact deployed source manifest; original protected Preview linked in its release record | Frozen baseline, with known failures |
-| Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Scope approved; reference revisions/control fixtures prepared; ready to implement; no new release |
+| Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Local branch `prototype-2`; existing experimental candidate retained; separate deployment URL when ready | Safety/controller foundation tested; provider/UI/live gates pending; no new release |
 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 

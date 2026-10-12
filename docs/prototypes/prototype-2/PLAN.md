@@ -62,3 +62,7 @@ Use the condensed model/code/user view in the architecture specification: one re
 ## Ready for approved implementation (D71)
 
 [Build-ready checkpoint](BUILD-READY.md) records completed design preparation and the build order. [Revised references](../../../evals/V2-REFERENCE-REVISION-2.md) deepen qualitative evidence and supply E2; existing cash tables allow an offline reconciled accounting bridge, to be prepared in the code metric tool. [Named control/autonomy fixtures](../../../evals/V2-CONTROL-FIXTURES.v1.json) remain pending actual tests. Original Helen scores are preserved. Next implement generic contracts/facts, bounded server flow, thread/artifact/revisions/Stop, then live product/control/semantic evaluations. No additional broad approval or pre-code requirement for tests that need the implementation.
+
+## Safety foundation tested first (D72)
+
+[Safety result record](../../../evals/V2-SAFETY-RESULTS-2026-10-12.md): V2 code-owned facts, request/tool/budget/controller/verifier and session revision primitives tested using scripted providers. 31 new test functions; 64 repository tests and typecheck pass. This is core coverage, not deployed/integrated safety or real model quality. Next connect actual provider and generic artifact/context UI, then exercise pending browser/deployment/injection/semantic gates. No extra approval loop or critic agent is introduced.

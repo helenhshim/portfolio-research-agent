@@ -4,6 +4,8 @@
 
 ## Immediate sequence
 
+D72 implementation progress: core controller/tool/budget/financial/verifier/revision functions now pass local scripted-provider tests. [Results and pending gates](../../../evals/V2-SAFETY-RESULTS-2026-10-12.md) explicitly separate code coverage from model/browser/deployment evidence. Actual provider/UI/route integration is still next; neither diagram nor passing unit tests certify the complete app.
+
 D71 preparation completed steps 1–2 as specifications: [revised references](../../../evals/V2-REFERENCE-REVISION-2.md), [named pending control fixtures](../../../evals/V2-CONTROL-FIXTURES.v1.json), authored calibration anchors and [build contract](BUILD-READY.md). Reviewer agreement and runtime behavior remain unmeasured. Current next step is the approved vertical-flow implementation. The metric tool will include a fixed cash accounting bridge from existing reports, with code lineage/reconciliation; no new source or subagent.
 
 1. Revise the qualitative worked reference as requested in D68, preserving the scored original; prepare a dedicated E2 cash/margin response. Record the new reference version and subsequent grades.
