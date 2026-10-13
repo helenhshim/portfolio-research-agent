@@ -55,7 +55,10 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-answer-content p { overflow-wrap: anywhere; }
 .a3-step-log { color: var(--ink-3); }
 .a3-step-summary { flex-wrap: wrap; }
+.a3-step-duration { white-space: nowrap; }
+.a3-step-actions { display: flex; flex-direction: column; align-items: flex-start; }
 .a3-steps { display: flex; flex-direction: column; gap: var(--space-2); margin-block: var(--space-2); }
+.a3-steps[hidden] { display: none; }
 .a3-workspace-layout { display: flex; flex: 1; min-height: 0; }
 .a3-research-layout { display: flex; flex: 1; min-width: 0; }
 .a3-inspection-toolbar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-6); border-bottom: var(--hairline); }

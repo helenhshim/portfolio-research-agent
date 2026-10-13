@@ -304,3 +304,12 @@ Helen requests removing the repeated composer helper copy and header evidence ba
 - **Overrides:** the original successful-turn transition to 06b and mandatory mobile Thread/Brief switch are superseded. The thread stays the primary surface. Internal Brief/source tabs appear only after explicit inspection. The optional pane is bound to the chosen turn and does not follow incoming completions.
 - **Signal/accessibility:** only the most recent valid thread answer gets the key-fact underline; inspection has none. Pane regions use section labels rather than tabpanel labels referencing removed navigation. Source tabs retain keyboard controls; close restores focus without losing input or disclosure state.
 - **Evidence limits:** links support findings as a whole, not automatically each clause. Existing qualitative citation-completeness evaluation remains open; this UI change makes no new semantic verification claim.
+
+
+### StepLog · single task and duration (D80)
+
+- **Use case:** Helen's ninety-one-second failure feedback; bounded generation and recovery status.
+- **Anatomy:** one active task/status square and one elapsed duration; after terminal state, one completion/failure/Stop status and one total duration. Optional Show/Hide actions moves to a separate row. Expanded history omits the current live action and all extra duration values. The recovery message does not repeat the failure heading already in StepLog.
+- **Variants/states:** sending, preparing, generating, inspecting, checking, complete/partial, failed and stopped. Historical attempts keep their own frozen summary, expanded only by selection.
+- **Reuses:** StepLog, Text meta, StatusSquare, Button link, native list/disclosure controls and existing A3 tokens. Timer text remains outside the single live status announcement; reduced-motion and cleanup remain unchanged.
+- **Override:** D78's two simultaneous current-action/attempt-total values and visible per-action durations are superseded. Internal timing records remain for debugging.

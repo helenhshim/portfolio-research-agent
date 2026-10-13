@@ -6,8 +6,8 @@ import {DataTable,SourceList} from './kit';
 export function FactProse({text,artifact}:{text:string;artifact:V2Artifact}){
  return <>{factSegments(text,artifact.facts).map((segment,i)=>segment.numeric?<Text key={i} style="data">{segment.text}</Text>:<FigureText key={i} text={segment.text}/>)}</>;
 }
-export function Outcome({status,message,retry}:{status:string;message:string;retry?:()=>void}){
- return <div className="a3-limit" role="status"><div className="a3-limit-status"><StatusSquare state={status==='failed'||status==='check_failed'?'failed':'idle'}/><Text style="meta">{status==='check_failed'?'Reference checks failed':status}</Text></div><Text as="p" style="secondary">{message}</Text>{retry&&<Button variant="quiet" onClick={retry}>Retry research</Button>}</div>;
+export function Outcome({status,message,retry,showStatus=true}:{status:string;message:string;retry?:()=>void;showStatus?:boolean}){
+ return <div className="a3-limit" role="status">{showStatus&&<div className="a3-limit-status"><StatusSquare state={status==='failed'||status==='check_failed'?'failed':'idle'}/><Text style="meta">{status==='check_failed'?'Reference checks failed':status}</Text></div>}<Text as="p" style="secondary">{message}</Text>{retry&&<Button variant="quiet" onClick={retry}>Retry research</Button>}</div>;
 }
 // One checked answer body for the thread and optional inspection. No second synthesis,
 // heuristic evidence trimming or different fact selection when opening the brief.

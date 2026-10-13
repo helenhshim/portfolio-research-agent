@@ -20,7 +20,9 @@ if(args[0]==='--replay'&&args.length===2){
  process.exitCode=result.status==='check_failed'?1:0;
 }else if(args.length===1&&args[0]==='--live'){
  if(!process.env.OPENAI_API_KEY)throw Error('Configure OPENAI_API_KEY locally; never post it in chat.');
- const ledger=new V2SpendLedger(1),traces:V2Trace[]=[];let draft:unknown;
+ const cap=Number(process.env.V2_DEBUG_CAP_USD??1);
+ if(!Number.isFinite(cap)||cap<=0||cap>1)throw Error('Public debug cap must be greater than zero and at most $1.');
+ const ledger=new V2SpendLedger(cap),traces:V2Trace[]=[];let draft:unknown;
  const provider=createV2Provider(process.env.OPENAI_API_KEY,{ledger,onTrace:trace=>traces.push(trace),onDraft:output=>{draft=output;}});
  const started=Date.now();
  const result=await runV2ControlledTurn({question:"Does NVIDIA's latest report strengthen or weaken the case for durable operating profitability?",history:[]},packet,provider);

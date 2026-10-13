@@ -43,7 +43,7 @@ export function recoveryMessage(attempt:ResearchAttempt){
  const prefix=prepared?'The report evidence was prepared. ':'';
  const messages:Record<string,string>={
   deadline:`${prefix}Research reached its time limit while ${activity}. No new brief was published. Try again or narrow your question.`,
-  provider_incomplete:`${prefix}The model returned an incomplete response, so a new brief could not be checked and published. Try again or narrow your question.`,
+  provider_incomplete:`${prefix}This attempt did not receive a complete model response, so no new answer could be checked and published. Try again or narrow your question.`,
   check_failed:'The answer was generated, but its takeaway did not pass reference and dependency checks. No new brief was published. You can try again or revise your question.',
   research_failed:`${prefix}This attempt could not finish. The available diagnostics do not establish a more specific cause. Try again.`,
   stopped:'You stopped this attempt. No new brief was published.',

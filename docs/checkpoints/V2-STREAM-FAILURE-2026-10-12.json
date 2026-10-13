@@ -1,0 +1,109 @@
+{
+  "case_id": "E1",
+  "original_incident": {
+    "elapsed_ms": 91772,
+    "request_bytes": 115340,
+    "output_chars": 22961,
+    "http_status": 200,
+    "body_read_ms": null,
+    "status": "failed",
+    "error_code": "provider_incomplete",
+    "usage": null,
+    "exact_reader_reason": "not_recorded"
+  },
+  "baseline_diagnostic": {
+    "elapsed_ms": 18132,
+    "estimated_usd": 0.08278000000000002,
+    "traces": [
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "low",
+        "prompt_version": "v2-public-research-2",
+        "schema_version": "v2-brief-schema-2",
+        "schema_hash": "46af3b4a16fc9e0af060dccff1b921f2b47cf442d32966c19c419ef0494e8c6a",
+        "provider_call": 1,
+        "request_bytes": 115340,
+        "first_event_ms": 790,
+        "first_text_ms": 2926,
+        "output_chars": 4446,
+        "elapsed_ms": 18120,
+        "response_received_ms": 787,
+        "body_read_ms": 17332,
+        "http_status": 200,
+        "request_id": "req_9e11ec54e11a4fa2b7636cf9a6677275",
+        "status": "completed",
+        "incomplete_reason": null,
+        "usage": {
+          "input_tokens": 28516,
+          "output_tokens": 1149,
+          "reasoning_tokens": 37,
+          "cached_input_tokens": 28513
+        },
+        "stream": {
+          "received_bytes": 374037,
+          "event_count": 1108,
+          "last_event_type": "response.completed",
+          "terminal_event": "response.completed",
+          "failure": null
+        }
+      }
+    ]
+  },
+  "candidate_cli": {
+    "elapsed_ms": 20010,
+    "estimated_usd": 0.0826925,
+    "traces": [
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "low",
+        "prompt_version": "v2-public-research-3",
+        "schema_version": "v2-brief-schema-3",
+        "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+        "provider_call": 1,
+        "request_bytes": 115412,
+        "first_event_ms": 647,
+        "first_text_ms": 3149,
+        "output_chars": 4397,
+        "elapsed_ms": 19999,
+        "response_received_ms": 642,
+        "body_read_ms": 19357,
+        "http_status": 200,
+        "request_id": "req_1b08f1456b9942478e8f2adaac408c4e",
+        "status": "completed",
+        "incomplete_reason": null,
+        "usage": {
+          "input_tokens": 28533,
+          "output_tokens": 1136,
+          "reasoning_tokens": 43,
+          "cached_input_tokens": 0
+        },
+        "stream": {
+          "received_bytes": 369212,
+          "event_count": 1089,
+          "last_event_type": "response.completed",
+          "terminal_event": "response.completed",
+          "failure": null
+        }
+      }
+    ],
+    "status": "complete",
+    "drops": []
+  },
+  "candidate_browser": {
+    "elapsed_ms": 21428,
+    "output_chars": 4437,
+    "stream_bytes": 384205,
+    "event_count": 1145,
+    "status": "complete",
+    "drops": [],
+    "provider_calls": 1,
+    "tool_calls": 0,
+    "usage": {
+      "input_tokens": 28533,
+      "output_tokens": 1199,
+      "reasoning_tokens": 50,
+      "cached_input_tokens": 28530
+    }
+  },
+  "scope": "Fixed public E1 diagnostic only; no raw credentials, arbitrary prompts or private reasoning."
+}

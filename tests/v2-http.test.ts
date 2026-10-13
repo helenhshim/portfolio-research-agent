@@ -69,9 +69,11 @@ test('Responses adapter carries exact tool call IDs into synthesis and requires 
  assert.ok(schema.properties.findings.items.properties.fact_ids.items.enum.includes('NVDA:operating_margin:current'));
  assert.ok(!schema.properties.findings.items.properties.fact_ids.items.enum.includes('operating_margin'));
  assert.ok(schema.properties.next_investigation.anyOf[1].properties.metric_ids.items.enum.includes('operating_margin'));
+ assert.equal(schema.properties.findings.items.properties.text.maxLength,800);
+ assert.equal(schema.properties.findings.items.properties.evidence.items.properties.quote.maxLength,400);
  const validates=new Ajv({strict:false}).compile(schema);
  assert.equal(validates(draft()),true,JSON.stringify(validates.errors));
- assert.equal(traces[0].schema_version,'v2-brief-schema-2');assert.match(traces[0].schema_hash,/^[a-f0-9]{64}$/);
+ assert.equal(traces[0].schema_version,'v2-brief-schema-3');assert.match(traces[0].schema_hash,/^[a-f0-9]{64}$/);
  assert.equal(traces[0].request_id,'req_public_fixture');assert.equal(traces[0].http_status,200);assert.equal(typeof traces[0].response_received_ms,'number');assert.equal(typeof traces[0].body_read_ms,'number');
  assert.equal(bodies[0].stream,true);
  const prior=JSON.parse(bodies[1].input.at(-1).output);
@@ -119,6 +121,7 @@ test('Provider SSE publishes only the completed draft, measures first text and p
  assert.equal(result.status,'complete');assert.deepEqual(drafts,[draft()]);
  assert.equal(typeof traces[0].first_event_ms,'number');assert.equal(typeof traces[0].first_text_ms,'number');
  assert.equal(traces[0].output_chars,'unverified draft fragment ·'.length);assert.equal(traces[0].usage?.reasoning_tokens,40);
+ assert.equal(traces[0].stream?.terminal_event,'response.completed');assert.equal(traces[0].stream?.failure,null);
  assert.doesNotMatch(JSON.stringify(traces),/unverified draft fragment/);
 });
 test('Incomplete or truncated SSE never turns partial text into a checked answer',async()=>{
