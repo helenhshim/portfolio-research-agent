@@ -2,6 +2,8 @@
 
 2026-10-12 · D86 · based on [E1–E5 specification v1.2](../V2-PREBUILD-REFERENCE.md). Cases and safety gates are retained; all V3 scores start unscored.
 
+D92 update, 2026-10-13: Helen reports useful reasoning/follow-ups from testing and explicitly skips another quality-grading round for now. Record founder acceptance without numerical scores. Current sequence is navigation and privacy/operational checks, then completion-time tuning; the repeated E1–E5 trial procedure below is deferred. Critical controls and hosted access boundaries remain separate. See [navigation/privacy checkpoint](NAVIGATION-AND-PRIVACY-2026-10-13.md).
+
 ## Compare supported research outcomes
 
 Use the identical question and frozen report hashes. Record prototype/commit, prompt/schema/fact-preparation version, model, effort, output cap, tool calls and all outcomes. The first experiment changes the answer contract, prepared fact coverage and allowed output together at fixed effort; do not attribute gains solely to reasoning effort. ChatGPT's supplied web-enabled answer is a separate unmatched baseline until equal sources/configuration are established.

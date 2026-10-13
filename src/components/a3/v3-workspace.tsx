@@ -1,120 +1,60 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
-import {addStage,addFinding,resetFindings,matchesTurnEvent,researchFailureCode,canRetry,finishAttempt,latestAttempt,recoveryMessage,researchHistory,startAttempt,turnArtifact,updateAttempt,type ResearchTurn} from '../../lib/v3-attempts.ts';
-import {V2RevisionGate} from '../../lib/v2-revisions.ts';
-import {V3_RESEARCH_PROTOCOL,type Coverage,type V3Artifact,type V3Evidence,type V3Event,type SourceRef,type Passage} from '../../lib/v3-display.ts';
+import {useCallback,useEffect,useRef,useState} from 'react';
+import type {Coverage,V3Artifact} from '../../lib/v3-display.ts';
+import {emptyV3Session,sortedV3Sessions,updateV3Session,V3_SESSION_LIMIT,type V3SessionSummary} from '../../lib/v3-sessions.ts';
 import {Button,FigureText,Text} from './primitives';
-import {Composer,QABlock,SourcePassage,StepLog,Tabs,TickerChip} from './kit';
-import {WorkspaceLayout} from './layouts';
-import {Outcome,ResearchAnswer,ResearchFindings,EvidenceDiscrepancies} from './v3-research-answer';
-function groupPassages(artifact:V3Evidence|null,source:string){
- const groups=new Map<string,{passage:Passage;quotes:string[]}>();
- for(const passage of artifact?.findings.flatMap(f=>f.passages)??[]){if(passage.source!==source)continue;const existing=groups.get(passage.id);if(existing){if(!existing.quotes.includes(passage.quote))existing.quotes.push(passage.quote);}else groups.set(passage.id,{passage,quotes:[passage.quote]});}
- return [...groups.values()];
-}
-export default function V3Workspace({coverage,reference,liveConfigured}:{coverage:Coverage;reference:V3Artifact;liveConfigured:boolean}){
- const [value,setValue]=useState(''),[inspection,setInspection]=useState<V3Evidence|null>(null),[turns,setTurns]=useState<ResearchTurn[]>([]),[running,setRunning]=useState(false),[inputError,setInputError]=useState(''),[tab,setTab]=useState<SourceRef['id']>('current'),[narrow,setNarrow]=useState(false),[selectedPassage,setSelectedPassage]=useState<string|null>(null);
- const host=useRef<HTMLDivElement>(null),input=useRef<HTMLTextAreaElement>(null),gate=useRef<V2RevisionGate<V3Artifact>|null>(null),active=useRef<{token:ReturnType<V2RevisionGate<V3Artifact>['begin']>;abort:AbortController;turnId:string}|null>(null),runningRef=useRef(false),provisionalInspection=useRef(false),inspectionPane=useRef<HTMLDivElement>(null),threadPane=useRef<HTMLElement>(null),opener=useRef<HTMLElement|null>(null),position=useRef({window:0,pane:0});
- const session=()=>{if(!gate.current)gate.current=new V2RevisionGate(crypto.randomUUID());return gate.current;};
- const openerLocation=useRef<{turn:string;label:string;finding?:string;line?:string}|null>(null);
- function citationSelector(location:{turn:string;label:string;finding?:string;line?:string}){
-  return `#${CSS.escape(location.turn)} ${location.finding?`[data-finding-id="${CSS.escape(location.finding)}"] `:''}${location.line!==undefined?`[data-analysis-line="${CSS.escape(location.line)}"] `:''}.a3-inline-citation[aria-label="${CSS.escape(location.label)}"]`;
+import {TickerChip} from './kit';
+import V3ResearchSession from './v3-session';
+type Props={coverage:Coverage;reference:V3Artifact;liveConfigured:boolean};
+// Intent: analysts return to an existing thesis investigation or begin another.
+// Domain: thesis, evidence, fiscal comparison, source lineage, investigation.
+// Signature: question-titled sessions retain their own checked evidence and draft.
+// Palette/depth: A3 white, paper grey, ink, source blue and status marks; hairlines.
+// Typography/space: existing Geist/mono styles and A3's four-unit spacing scale.
+// DESIGN-DECISION: D92 uses a centered index with RailItem-like ruled rows,
+// rather than adding a permanent command rail or unsupported watchlist/commands.
+export default function V3Workspace(props:Props){
+ const [sessions,setSessions]=useState<V3SessionSummary[]>(()=>[emptyV3Session('initial-session',0)]);
+ const [selected,setSelected]=useState<string|null>('initial-session'),[runningId,setRunningId]=useState<string|null>(null),[notice,setNotice]=useState(''),[narrow,setNarrow]=useState(false);
+ const active=useRef<{id:string;stop:()=>void}|null>(null),host=useRef<HTMLDivElement>(null),indexTitle=useRef<HTMLHeadingElement>(null),scroll=useRef(new Map<string,number>());
+ const onSummary=useCallback((id:string,patch:Partial<Omit<V3SessionSummary,'id'>>)=>setSessions(s=>updateV3Session(s,id,patch)),[]);
+ const claimRun=useCallback((id:string,stop:()=>void)=>{if(active.current)return false;active.current={id,stop};setRunningId(id);return true;},[]);
+ const releaseRun=useCallback((id:string)=>{if(active.current?.id===id){active.current=null;setRunningId(null);}},[]);
+ useEffect(()=>{const el=host.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);setNarrow(entries[0].contentRect.width<parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--workspace-min-w')));});observer.observe(el);return()=>observer.disconnect();},[]);
+ function open(id:string|null,isNew=false){
+  if(selected)scroll.current.set(selected,window.scrollY);
+  setSelected(id);setNotice('');
+  requestAnimationFrame(()=>{
+   const target=id?host.current?.querySelector<HTMLElement>(`[data-session-id="${CSS.escape(id)}"]`):indexTitle.current;
+   if(isNew)target?.querySelector<HTMLTextAreaElement>('textarea')?.focus({preventScroll:true});else target?.focus({preventScroll:true});
+   window.scrollTo({top:id?scroll.current.get(id)??0:0,behavior:'auto'});
+  });
  }
- useEffect(()=>{const el=host.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);const threshold=parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--workspace-min-w'));setNarrow(entries[0].contentRect.width<threshold);});observer.observe(el);return()=>observer.disconnect();},[]);
- useEffect(()=>()=>active.current?.abort.abort(),[]);
- useEffect(()=>{
-  if(!inspection)return;
-  if(!selectedPassage&&inspectionPane.current?.contains(document.activeElement))return;
-  const el=selectedPassage?document.getElementById(`passage-${selectedPassage.replaceAll(':','-')}`):inspectionPane.current;
-  el?.focus({preventScroll:true});if(selectedPassage)el?.scrollIntoView({block:'nearest',behavior:'auto'});
- },[inspection,selectedPassage,tab,narrow]);
- function inspect(saved:V3Evidence,id:SourceRef['id'],passage?:string){
-  // Capture only thread-origin openers so switching source tabs does not lose the return target.
-  if(!inspectionPane.current?.contains(document.activeElement)){
-   opener.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
-   const turn=opener.current?.closest('.a3-qa')?.id,label=opener.current?.getAttribute('aria-label'),finding=opener.current?.closest('[data-finding-id]')?.getAttribute('data-finding-id')??undefined,line=opener.current?.closest('[data-analysis-line]')?.getAttribute('data-analysis-line')??undefined;openerLocation.current=turn&&label?{turn,label,finding,line}:null;
-   position.current={window:window.scrollY,pane:threadPane.current?.scrollTop??0};
-  }
-  provisionalInspection.current=!('takeaway' in saved);setInspection(saved);setTab(id);setSelectedPassage(passage??null);
+ function createSession(){
+  if(active.current)return;
+  if(sessions.length>=V3_SESSION_LIMIT){open(null);setNotice('Session limit reached. Delete a session to start another.');return;}
+  const id=crypto.randomUUID();setSessions(s=>[...s,emptyV3Session(id,Date.now())]);open(id,true);
  }
- function closeInspection(restore=true){
-  provisionalInspection.current=false;setInspection(null);setSelectedPassage(null);
-  if(restore)requestAnimationFrame(()=>{const location=openerLocation.current;const surviving=location?host.current?.querySelector<HTMLElement>(citationSelector(location)):null;const target=opener.current?.isConnected?opener.current:surviving??input.current;target?.focus({preventScroll:true});window.scrollTo({top:position.current.window,behavior:'auto'});if(threadPane.current)threadPane.current.scrollTop=position.current.pane;});
+ function removeSession(id:string){
+  if(active.current?.id===id)return;
+  setSessions(s=>s.filter(item=>item.id!==id));scroll.current.delete(id);setNotice('Session deleted.');
+  requestAnimationFrame(()=>indexTitle.current?.focus({preventScroll:true}));
  }
- function stop(){
-  const current=active.current;if(!current)return;
-  session().stop(current.token);current.abort.abort();active.current=null;runningRef.current=false;setRunning(false);closeInspection();
-  const now=performance.now();setTurns(t=>updateAttempt(t,current.turnId,current.token.turn_id,a=>finishAttempt(a,{status:'stopped',error_code:'stopped'},now)));
- }
- function reset(){stop();gate.current=null;setInspection(null);setTurns([]);setValue('');setInputError('');setTab('current');requestAnimationFrame(()=>input.current?.focus());}
- function showReference(){
-  if(runningRef.current)return;const g=session(),token=g.begin(crypto.randomUUID()),saved={...reference,revision:token.revision};g.commit(token,saved);
-  setTurns(t=>[...t,{id:token.turn_id,question:saved.question,history:researchHistory(t),attempts:[],reference:saved}]);closeInspection(false);
- }
- async function run(question=value,retryTurnId?:string){
-  if(runningRef.current)return;const q=question.trim();if(!q){setInputError('Enter a research question.');return;}
-  const retryTurn=retryTurnId?turns.find(t=>t.id===retryTurnId):undefined;
-  if(retryTurnId&&(!retryTurn||!latestAttempt(retryTurn)||!canRetry(latestAttempt(retryTurn)!)))return;
-  const turnId=retryTurnId??crypto.randomUUID(),g=session(),token=g.begin(crypto.randomUUID()),abort=new AbortController();
-  active.current={token,abort,turnId};runningRef.current=true;setRunning(true);setInputError('');if(!retryTurnId)setValue('');closeInspection(false);
-  const started=performance.now();setTurns(t=>startAttempt(t,turnId,q,token.turn_id,started));
-  requestAnimationFrame(()=>host.current?.querySelector<HTMLButtonElement>('[data-research-stop]')?.focus({preventScroll:true}));
-  const previous=retryTurn?.history??researchHistory(turns);
-  let received=false,focusComposer=false;
-  try{
-   if(!liveConfigured)throw Error('unavailable');
-   const response=await fetch('/api/v3/research',{method:'POST',headers:{'Content-Type':'application/json','X-Research-Protocol':V3_RESEARCH_PROTOCOL},body:JSON.stringify({question:q,history:previous,identity:token}),signal:abort.signal});
-   if(!response.ok){const data=await response.json();throw Error(data.error_code??'research_failed');}if(!response.body)throw Error('research_failed');
-   const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='';
-   const process=(line:string)=>{
-    if(!line.trim())return;const event=JSON.parse(line) as V3Event;
-    if(!matchesTurnEvent(event,token,active.current?.token.turn_id,received))return;
-    const now=performance.now();
-    if(event.type==='stage'){setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>addStage(a,event.stage,event.elapsed_ms,now)));return;}
-    if(event.type==='finding'){setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>addFinding(a,event)));return;}
-    if(event.type==='findings_reset'){setTurns(t=>updateAttempt(t,turnId,token.turn_id,resetFindings));closeInspection(Boolean(inspectionPane.current?.contains(document.activeElement)));return;}
-    received=true;focusComposer=Boolean(document.activeElement?.hasAttribute('data-research-stop'));const result=event.result;
-    const focused=document.activeElement instanceof HTMLElement&&document.activeElement.matches('.a3-inline-citation')&&document.activeElement.closest('.a3-qa')?.id==='turn-'+turnId?document.activeElement:null;
-    const focusedCitation=focused?{turn:'turn-'+turnId,label:focused.getAttribute('aria-label')??'',finding:focused.closest('[data-finding-id]')?.getAttribute('data-finding-id')??undefined,line:focused.closest('[data-analysis-line]')?.getAttribute('data-analysis-line')??undefined}:null;
-    // A source opened from developing findings must follow the final surviving
-    // evidence, never retain a finding excluded by the complete dependency check.
-    if(provisionalInspection.current){if(result.artifact){setInspection(result.artifact);setSelectedPassage(null);provisionalInspection.current=false;}else closeInspection();}
-    // DESIGN-DECISION: D79 keeps completion in the thread. Inspection is user-selected.
-    if(!result.artifact||!g.commit(token,result.artifact))g.fail(token);
-    setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,result,now)));
-    // D89: inline analysis replaces the finding disclosure. Keep the exact
-    // surviving bullet's citation focus when the completed body reconciles it.
-    if(focusedCitation)requestAnimationFrame(()=>{(host.current?.querySelector<HTMLElement>(citationSelector(focusedCitation))??input.current)?.focus({preventScroll:true});});
-   };
-   try{while(true){const chunk=await reader.read();if(chunk.done)break;buffer+=decoder.decode(chunk.value,{stream:true});let index;while((index=buffer.indexOf('\n'))>=0){process(buffer.slice(0,index));buffer=buffer.slice(index+1);}}buffer+=decoder.decode();process(buffer);if(!received)throw Error('research_failed');}
-   finally{
-    // A client-side processing failure must release the server request too, rather
-    // than leave paid generation running after the visible turn has failed.
-    if(!received){abort.abort();await reader.cancel().catch(()=>{});}reader.releaseLock();
-   }
-  }catch(error){
-   if(active.current?.token.turn_id===token.turn_id&&!received){g.fail(token);focusComposer=Boolean(document.activeElement?.hasAttribute('data-research-stop'));closeInspection(Boolean(inspectionPane.current?.contains(document.activeElement)));const code=researchFailureCode(error),now=performance.now();setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,{status:'failed',error_code:code},now)));}
-  }finally{if(active.current?.token.turn_id===token.turn_id){active.current=null;runningRef.current=false;setRunning(false);if(focusComposer)requestAnimationFrame(()=>input.current?.focus());}}
- }
- // Source provenance remains inspectable; D75's removed scope/banner copy stays removed.
- const composerProps={value,onChange:(v:string)=>{setValue(v);setInputError('');},onSubmit:()=>void run(),running,onStop:stop,error:inputError,inputRef:input};
- const composer=<Composer {...composerProps}/>;
- const thread=<>{turns.length===0?<div className="a3-empty"><Text as="h1" style="display">A question. The evidence. A sharper thesis.</Text><Text as="p" style="secondary">Pressure-test NVIDIA’s operating profitability using two frozen SEC reports. Ask what supports your premise, what challenges it and what remains unanswered.</Text><div className="a3-examples"><Text style="meta">Start with a question</Text>{[reference.question,'Why did cash flow fall? Does that mean margins are deteriorating?'].map(q=><Button variant="link" key={q} onClick={()=>{setValue(q);input.current?.focus();}}>{q}</Button>)}<Button variant="quiet" onClick={showReference}>View saved reference</Button></div></div>:turns.map(turn=>{
-  const attempt=latestAttempt(turn),saved=turnArtifact(turn),failed=attempt&&['failed','check_failed','stopped'].includes(attempt.status);
-  return <QABlock key={turn.id} id={`turn-${turn.id}`} question={turn.question}>
-   {attempt&&<StepLog key={attempt.id} attempt={attempt} attemptNumber={turn.attempts.length}/>}
-   {attempt?.status==='running'?attempt.developing?<><Text as="p" style="secondary">References checked for the findings below. The answer is still developing; interpretation requires review.</Text><ResearchFindings evidence={attempt.developing} developing onSource={(id,passage)=>inspect(attempt.developing!,id,passage)}/></>:<Text as="p" style="secondary">Complete findings will appear as their references pass checks.</Text>:failed?<><Outcome showStatus={false} status={attempt.status} message={recoveryMessage(attempt)} retry={!running&&canRetry(attempt)?()=>void run(turn.question,turn.id):undefined}/><EvidenceDiscrepancies discrepancies={attempt.discrepancies} sources={coverage.sources} onSource={id=>inspect({findings:[],facts:[],sources:coverage.sources,cutoff:coverage.cutoff},id)}/></>:saved?<ResearchAnswer artifact={saved} running={running} onSource={(id,passage)=>inspect(saved,id,passage)} onInvestigate={q=>void run(q)}/>:<Text as="p"><FigureText text={attempt?.message??''}/></Text>}
-   {failed&&['unavailable','spend_limit','provider_quota'].includes(attempt.errorCode??'')&&<Button variant="quiet" disabled={running} onClick={showReference}>View saved reference</Button>}
-   {turn.attempts.length>1&&<details className="a3-detail"><summary className="text-secondary">Previous attempts <FigureText text={`(${turn.attempts.length-1})`}/></summary><div className="a3-detail-content">{turn.attempts.slice(0,-1).map((prior,index)=><div key={prior.id}><Text style="meta"><FigureText text={`Attempt ${index+1}`}/></Text><StepLog attempt={prior}/><Text as="p" style="secondary">{recoveryMessage(prior)}</Text></div>)}</div></details>}
-  </QABlock>;
- })}{composer}</>;
- const tabs=coverage.sources.map((s,i)=>({id:s.id,label:s.label,citation:i+1}));
- const workspace=inspection?<div id="research-inspection" className="a3-inspection" ref={inspectionPane} tabIndex={-1} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();closeInspection();}}}>
-  <div className="a3-inspection-toolbar"><Text style="strong">Sources</Text><div className="a3-header-actions">{running&&<Button variant="outline" onClick={stop}>Stop research</Button>}<Button variant="quiet" onClick={()=>closeInspection()}>Close source</Button></div></div>
-  <Tabs items={tabs} value={tab} onChange={id=>{setTab(id as SourceRef['id']);setSelectedPassage(null);}} id="workspace"/>{tabs.map(item=><div key={item.id} id={`workspace-panel-${item.id}`} role="tabpanel" aria-labelledby={`workspace-tab-${item.id}`} hidden={tab!==item.id} className="a3-brief-panel" tabIndex={0}><div className="a3-brief"><Text as="h2" style="title"><FigureText text={item.label}/></Text><Text as="p" style="meta"><FigureText text={`${coverage.sources.find(s=>s.id===item.id)?.date} · cutoff ${inspection.cutoff}`}/></Text>{groupPassages(inspection,item.id).map(({passage:p,quotes})=><SourcePassage key={p.id} passage={p} quotes={quotes} source={coverage.sources.find(s=>s.id===p.source)!} index={p.source==='current'?1:2}/>)}<a className="a3-source-link text-secondary" href={coverage.sources.find(s=>s.id===item.id)?.url} target="_blank" rel="noreferrer">Open original SEC release</a><Text as="p" style="secondary">{groupPassages(inspection,item.id).length?'Shown passages are the evidence cited by this answer.':'This citation supports code-owned financial facts. Inspect calculation basis in the thread for metric lineage.'} The full report remains available at the original source.</Text></div></div>)}</div>:null;
- return <div className="a3-app" ref={host} data-narrow={narrow}><header className="a3-header"><div className="a3-brand"><span className="a3-logo" aria-hidden="true"/><Text style="strong">Research</Text><Text style="meta"><FigureText text="Prototype 3"/></Text>{turns.some(t=>turnArtifact(t))?<TickerChip coverage={coverage}/>:<Text style="secondary">NVIDIA profitability</Text>}</div><div className="a3-header-actions"><Button variant="outline" onClick={reset} disabled={running}>New session</Button></div></header>
-  {/* DESIGN-DECISION: No global Thread/Brief or layout navigation. The pane exists only after explicit inspection. */}
-  <WorkspaceLayout thread={thread} brief={workspace} narrow={narrow} threadRef={threadPane}/>
-  <footer className="a3-footer"><Text style="meta">Session is lost on reload · Research support, not investment advice</Text></footer>
+ const current=sessions.find(s=>s.id===selected),onActiveResearch=()=>{if(active.current)open(active.current.id);};
+ return <div className="a3-app" ref={host} data-narrow={narrow}>
+  <header className="a3-header a3-v3-header"><nav className="a3-brand" aria-label="Research navigation">
+   <Button variant="icon" className="a3-home" onClick={()=>open(null)} aria-label="All research sessions"><span className="a3-logo" aria-hidden="true"/><Text style="strong">Research</Text></Button>
+   <Button variant="icon" onClick={createSession} disabled={Boolean(runningId)} aria-label="New research session" title="New research session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9 3H3v10h10V7M8 8l5-5 1 1-5 5H8V8Z"/></svg></Button>
+   <Text style="meta"><FigureText text="Prototype 3"/></Text>{current?.hasAnswer?<TickerChip coverage={props.coverage}/>:<Text style="secondary">{selected?'NVIDIA profitability':'All sessions'}</Text>}
+  </nav>{runningId&&selected!==runningId&&<div className="a3-header-actions"><Button variant="link" onClick={onActiveResearch}>Return to active research</Button><Button variant="outline" onClick={()=>active.current?.stop()}>Stop research</Button></div>}</header>
+  {selected===null&&<main className="a3-thread-layout a3-session-index" aria-labelledby="session-index-title"><div className="a3-session-index-heading"><h1 className="text-title" id="session-index-title" tabIndex={-1} ref={indexTitle}>Research sessions</h1><Button variant="outline" onClick={createSession} disabled={Boolean(runningId)}>New research</Button></div>
+   <Text as="p" style="secondary">Available in this open app. Reloading or closing the page clears them.</Text>
+   {notice&&<Text as="p" style="secondary" role="status">{notice}</Text>}
+   {sessions.length?<ul className="a3-session-list" aria-label="Research sessions">{sortedV3Sessions(sessions).map(s=><li key={s.id} className="a3-session-row"><button className="a3-session-open" onClick={()=>open(s.id)} aria-label={`Open research session: ${s.title}`}><Text style="strong"><FigureText text={s.title}/></Text><Text style="meta"><FigureText text={`${s.outcome} · ${s.updatedAt?new Date(s.updatedAt).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'Just started'}`}/></Text></button><Button variant="icon" onClick={()=>removeSession(s.id)} disabled={runningId===s.id} aria-label={`Delete research session: ${s.title}`} title="Delete session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4h10M6 4V2h4v2M4 4l1 10h6l1-10M7 6v6M9 6v6"/></svg></Button></li>)}</ul>:<div className="a3-empty"><Text as="p" style="strong">No research sessions yet.</Text><Text as="p" style="secondary">Start with a public-company question.</Text></div>}
+  </main>}
+  {/* Keep each bounded memory-only session mounted so drafts, native disclosures,
+      source focus and in-flight response ownership survive navigation. */}
+  {sessions.map(s=><div key={s.id} className="a3-session-view" data-session-id={s.id} hidden={selected!==s.id} tabIndex={-1} aria-label={`Research session: ${s.title}`}><V3ResearchSession {...props} id={s.id} visible={selected===s.id} busyElsewhere={Boolean(runningId&&runningId!==s.id)} claimRun={claimRun} releaseRun={releaseRun} onSummary={onSummary} onActiveResearch={onActiveResearch}/></div>)}
+  <footer className="a3-footer"><Text style="meta">Sessions clear on reload · Research support, not investment advice</Text></footer>
  </div>;
 }

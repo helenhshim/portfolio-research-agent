@@ -129,10 +129,11 @@ export function createV3Provider(apiKey:string,options:{effort?:'low'|'medium'|'
    };
    const data=response.headers.get('content-type')?.includes('text/event-stream')?await readV2ProviderStream(response,observe,data=>{stream=data;}):await response.json();
    bodyReadMs=Date.now()-started-responseReceivedMs;
-   if(data.usage)usage={input_tokens:data.usage.input_tokens,output_tokens:data.usage.output_tokens,
-    ...(Number.isFinite(data.usage.output_tokens_details?.reasoning_tokens)?{reasoning_tokens:data.usage.output_tokens_details.reasoning_tokens}:{}),
-    ...(Number.isFinite(data.usage.input_tokens_details?.cached_tokens)?{cached_input_tokens:data.usage.input_tokens_details.cached_tokens}:{})};
-   status=data.status??'unknown';
+   const tokenCount=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
+   if(tokenCount(data.usage?.input_tokens)&&tokenCount(data.usage?.output_tokens))usage={input_tokens:data.usage.input_tokens,output_tokens:data.usage.output_tokens,
+    ...(tokenCount(data.usage.output_tokens_details?.reasoning_tokens)?{reasoning_tokens:data.usage.output_tokens_details.reasoning_tokens}:{}),
+    ...(tokenCount(data.usage.input_tokens_details?.cached_tokens)?{cached_input_tokens:data.usage.input_tokens_details.cached_tokens}:{})};
+   status=['completed','incomplete','failed','cancelled','in_progress','queued'].includes(data.status)?data.status:'unknown';
    incompleteReason=['max_output_tokens','content_filter','max_messages','steered'].includes(data.incomplete_details?.reason)?data.incomplete_details.reason:null;
    if(data.status!=='completed'){
     const unfinished=(data.output??[]).filter((item:any)=>item.type==='message').flatMap((item:any)=>item.content??[]).filter((item:any)=>item.type==='output_text').map((item:any)=>item.text).join('');

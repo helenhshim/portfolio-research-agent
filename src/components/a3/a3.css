@@ -13,6 +13,16 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-app { min-height: 100dvh; display: flex; flex-direction: column; }
 .a3-header { min-height: var(--header-h); padding: 0 var(--space-5); border-bottom: var(--hairline); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
 .a3-brand, .a3-header-actions, .a3-step-summary, .a3-steps li { display: flex; align-items: center; gap: var(--space-2); }
+.a3-v3-header .a3-brand { flex-wrap: wrap; min-width: 0; }
+.a3-button-icon.a3-home { width: auto; display: inline-flex; align-items: center; gap: var(--space-2); padding-inline: 0 var(--space-2); }
+.a3-nav-icon { width: var(--space-4); height: var(--space-4); stroke: var(--ink-2); stroke-width: var(--spark-stroke); }
+.a3-session-view, .a3-session-app { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.a3-session-view[hidden] { display: none; }
+.a3-session-index-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.a3-session-list { border-top: var(--hairline); }
+.a3-session-row { display: flex; align-items: center; gap: var(--space-2); border-bottom: var(--hairline); }
+.a3-session-open { display: flex; flex-direction: column; gap: var(--space-1); flex: 1; min-width: 0; min-height: var(--hit-area); padding: var(--space-4) var(--space-2); background: transparent; border: 0; border-radius: var(--radius); text-align: left; overflow-wrap: anywhere; }
+.a3-session-open:hover { background: var(--surface-hover); }
 .a3-logo { width: var(--logo-size); height: var(--logo-size); background: var(--signal); flex-shrink: 0; }
 .a3-button { position: relative; isolation: isolate; border: 0; background: transparent; min-height: var(--hit-area); padding: var(--space-2) var(--space-3); max-width: 100%; }
 .a3-button::before { content: ''; position: absolute; z-index: -1; inset: var(--space-2) 0; border-radius: var(--radius); transition: background var(--dur) var(--ease); }

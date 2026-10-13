@@ -29,16 +29,16 @@ Initial D86 UI: 06a thread with upfront completed verdict, short qualified findi
 ## Execute and decide
 
 1. Preserve V2 and implement/check V3's typed facts, schema/dependencies and summary/detail UI. Completed; evidence in [results](../../../evals/prototype-3/RESULTS-2026-10-12.md).
-2. Run a small matched public E1 comparison at fixed model/effort/sources. V2 completed; V3 provider returned exhausted-credit errors before text. Resume V3 once credentials have usable credits. Keep failures in the record.
-3. Helen reviews live verdict, material claims, explanatory depth, evidence weighting, omissions and final synthesis. No score is inferred from the authored example. See [evaluation contract](../../../evals/prototype-3/EVALS.md).
-4. If useful, freeze the candidate and run three trials per E1–E5, including E4 follow-up, E5 limitations, cancellation and adversarial/control variants. Preserve failures and measure first useful finding, full answer, reviewed task time, corrective prompts and estimated cost.
-5. Only if reasoning remains weak, compare low/medium effort with the same V3 contract/limits and equal task evidence. Higher effort is not automatically promoted; require improved reviewed quality worth the added time/cost.
+2. Initial matched V2 E1 completed; V3 quota failures remain historical. Later user runs complete. Credits are not the current blocker.
+3. Under D92, Helen accepts reasoning/follow-up usefulness from testing and skips another grading round for now. Preserve unscored E1–E5 records and the [evaluation contract](../../../evals/prototype-3/EVALS.md); do not manufacture ratings or source-matched comparison claims.
+4. Execute session navigation, then operational/privacy checks first. Verify sensitive-input, credential, error, cancellation and source-instruction boundaries. Hosted protection/resource controls still need deployment-specific verification. Repeated E1–E5 quality/latency trials are deferred rather than interrupting Helen's current sequence.
+5. Completion-time tuning follows navigation/safety. Compare shorter necessary authored output at fixed facts/sources and review material omissions. Compare effort settings only if a real quality gap returns; retain actual timing traces.
 6. Evaluate source expansion separately: issuer-authored SEC/CFO evidence where sufficient, permitted access/reuse, exact provenance and source-date/claim checks. NVIDIA-hosted third-party transcript inspection alone does not establish reuse rights. Keep login-requiring sources out.
-7. Protected Preview/pilot gates remain after semantic and operational review. Navigation/history is a separate later priority. No public production enablement or deployment performed.
+7. Protected Preview/pilot gates remain separate from local test success. Navigation is implemented under D92; durable history remains deferred. No public production enablement or V3 deployment performed.
 
-## Constraints and live blocker
+## Constraints and historical live blocker
 
-Sessions remain memory-only. Prior checked turns survive failed follow-ups/Stop in the active session; reload loses the session. Live credit-limit errors are specifically sanitized and do not trigger an automatic retry. No secrets or raw user input in default logs; debug captures support only the fixed public E1 fixture and stay in ignored `.research-runs/`.
+Sessions remain memory-only, now with a bounded index across sessions in the open page. Prior checked turns survive failed follow-ups/Stop/navigation; reload clears history. Credit-limit errors remain sanitized without automatic retry, but later user runs complete. No secrets or raw user input in default logs. Fixed public E1 and explicitly labeled public/synthetic control captures stay in ignored `.research-runs/`; never capture real private inputs.
 
 
 ## Reported-first financial evidence policy (D87, 2026-10-12)

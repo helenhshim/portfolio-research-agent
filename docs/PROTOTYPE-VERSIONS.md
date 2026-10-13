@@ -1,14 +1,14 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D91.
+Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D92.
 
-Prototype numbers identify product experiments. PRD v0.61 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.62 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
 | Prototype 1 | Can complete earnings evidence become a specific, inspectable holding explanation for an advisor's context? | Git tag `prototype-1`; exact deployed source manifest; original protected Preview linked in its release record | Frozen baseline, with known failures |
 | Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Branch `prototype-2`; annotated tag `prototype-2-baseline-2026-10-12` at `89d9641`; `/v2` | Preserved local baseline with known limits; no pilot/release pass |
-| Prototype 3 | Does evidence-weighted reasoning with qualified summaries and inspectable evidence reduce analyst prompting/checking work? | Branch `prototype-3`; `/v3`; isolated experiment contracts; [plan](prototypes/prototype-3/PLAN.md) | Local candidate implemented; user-run answer completed, live quality/latency review and semantic/pilot gates pending |
+| Prototype 3 | Does evidence-weighted reasoning with qualified summaries and inspectable evidence reduce analyst prompting/checking work? | Branch `prototype-3`; `/v3`; isolated experiment contracts; [plan](prototypes/prototype-3/PLAN.md) | Helen accepts tested usefulness; bounded session navigation and privacy/control checks implemented locally. Latency tuning deferred; hosted pilot gates separate |
 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 
@@ -50,3 +50,5 @@ D89 improves V3's reading hierarchy: grouped headings, visible cited analysis an
 D90 replaces V3 numeral tiles with inline Source links, relocates context under Verdict and removes the key-value underline and two generic closing lines. `prototype-3-candidate-3` preserves the preceding layout; `prototype-3-candidate-4` records this presentation checkpoint. Existing live user-run completion is an observation, not a semantic/pilot pass.
 
 D91 fixes local preview delivery with `npm run dev:v3` and isolated Fast Refresh output. It is an operational correction to candidate-4, not a new answer/model experiment. The stale user's production-loaded tab is preserved; further UI tests use a fresh development-loaded preview. Do not infer a frontend update from a successful model response alone.
+
+D92 accepts Helen's usefulness feedback and implements bounded memory-only navigation plus privacy/control hardening. `prototype-3-candidate-5` records this local checkpoint; candidate-4 preserves the preceding layout. Model/prompt/facts/sources/output limits remain fixed. Two public/synthetic live control probes and credential/bundle/response tests are recorded separately from unscored E1–E5 quality cases. V3 is not deployed; durable history and completion-time tuning remain later.

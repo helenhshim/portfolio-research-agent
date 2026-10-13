@@ -2,6 +2,7 @@ import {runV3ControlledTurn,type V3Provider,type V3Timing} from './v3-controller
 import {exactKeys,validateV3Request,V3PolicyError,V3_LIMITS} from './v3-safety.ts';
 import {packetCoverage,presentV3Result,presentV3Finding} from './v3-presentation.ts';
 import {plainArtifactText,V3_RESEARCH_PROTOCOL,type ResearchStage,type TurnIdentity} from './v3-display.ts';
+import {createHash} from 'node:crypto';
 type Dependencies={packet:unknown;configured:()=>boolean;provider:(identity:TurnIdentity)=>V3Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void};
 const legacyStages=new Set(['preparing','researching','investigating','checking','recovering']);
 export function createV3Handler(deps:Dependencies){
@@ -43,7 +44,10 @@ export function createV3Handler(deps:Dependencies){
     });
     const presenting=performance.now();
     const artifact=presentV3Result(result,coverage,input.question,identity.revision);
-    deps.onDiagnostics?.({identity,protocol,elapsed_ms:elapsed(),first_verified_finding_ms:firstVerifiedFindingMs,verified_findings_published:verifiedFindings,timings,presentation_ms:Math.max(0,Math.round(performance.now()-presenting)),status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
+    // Never log user-controlled identity strings, fact IDs, questions, history,
+    // provider error bodies, quotes or draft contents. Retain operational counts.
+    const run_id=createHash('sha256').update(JSON.stringify(identity)).digest('hex');
+    deps.onDiagnostics?.({run_id,protocol,elapsed_ms:elapsed(),first_verified_finding_ms:firstVerifiedFindingMs,verified_findings_published:verifiedFindings,timings,presentation_ms:Math.max(0,Math.round(performance.now()-presenting)),status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops.map(d=>({kind:d.kind,...(d.reason?{reason:d.reason}:{})}))}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
     // DESIGN-DECISION: Coverage/clarification answers belong in the thread and preserve
     // the last useful brief. Mechanical success is not semantic task completion.
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);

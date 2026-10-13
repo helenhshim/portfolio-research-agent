@@ -1,4 +1,6 @@
 import {prepareV3Facts,prepareV3BaseFacts,V3_METRICS,type V3Metric,type V3Discrepancy} from './v3-financials.ts';
+import {hasIdentifiedSensitiveInput,V3_QUESTION_LIMIT} from './v3-input-policy.ts';
+export {hasIdentifiedSensitiveInput} from './v3-input-policy.ts';
 export class V3PolicyError extends Error {
  code:string;
  constructor(code:string){
@@ -7,10 +9,7 @@ export class V3PolicyError extends Error {
  }
 }
 const reject=(code:string):never=>{throw new V3PolicyError(code);};
-export const V3_LIMITS=Object.freeze({questionChars:2000,historyTurns:6,envelopeBytes:24000,providerCalls:2,toolCalls:2,toolRounds:1,deadlineMs:120000});
-export function hasIdentifiedSensitiveInput(text:string){
- return /\b(?:account|acct)(?:\s*(?:number|no\.?|#))?\s*[:=]?\s*\d[\d -]{5,}\b|\b\d{3}-\d{2}-\d{4}\b|\bsk-[A-Za-z0-9_-]{12,}\b|\bclient\s+(?:name|identity)\s*[:=]\s*\S+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(text);
-}
+export const V3_LIMITS=Object.freeze({questionChars:V3_QUESTION_LIMIT,historyTurns:6,envelopeBytes:24000,providerCalls:2,toolCalls:2,toolRounds:1,deadlineMs:120000});
 const plainObject=(value:any):value is Record<string,any>=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value)&&[Object.prototype,null].includes(Object.getPrototypeOf(value));
 export function exactKeys(value:any,keys:readonly string[]){
  if(!plainObject(value)||Object.keys(value).some(key=>!keys.includes(key)))return reject('invalid_shape');
