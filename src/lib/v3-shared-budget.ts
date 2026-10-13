@@ -26,7 +26,7 @@ return 1`;
 type Evaluator={eval:(script:string,keys:string[],args:(string|number)[])=>Promise<unknown>};
 export class V3SharedBudget {
  private redis:Evaluator; private key:string; private capMicroUsd:number;
- constructor(redis:Evaluator,key=V3_BUDGET_KEY,capMicroUsd=1_000_000){this.redis=redis;this.key=key;this.capMicroUsd=capMicroUsd;}
+ constructor(redis:Evaluator,key=V3_BUDGET_KEY,capMicroUsd=5_000_000){this.redis=redis;this.key=key;this.capMicroUsd=capMicroUsd;}
  async reserve(inputBytes:number){
   if(!Number.isSafeInteger(inputBytes)||inputBytes<0||inputBytes>240000)throw new V3PolicyError('input_limit');
   const amount=Math.ceil(inputBytes*2.5+5120*10),id=randomUUID();

@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.69. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; authenticated hosted journey checked; shared Preview budget implemented; credential-rotation confirmation and actual pilot gates remain open · Last updated: 2026-10-13
+Owner: Helen Shim · Status: v0.70. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; authenticated hosted journey checked; shared Preview budget implemented; credential-rotation confirmation and actual pilot gates remain open · Last updated: 2026-10-13
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. V2 is preserved at `prototype-2-baseline-2026-10-12`; current local experiments are on `prototype-3`, not a released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -852,3 +852,7 @@ The deployment-wide spending cap is still open: the current per-instance ledger 
 ## D99 shared Preview budget
 
 Helen approves Upstash Redis free plan and completes terms. Preview now uses an atomic, server-only shared $1 total allowance, without expiry or automatic reset across deployments. Reserve before every model call, settle from token usage, retain unknown usage conservatively, and reject new calls if storage is unavailable. No question/answer data is sent to Redis. Local development remains per-instance; older immutable Preview deployments are not retroactively covered. Key-rotation confirmation is still outstanding. Implementation and actual checks: `evals/prototype-3/SHARED-BUDGET-2026-10-13.md`.
+
+## D100 Preview allowance increase
+
+Helen explicitly raises the total shared research allowance from $1 to $5. Keep the same Redis counter key and all accumulated spending/reservations; this adds $4 of headroom, not a fresh $5 balance. No automatic reset, paid Redis upgrade, Production enablement or model-policy change.

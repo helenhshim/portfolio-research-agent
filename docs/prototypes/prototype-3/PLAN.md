@@ -111,3 +111,7 @@ Still open before calling spending/credential safeguards complete: shared atomic
 ## D99 shared budget follow-through
 
 Approved free Preview-only Redis is installed. New V3 Preview runtime uses a shared $1 total allowance with atomic pre-call reservations and conservative settlement. No automatic reset, no client budget control, fail closed when storage is unavailable. See `evals/prototype-3/SHARED-BUDGET-2026-10-13.md`. Old immutable deployments and local development do not gain this shared guard. Key rotation confirmation remains open.
+
+## D100 testing allowance
+
+The shared Preview allowance is now $5 total, retaining D99 spending in the same Redis key. Credential-rotation confirmation remains open. Next work: bounded completion-time experiment, then advisor/analyst pilot; the five saved UX improvements remain queued.
