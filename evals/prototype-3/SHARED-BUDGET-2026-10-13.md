@@ -24,3 +24,9 @@ Deployment verification recorded below after completion. Previously pasted API k
 Deployed to protected Preview `portfolio-research-agent-45g6ppaa8-helenhshims-projects.vercel.app` (deployment `dpl_4AkifeYdodytDzgrsvEy5TrsToyx`). One public default research call completed in 29,321ms with one provider call, zero tools and five incremental findings. The actual shared hash showed $0.403948 reserved with one outstanding reservation during the call; afterward it showed $0.101480 estimated spending and zero outstanding reservations. No budget reset performed. Approximately $0.898520 remains under the initial $1 allowance.
 
 Unauthenticated `/v3` returned 302. Updated only the stable V3 alias to this Preview; Production/V2 aliases unchanged. Local optimized client output: 17 files scanned against Preview API/Redis credentials, zero matches. No new quality or controlled latency claim.
+
+## D100 allowance increase
+
+Helen explicitly approved increasing the total allowance to $5. Source `68833c9` changes the shared ledger default only, preserving the Redis key and accumulated spending. Read-only Redis verification: $0.101480 spent/reserved, zero outstanding reservations, $4.898520 available under the new cap. No paid model call or counter reset performed for this change. Existing budget tests and typecheck pass; Vercel optimized build succeeds.
+
+Protected Preview: `portfolio-research-agent-jnydzppx4-helenhshims-projects.vercel.app`, deployment `dpl_GrPX5bWD6X79ojeNGFtYbp39XwhW`. Unauthenticated page returns 302; authenticated page returns 200. Stable V3 alias updated to this build. No Production promotion.
