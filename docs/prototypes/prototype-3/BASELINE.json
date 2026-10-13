@@ -1,0 +1,29 @@
+{
+  "prototype": 2,
+  "git_tag": "prototype-2-baseline-2026-10-12",
+  "git_commit": "89d9641",
+  "runtime_last_change": "961ea21",
+  "status": "local baseline; not a release or semantic pass",
+  "route": "/v2",
+  "model": "gpt-6.1-sol",
+  "effort": "low",
+  "verbosity": "low",
+  "prompt_version": "v2-public-research-7",
+  "schema_version": "v2-brief-schema-5",
+  "max_output_tokens": 3072,
+  "files": {
+    "src/data/nvda-quarter-pair.json": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+    "package-lock.json": "281da13367f7ddbabe9947452504712fa3a333cf695495667ea882c497f9a620",
+    "src/lib/v2-provider.ts": "32d9dba94d01b1e1dd7eff32bc15c1caaf3dac934c7a8438565d144a33a178cd",
+    "src/lib/v2-verifier.ts": "7a965109bdd5d6072087a3ecfc53129014270288dfa71693b45012ba22c31d5c",
+    "src/components/a3/workspace.tsx": "4b03e78ebc1291308b4a05d0a8895101eb8aa4fbeed94d96fd9e818fc7e68f82",
+    "src/components/a3/research-answer.tsx": "b5c7797a86772c278015694cd40f16229510e9e5b535be2c4cb4b446f80d3eb7"
+  },
+  "excludes": [
+    "credentials",
+    "dependencies",
+    "build output",
+    "Vercel settings",
+    "memory-only browser sessions"
+  ]
+}

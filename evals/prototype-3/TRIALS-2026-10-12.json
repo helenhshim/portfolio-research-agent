@@ -1,0 +1,173 @@
+{
+  "records": [
+    {
+      "label": "V2 local sandbox network attempt",
+      "capture": ".research-runs/public-v2-8eb6d27b-4ebb-473a-93dd-ef42c74e0d74/result.json",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-7",
+      "schema_version": "v2-brief-schema-5",
+      "elapsed_ms": 20,
+      "finding_milestones": [],
+      "status": "failed",
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "drops": null,
+      "provider_timings": [
+        {
+          "elapsed_ms": 17,
+          "http_status": null,
+          "status": "failed",
+          "first_text_ms": null,
+          "output_limit": 3072,
+          "usage": null,
+          "stream": null
+        }
+      ],
+      "diagnosed_error_code": null,
+      "raw_generation_saved": false,
+      "usage_unknown": true
+    },
+    {
+      "label": "V2 live matched baseline",
+      "capture": ".research-runs/public-v2-9b19c4ac-e8d8-4e15-b03f-e409ce1aab16/result.json",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-7",
+      "schema_version": "v2-brief-schema-5",
+      "elapsed_ms": 17173,
+      "finding_milestones": [
+        {
+          "id": "finding_1",
+          "elapsed_ms": 7471
+        },
+        {
+          "id": "finding_2",
+          "elapsed_ms": 11469
+        },
+        {
+          "id": "finding_3",
+          "elapsed_ms": 14274
+        }
+      ],
+      "status": "complete",
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "drops": [],
+      "provider_timings": [
+        {
+          "elapsed_ms": 17169,
+          "http_status": 200,
+          "status": "completed",
+          "first_text_ms": 4583,
+          "output_limit": 3072,
+          "usage": {
+            "input_tokens": 28783,
+            "output_tokens": 942,
+            "reasoning_tokens": 67,
+            "cached_input_tokens": 0
+          },
+          "stream": {
+            "received_bytes": 314408,
+            "event_count": 871,
+            "last_event_type": "response.completed",
+            "terminal_event": "response.completed",
+            "failure": null
+          }
+        }
+      ],
+      "diagnosed_error_code": null,
+      "raw_generation_saved": true,
+      "usage_unknown": false
+    },
+    {
+      "label": "V3 candidate attempt",
+      "capture": ".research-runs/public-v3-a9f8ede3-d9f5-4772-834e-f209d594e69e/result.json",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v3-thesis-research-1",
+      "schema_version": "v3-thesis-schema-1",
+      "elapsed_ms": 941,
+      "finding_milestones": [],
+      "status": "failed",
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "drops": null,
+      "provider_timings": [
+        {
+          "elapsed_ms": 938,
+          "http_status": 200,
+          "status": "failed",
+          "first_text_ms": null,
+          "output_limit": 5120,
+          "usage": null,
+          "stream": {
+            "received_bytes": 50224,
+            "event_count": 3,
+            "last_event_type": "error",
+            "terminal_event": null,
+            "failure": "event_error"
+          }
+        }
+      ],
+      "diagnosed_error_code": null,
+      "raw_generation_saved": false,
+      "usage_unknown": true
+    },
+    {
+      "label": "V3 public error diagnostic",
+      "capture": ".research-runs/public-v3-23a48375-aa63-45fc-a5f1-9bd315ec5c35/result.json",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v3-thesis-research-1",
+      "schema_version": "v3-thesis-schema-1",
+      "elapsed_ms": 1134,
+      "finding_milestones": [],
+      "status": "failed",
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "drops": null,
+      "provider_timings": [
+        {
+          "elapsed_ms": 1131,
+          "http_status": 200,
+          "status": "failed",
+          "first_text_ms": null,
+          "output_limit": 5120,
+          "usage": null,
+          "stream": {
+            "received_bytes": 50224,
+            "event_count": 3,
+            "last_event_type": "error",
+            "terminal_event": null,
+            "failure": "event_error"
+          }
+        }
+      ],
+      "diagnosed_error_code": "credit_balance_exhausted",
+      "raw_generation_saved": false,
+      "usage_unknown": true
+    }
+  ],
+  "limitations": "One V2 success, no V3 text; local network and provider-credit failures are not answer-quality scores. Unknown usage/reserved ledger amounts are not observed API charges."
+}
