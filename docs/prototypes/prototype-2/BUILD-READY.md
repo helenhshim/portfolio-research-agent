@@ -2,6 +2,8 @@
 
 2026-10-12 · D71 · Design preparation complete enough to begin the approved vertical-flow implementation. This is build readiness, not tested pilot readiness. No runtime changes, paid model trials or deployment in this checkpoint.
 
+Current contract includes D82's user-authorized incremental checked findings and thread-only answer/source-inspection presentation. D71/D72 readiness statements and earlier implementation notes below are historical; current verification is recorded separately, not inferred from build readiness.
+
 D72 progress: reusable V2 financial/controller/safety/verifier/revision modules and 31 scripted-provider unit tests now exist. [Coverage record](../../../evals/V2-SAFETY-RESULTS-2026-10-12.md) reports core passes and remaining integration/semantic gates. No actual provider/route/UI hookup or live call yet; earlier D71 preparation notes below are historical.
 
 ## What is settled before coding
@@ -21,9 +23,9 @@ D72 progress: reusable V2 financial/controller/safety/verifier/revision modules 
 
 **Tool 2 — get checked metrics:** choose from explicitly prepared metrics/comparisons, including GAAP operating margin/percentage-point change and the fixed cash bridge. Code returns values, units, definitions, quarter alignment and lineage; reject missing/incompatible facts or unreconciled bridge. The model never supplies arbitrary formulas or raw values for computation.
 
-**Answer/artifact:** typed findings with stable IDs, exact valid source references, eligible fact references, selected evidence/rows, limits/unanswered criteria and optional next action. Code renders numerical values from authoritative facts; every material interpretation still needs semantic evaluation. Actions reference surviving findings and available evidence. Preserve last valid brief on failure; reject late results from obsolete turns/revisions.
+**Answer/artifact:** typed findings with stable IDs, exact valid source references, eligible fact references, selected evidence/rows, limits/unanswered criteria and optional next action. Code renders numerical values from authoritative facts; every material interpretation still needs semantic evaluation. Actions reference surviving findings and available evidence. D82 permits only complete independently checked findings during generation, labeled as a developing answer. Full-draft dependency checks remain authoritative and reconcile/remove earlier provisional findings before completion. Clear provisional content on recovery, Stop or failure; preserve completed earlier answers under their original ownership. Reject late results from obsolete sessions/turns/revisions.
 
-**Visible states:** preparing/researching/checking → result, honest source limitation, explicit partial/check failure, provider failure or stopped. Stop cancels future work and prevents a late artifact replacement. Retry is user initiated. No raw unverified claims are streamed as checked results.
+**Visible states:** preparing/researching/investigating/checking → result, honest source limitation, explicit partial/check failure, provider failure or stopped. D82 animates real stage changes in one top-level progress line with one elapsed timer and reduced-motion support; independently checked findings can appear while generation continues. Stop cancels future work and prevents late publication/artifact replacement. User Retry remains explicit; D81's one formatting-only recovery may use the second existing call slot after a detected whitespace stall, never a third call. No raw unverified claims or private reasoning are streamed to the browser.
 
 **Protection:** server-only secrets; protected preview access; identified sensitive-input blocking before provider dispatch and no raw prompt/history in default logs; escaped output/catalog source links; input, call, time/output and resource limits. Detection is not guaranteed anonymization. Do not weaken checks for speed.
 
@@ -39,7 +41,7 @@ Control pass/fail results, actual E1–E5 outputs, E4 contextual action/revision
 
 1. Read relevant local Next.js guides. Add generic request/answer/artifact contracts, prepared margin/cash-bridge facts and meaningful financial/lineage regressions.
 2. Build server-only single-model synthesis and bounded tool execution. Add input/action/output budgets, source checks and explicit error paths.
-3. Wire thread + brief, selected CTA, revision handling and Stop, using the agreed compact hierarchy. Preserve a source-faithful response on missing evidence and valid prior work on generation/check failures.
+3. Wire the in-thread checked answer, source inspection, selected next-investigation CTA, revision handling and Stop, using the agreed compact hierarchy. D82 adds complete checked findings during generation; no Open brief CTA, Brief pane/tab or bottom source list. Preserve a source-faithful response on missing evidence and valid prior work on generation/check failures.
 4. Exercise deterministic control fixtures and actual repeated E1–E5 trials under fixed source/model/prompt/schema/config. Include failures and review material interpretations/omissions. Helen's live grades are new entries, not replacements for reference feedback.
 5. Deploy a separate protected preview only after product/control/semantic gates; compare useful reviewed task completion with a strong baseline. Unrun or failing critical controls prevent pilot release, not starting their implementation.
 
@@ -56,3 +58,14 @@ See [A3 implementation and trial record](../../checkpoints/A3-FRONTEND-2026-10-1
 ## D79 thread-first implementation update
 
 Checked answers now remain directly in the originating research turn, including selected comparisons, surviving findings, details, unanswered criteria and next CTA. Completion does not navigate to inspection. Open brief/source links select the originating answer for optional desktop split or dismissible narrow inspection. Remove global Thread/Brief switching and footer layout navigation; the header/index is still subsequent work. The same checked body renders both surfaces, with existing provider/data/verification contracts and no extra model call. See [thread-first checkpoint](../../checkpoints/V2-THREAD-FIRST-2026-10-12.md) for browser validation.
+
+
+## D82 progressive findings and focused source inspection
+
+Helen authorizes publishing complete checked findings incrementally before the final answer. Keep the existing one-model/two-code-tool controller and request budgets. Recognize complete structured finding objects server-side, apply the final verifier's finding-level shape/fact/quote/numerical/sensitive-output and complete-sentence closure rules, and publish only passing findings with validated attempt identity. No model text token or partial object goes straight to the UI. The thread labels these as reference-checked findings while the answer develops; neither final synthesis nor semantic support is certified early.
+
+Final full-draft checking controls the completed artifact and removes provisional findings that do not survive. Reset provisional content for formatting recovery, Stop, failure and obsolete identities. Test rejection before client publication, duplicate/out-of-order events, final reconciliation, cancellation/late callbacks and recovery boundaries. Keep completed earlier answers intact, and exclude unfinished attempts from history/evidence.
+
+Remove Open brief, the Brief inspection tab/full brief pane and standalone bottom source rows. Keep interpretation, financial evidence and calculations/cash-bridge disclosures in the thread. Compact inline `[1]`/`[2]` source controls expose actual report/date descriptions and open source inspection; quoted findings select exact passages, while fact-only findings use honest report/lineage provenance. No invented sentence-to-quote mapping. Source inspection remains keyboard accessible and dismissible on desktop/narrow screens.
+
+Advance from generating to remaining findings only after a checked finding, and to final synthesis only when the actual findings array closes. Animate only actual stage-label changes in the top-level StepLog using A3 tokens and reduced-motion rules. Show one elapsed timer while running and one total at completion; do not announce ticks, simulate progress or add output-generation calls. Header/index/history remain later scope. Tests, browser proof and any bounded live measurements belong in [D82 checkpoint](../../checkpoints/V2-PROGRESSIVE-FINDINGS-2026-10-12.md); live reliability, semantic support and E1–E5/pilot gates remain pending until evaluated.

@@ -1,0 +1,120 @@
+{
+  "public_E1_trials": [
+    {
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-6",
+      "schema_version": "v2-brief-schema-4",
+      "finding_milestones": [
+        {
+          "id": "finding_1",
+          "elapsed_ms": 7291
+        },
+        {
+          "id": "finding_2",
+          "elapsed_ms": 12424
+        },
+        {
+          "id": "finding_3",
+          "elapsed_ms": 16096
+        }
+      ],
+      "finding_resets": 0,
+      "elapsed_ms": 20026,
+      "run_reserved_or_estimated_usd": 0.0811575,
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "status": "complete",
+      "drops": [],
+      "finding_text_lengths": [
+        577,
+        800,
+        428
+      ],
+      "findings_end_in_sentence_punctuation": [
+        true,
+        false,
+        true
+      ],
+      "provider_timings": [
+        {
+          "first_event_ms": 1214,
+          "first_text_ms": 3531,
+          "elapsed_ms": 20019,
+          "usage": {
+            "input_tokens": 28723,
+            "output_tokens": 935,
+            "reasoning_tokens": 32,
+            "cached_input_tokens": 0
+          },
+          "status": "completed"
+        }
+      ],
+      "note": "Rejected as a complete-prose example: finding_2 hit the previous 800-character bound and ended mid-sentence, despite passing the earlier mechanical checks."
+    },
+    {
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-7",
+      "schema_version": "v2-brief-schema-5",
+      "finding_milestones": [
+        {
+          "id": "finding_1",
+          "elapsed_ms": 7571
+        },
+        {
+          "id": "finding_2",
+          "elapsed_ms": 10766
+        },
+        {
+          "id": "finding_3",
+          "elapsed_ms": 13592
+        }
+      ],
+      "finding_resets": 0,
+      "elapsed_ms": 17062,
+      "run_reserved_or_estimated_usd": 0.08128750000000001,
+      "counts": {
+        "provider_calls": 1,
+        "tool_calls": 0,
+        "tool_rounds": 0
+      },
+      "status": "complete",
+      "drops": [],
+      "finding_text_lengths": [
+        574,
+        660,
+        493
+      ],
+      "findings_end_in_sentence_punctuation": [
+        true,
+        true,
+        true
+      ],
+      "provider_timings": [
+        {
+          "first_event_ms": 929,
+          "first_text_ms": 3900,
+          "elapsed_ms": 17057,
+          "usage": {
+            "input_tokens": 28783,
+            "output_tokens": 933,
+            "reasoning_tokens": 56,
+            "cached_input_tokens": 0
+          },
+          "status": "completed"
+        }
+      ],
+      "note": "Accepted mechanical/prose-closure test; semantic evidence coverage remains a separate evaluation."
+    }
+  ],
+  "total_reserved_or_estimated_usd": 0.162445,
+  "measurements_are_not_a_latency_guarantee": true
+}

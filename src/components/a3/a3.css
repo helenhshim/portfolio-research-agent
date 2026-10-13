@@ -55,6 +55,9 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-answer-content p { overflow-wrap: anywhere; }
 .a3-step-log { color: var(--ink-3); }
 .a3-step-summary { flex-wrap: wrap; }
+.a3-step-task { min-width: 0; }
+.a3-step-task-label { display: inline-block; animation: a3-task-change var(--dur) var(--ease); }
+@keyframes a3-task-change { from { opacity: var(--opacity-disabled); transform: translateY(var(--space-1)); } to { opacity: 1; transform: translateY(0); } }
 .a3-step-duration { white-space: nowrap; }
 .a3-step-actions { display: flex; flex-direction: column; align-items: flex-start; }
 .a3-steps { display: flex; flex-direction: column; gap: var(--space-2); margin-block: var(--space-2); }
@@ -63,6 +66,8 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-research-layout { display: flex; flex: 1; min-width: 0; }
 .a3-inspection-toolbar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-6); border-bottom: var(--hairline); }
 .a3-inline-source { border: 0; background: transparent; color: var(--accent); text-decoration: underline; min-height: var(--hit-area); padding: var(--space-2); }
+.a3-inline-citation { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; min-width: var(--hit-area); min-height: var(--hit-area); border: 0; background: transparent; color: var(--accent); padding: 0; border-radius: var(--radius-cite); }
+.a3-inline-citation:hover { background: var(--surface-hover); }
 .a3-thread-pane[hidden] { display: none; }
 .a3-thread-pane { flex: 1 1 var(--pane-min-w); min-width: 0; padding: var(--space-5) var(--space-4) var(--space-4); border-right: var(--hairline); display: flex; flex-direction: column; gap: var(--space-6); }
 .a3-brief-pane { flex: 999 1 var(--workspace-min-w); min-width: 0; }

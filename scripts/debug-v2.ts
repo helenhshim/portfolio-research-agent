@@ -17,16 +17,17 @@ async function runPublicFixture(ledger:V2SpendLedger,directory:URL,run?:number){
  const before=ledger.reservedOrEstimatedUsd;
  const provider=createV2Provider(process.env.OPENAI_API_KEY!,{ledger,onTrace:trace=>traces.push(trace),onDraft:output=>{draft=output;},onIncompleteText:text=>{incompleteText=text;}});
  const started=performance.now();
- const result=await runV2ControlledTurn(publicRequest,packet,provider,{onTiming:timing=>timings.push(timing)});
+ const findingMilestones:{id:string;elapsed_ms:number}[]=[];let findingResets=0;
+ const result=await runV2ControlledTurn(publicRequest,packet,provider,{onTiming:timing=>timings.push(timing),onFinding:f=>findingMilestones.push({id:f.id,elapsed_ms:Math.round(performance.now()-started)}),onFindingsReset:()=>findingResets++});
  const elapsedMs=Math.round(performance.now()-started);
  await mkdir(directory,{recursive:true,mode:0o700});
  const draftSafe=draft!==undefined&&!hasIdentifiedSensitiveInput(JSON.stringify(draft));
  const resultSafe=!hasIdentifiedSensitiveInput(JSON.stringify(result));
  const incompleteSafe=typeof incompleteText==='string'&&!hasIdentifiedSensitiveInput(incompleteText);
- const capture={case_id:'E1',source_hash:sourceHash,model:V2_MODEL,effort:'low',prompt_version:V2_PROMPT_VERSION,schema_version:V2_SCHEMA_VERSION,traces,timings,elapsed_ms:elapsedMs,budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:Math.max(0,ledger.reservedOrEstimatedUsd-before),draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,
+ const capture={case_id:'E1',source_hash:sourceHash,model:V2_MODEL,effort:'low',prompt_version:V2_PROMPT_VERSION,schema_version:V2_SCHEMA_VERSION,traces,timings,finding_milestones:findingMilestones,finding_resets:findingResets,elapsed_ms:elapsedMs,budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:Math.max(0,ledger.reservedOrEstimatedUsd-before),draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,
   ...(run!==undefined?{run}:{}),...(draftSafe?{draft}:{}),...(incompleteSafe?{incomplete_text:incompleteText}:{}),...(resultSafe?{result}:{result:{status:result.status,counts:result.counts}})};
  const path=new URL('result.json',directory);await writeFile(path,JSON.stringify(capture,null,2),{mode:0o600});
- const summary={...(run!==undefined?{run}:{}),status:result.status,counts:result.counts,elapsed_ms:elapsedMs,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:capture.run_reserved_or_estimated_usd,draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,capture:path.pathname,
+ const summary={...(run!==undefined?{run}:{}),status:result.status,counts:result.counts,finding_milestones:findingMilestones,finding_resets:findingResets,elapsed_ms:elapsedMs,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:capture.run_reserved_or_estimated_usd,draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,capture:path.pathname,
   provider_timings:traces.map(trace=>({provider_call:trace.provider_call,elapsed_ms:trace.elapsed_ms,first_event_ms:trace.first_event_ms,first_text_ms:trace.first_text_ms,output_chars:trace.output_chars,status:trace.status,incomplete_reason:trace.incomplete_reason,usage:trace.usage})),
   ...('output' in result?{drops:result.output?.drops}:{error_code:result.error_code})};
  console.log(JSON.stringify(summary));

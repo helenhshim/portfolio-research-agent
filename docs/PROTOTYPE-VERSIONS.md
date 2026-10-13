@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D81.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D82.
 
-Prototype numbers identify product experiments. PRD v0.51 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.52 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -12,6 +12,8 @@ Prototype numbers identify product experiments. PRD v0.51 identifies a document 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 
 Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision memo](prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md) captures Helen's analyst-first pivot. Direction is documented; the initial D64 launch scope is approved under D65, and benefit remains to be tested.
+
+D82 implements complete independently checked findings during the existing model request, followed by the final checked answer in the same thread. Compact inline source inspection replaces Open brief and bottom source-list rows; actual stage changes animate with one timer. This is an iteration within Prototype 2, not a new prototype, deployment or release gate pass. [Progressive-findings checkpoint](checkpoints/V2-PROGRESSIVE-FINDINGS-2026-10-12.md) records implementation verification separately from live latency, semantic quality and user benefit.
 
 ## How we will work
 

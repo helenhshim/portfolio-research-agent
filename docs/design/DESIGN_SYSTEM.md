@@ -82,7 +82,7 @@ Rules:
 - Lines: hairline `1px var(--border)`. Ink rule `1px var(--ink)` on table tops and the composer. Signal underline `box-shadow: inset 0 -2px 0 var(--signal)` on one key cell.
 - Sizes: header 44px, rail 220px, workspace left pane min 360px, controls 28px, chips 22px. Hit areas ≥ 44px via padding.
 - Icons: Lucide, 14–16px, stroke 1.5, `--ink-2`. Status indicators are **6px squares**, not dots.
-- Motion: 120ms `--ease` on hover and expand. Status lines update live, but checked answers appear whole: never stream unverified claim text. The live step's signal square pulses (1s). No bounce, no spinners.
+- Motion: 120ms `--ease` on hover and expand. Status lines update live. Under D82, independently checked findings appear as complete blocks while the final answer develops; never stream unverified claim text. Actual active-stage label changes may use the same tokens. The live step's signal square pulses (1s). No bounce, no spinners.
 - Focus: `:focus-visible` 2px accent outline, 2px offset.
 
 ---
@@ -239,7 +239,9 @@ The canvas designs used placeholder content. In `portfolio-research-agent`, the 
 | Watchlist in 06c rail | One issuer, no prices | Replace with a "Coverage" section: NVDA available with source dates, other tickers listed as not covered, or omit. |
 | `/compare`, `/chart`, `/filing`, `/export`, `$` tickers | Only NVIDIA; export is P1 | Only show commands that map to real supported actions. The single next-investigation CTA (D65/D67) is a Quiet button under the answer. |
 | Threads list in 06c rail | Active session only, lost on reload | Show the current session's turns or omit; display the reload-loss notice (F7). |
-| 06b right pane "workspace" | Thread + brief artifact (D61) | Right pane is the **explicitly selected answer’s checked brief**: working question, direct answer, 1–3 metric rows (label / value / implication), supporting and qualifying evidence, unanswered questions, source and check status. Tabs appear only inside opened inspection: Brief, then one tab per source. Narrow inspection is full-width and dismissible with Close brief/Escape; no global Thread/Brief switch (D79). |
+| 06b right pane "workspace" | D82 keeps the answer in the thread and inspection for sources | Right pane is the **explicitly selected answer/finding's source inspection**: current/prior report tabs, actual report labels/dates and selected quoted passage when present. No Brief tab/full brief pane or Open brief CTA. Complete interpretation, 1–3 metric rows, findings, calculations/cash bridge and unanswered criteria stay in the thread. Narrow source inspection is full-width and dismissible with Close source/Escape; no global Thread/Brief switch. |
+| Bottom source list (06a; component 06) | Helen removes the standalone numbered rows (D82) | Use compact inline `[1]`/`[2]` source controls beside the supported context. Report label/date remain in the accessible description or tooltip and source inspection. No pills or numeral boxes; use existing mono/accent/focus/hit-area tokens. Fact-only evidence uses report/lineage provenance without an invented quoted passage. |
+| Whole checked answer after completion | D82 permits complete independently checked findings before completion | Render each passed finding as one block, labeled as a developing answer with reference checks. Final verification reconciles the complete answer; recovery, Stop and failure clear provisional findings. Never display unfinished objects or token-by-token unverified prose. |
 | Mock `[00.0]%` values | Real frozen NVDA packet and code-owned facts exist | Render values from existing `src/lib` contracts and data. Never display model-supplied numbers. |
 
 **States the PRD requires (design these with A3 parts)**
@@ -248,7 +250,7 @@ The canvas designs used placeholder content. In `portfolio-research-agent`, the 
 - Terminal states: complete, partial, unresolved, out of scope, failed, stopped. Each gets a one-line `text-meta` status label plus plain-language copy. Failed uses `--down` square plus text. Signal orange is never used for errors.
 - Limitation notice for partial results and excluded claims: hairline panel, 4px radius, `text-secondary`. No warning colors or icons beyond a status square.
 - Claim types must be distinguishable without color: label `Reported`, `Calculated`, `Interpretation`, `Assumption`, `Management outlook` in `text-meta` before or beside the claim.
-- Coverage and basis (F2, placement revised by D75): issuer, source dates, cutoff and GAAP operating-margin basis remain in the brief/source tabs and calculation details. Do not show the three-line composer scope block or the header “Frozen evidence” badge.
+- Coverage and basis (F2, placement revised by D75/D82): issuer, source dates, cutoff and GAAP operating-margin basis remain in source inspection and calculation details. Do not show the three-line composer scope block, header “Frozen evidence” badge or a repeated bottom source list.
 - Checked example (F11): clearly labeled as saved output with frozen dates.
 - "Reference checks passed" wording only; never imply semantic verification.
 
@@ -257,7 +259,7 @@ Log any decision that changes this mapping in `docs/DECISIONS.md` as the repo's 
 
 ## Components added after v1 (D73)
 
-Approved by Helen after the pre-code use-case mapping on 2026-10-12. Product scope remains D65–D72. Implementation is under `src/components/a3/`; `/v2` uses a separate root layout so the legacy route keeps its stylesheet. Eight text styles, palette, square geometry, one fact highlight and light-only behavior remain fixed.
+Approved by Helen after the pre-code use-case mapping on 2026-10-12; later authorized variants are recorded below through D82. Product scope follows the current PRD/build contract. Implementation is under `src/components/a3/`; `/v2` uses a separate root layout so the legacy route keeps its stylesheet. Eight text styles, palette, square geometry, one fact highlight and light-only behavior remain fixed. The original register records component history; later entries supersede earlier presentation requirements.
 
 | Component / variant | Spec use case | Anatomy | Variants and states | Existing pieces reused |
 |---|---|---|---|---|
@@ -274,9 +276,9 @@ Approved by Helen after the pre-code use-case mapping on 2026-10-12. Product sco
 
 ### Implementation decisions
 
-- 06a starts research and retains checked answers on completion. Explicit brief/source inspection opens 06b; the original automatic transition is superseded by D79. 06c remains a reference layout rather than a user-facing footer option, without broad ticker search, live prices, durable threads or placeholder commands. Export is omitted. The canvas's two follow-up rows become the PRD's zero/one action.
+- 06a starts research and retains checked answers on completion. Under D82, explicit source inspection opens 06b; Open brief/full brief inspection is removed. The original automatic transition was superseded by D79. 06c remains a reference layout rather than a user-facing footer option, without broad ticker search, live prices, durable threads or placeholder commands. Export is omitted. The canvas's two follow-up rows become the PRD's zero/one action.
 - Token additions encode A3's previously untokenized dimensions, focus, sparkline and pulse values, plus hit-target/accessibility constants. Sketch paddings and gaps outside the spacing scale use the nearest existing scale value. Fonts are bundled locally with `public/fonts/GEIST-LICENSE.txt`; no Google CSS import.
-- Responsive layout uses a ResizeObserver threshold derived from pane-width tokens, because CSS variables cannot supply media-query conditions. Desktop keeps the composer visible while the brief scrolls. Narrow screens use dismissible full-width inspection and contained table scrolling (D79).
+- Responsive layout uses a ResizeObserver threshold derived from pane-width tokens, because CSS variables cannot supply media-query conditions. Desktop keeps the composer visible alongside source inspection. Narrow screens use dismissible full-width inspection and contained table scrolling (D79/D82).
 - Source text is verbatim evidence. Original em dashes in SEC quotations remain unchanged to preserve quote fidelity; newly authored interface copy has no em dashes or emoji. This resolves the quote-integrity versus UI-copy conflict.
 - The core does not expose an inferred working-question or detailed claim-kind classification. Display the submitted research question, label synthesis as Interpretation, and identify source excerpts as Reported issuer statements. Do not invent semantic classifications. A small optional `answer_kind` field distinguishes analysis, source-limited, out-of-scope and clarification responses; live provider output requires it. Coverage/clarification replies preserve the previous useful artifact.
 - Top-level financial rows remain at most three; complete cash components are disclosed separately. No sparkline is forced onto a two-quarter comparison. No additional agent, source, export or persistence is introduced.
@@ -320,3 +322,24 @@ Helen requests removing the repeated composer helper copy and header evidence ba
 - **Use case:** generation whitespace stalls and uninterrupted same-turn recovery.
 - **Variant/state:** “Retrying response formatting” becomes the sole active stage; the abandoned generation action is failed, then existing checking/completed states apply. One timer and one Q/A turn remain.
 - **Reuses:** StepLog, Text meta, StatusSquare, existing stage history and Outcome. No new tokens/components or raw streamed claims. Generic user Retry remains explicit; this stage records a real bounded internal formatting request within the existing two-call maximum.
+
+
+### Complete finding preview, inline citations and source-only inspection (D82)
+
+- **Use cases:** E1/E3 useful supporting/qualifying evidence before synthesis completes; E2 code-owned numbers and lineage; E5 cancellation/recovery; Helen's request to remove Open brief and bottom source rows.
+- **Anatomy:** a developing-answer label, one complete finding block at a time, code-rendered figures and compact inline source controls. The final answer replaces/reconciles provisional findings only after full dependency checks. Source controls open an answer-owned report inspection pane with actual label/date, report tabs and exact cited excerpts where present.
+- **Variants/states:** developing/reference-checked, final complete/partial, source-limited and authored reference. Provisional content clears on recovery, Stop or failure. A failed finding never renders. Fact-only findings link honest report/lineage provenance; qualitative findings can select their exact quoted passage. Historical successful answers retain their own source inspection.
+- **Reuses:** Text/FactProse, QABlock, Citation, Tabs, SourcePassage, existing WorkspaceLayout widths, Outcome and source links. New compact InlineCitation uses mono `[1]`/`[2]`, accent only for source interaction, actual report/date tooltip or accessible label, visible focus and existing minimum hit-area token. It has no pill or boxed numeral and introduces no color/type/spacing values. The SourceList kit remains available as a reference primitive but is absent from answer and cash-bridge presentation.
+- **Overrides:** D79's Open brief action and internal Brief tab/full brief pane are removed. No standalone source list follows the answer or bridge. Calculation/bridge details remain native in-thread disclosures. This is Helen's explicit presentation update; the fixed A3 principles, eight text styles, light mode, square geometry, signal-once rule and accessibility requirements remain intact.
+- **Accessibility:** source controls are real buttons/links with report identification, visible keyboard focus and at least the tokenized hit area. Source tabs retain keyboard navigation. Close/Escape restores focus and preserves input, disclosures and thread position. Preview/status announcements describe completed checks; timers remain outside live announcements.
+- **Evidence boundary:** “Reference checks passed” describes mechanical validation only. No claim of semantic verification, complete clause-level citation support or final investment suitability. Qualitative citation-coverage review remains open.
+
+### StepLog · animated active stage (D82)
+
+- **Use case:** real subaction progress remains visible in the top-level L1 line while findings arrive.
+- **Anatomy:** existing live status square, current stage label and one elapsed duration; label entry animates only when the actual stage changes. Show/Hide actions stays on its secondary row; terminal state has one total duration.
+- **Variants/states:** preparing, generating, approved evidence/metric investigation, final checking, bounded formatting recovery and terminal outcomes. Do not simulate a stage sequence or expose private model reasoning. Stage history continues to record actual executed actions.
+- **Reuses:** StepLog, StatusSquare, existing Text styles and `--dur`, `--ease`, spacing/pulse tokens. Motion uses opacity/transform with no new animation dependency, layout jump, spinner or typing dots. `prefers-reduced-motion` suppresses label/pulse animations; active status is still readable.
+- **Scope:** this improves feedback, not model completion latency. No second timer, per-action duration repetition or live-announced clock ticks. Header/index/history remain deferred.
+
+D82 implementation checks also preserve keyboard focus when a developing citation is reconciled or Stop removes source inspection. Row implication placeholders resolve from the row's checked fact and keep numerical spans mono. The real stage sequence can include remaining-findings and final-synthesis milestones; it never invents private reasoning or delays.
