@@ -50,7 +50,9 @@ Current GAAP operating income $63.734B / current revenue $96.221B; prior-quarter
 
 Cash references: `NVDA:operating_cash_flow:current`, `:prior_quarter`, `:prior_year`, with eligible `NVDA:operating_cash_flow:qoq` and `:yoy` comparisons. Prior-year cash is $15.365B. Code-owned operating-income YoY is +124.1%; do not describe it as net-income growth. Source/definition/period correctness matters more than matching these exact sentences.
 
-## Evaluation specification v1.1: what exactly are the evals?
+## Evaluation specification v1.2: what exactly are the evals?
+
+D85 adds founder-observed reasoning/synthesis gaps to E1 and the human scorecard. Preserve v1.1 trial/reference records under their original rubric; this revision is not a completed scoring round. See [Helen's review log](V2-HELEN-REVIEW-LOG.md) for the reported, not yet source-matched, ChatGPT comparison.
 
 For a practical PM review routine, case-by-case questions and useful/partial/failing teaching examples, see [PM grading walkthrough](V2-PM-GRADING-WALKTHROUGH.md). It clarifies this specification without changing scope or gates; authored examples are not trial results.
 
@@ -84,6 +86,8 @@ Do not require a particular tool sequence when a different permitted path produc
 - **Known reference:** margin 66.2% versus 65.6%, +0.6 pp; revenue +17.9% QoQ; OCF −52.2% QoQ is a qualification, not proof that margins fell. Rubin announcement versus reported production does not establish product margins/repeat demand. Financing terms remain conditional where used.
 - **Grading:** code numerical/source/dependency checks; human review of support, inference, omissions and objective relevance.
 - **Pass:** no critical financial/support error; direct scoped interpretation supported by specific evidence; material qualifications not hidden. Wording/metric selection may differ if equally justified. A generic summary with correct numbers is insufficient.
+
+- **D85 depth/synthesis review:** Does the visually upfront checked verdict distinguish present performance from durability? Do the analytical points explain why the observations matter, with source-supported mechanisms or explicit missing discriminating evidence? Does the answer weigh the strongest support against material challenges, distinguish adverse evidence from absent proof, and tie that balance to a final business-thesis assessment? Is the next evidence likely to change or narrow that assessment? A list of positives/caveats, generic disclaimers, added length or matching ChatGPT's headings earns no automatic pass. Stock attractiveness cannot be established from operating performance without valuation evidence. No unsupported early verdict, forced bearishness or invented shipment/product economics.
 
 ### E2 (V2-02) — Does the agent handle a missing causal explanation honestly?
 
@@ -145,6 +149,7 @@ Use these anchors per applicable dimension; mark not-applicable with a reason. D
 | Counterevidence/omissions | Material contrary evidence omitted/misread | Qualification present but weakly connected | Material support and qualifications weighed without overstating either |
 | Next investigation, if offered | Generic, redundant, ungrounded or infeasible | Relevant question with unclear value/action | Finding-linked, goal-relevant, distinct and honest about available evidence; actionable CTA |
 | Continuation | Loses context or revises without basis | Context retained, mostly repetition | Follow-up resolves or narrows the question and usefully updates/preserves the artifact |
+| Explanatory depth and synthesis (D85) | Generic facts/caveats, unsupported mechanism or conclusion disconnected from evidence | Specific relevant analysis but weak weighting or final synthesis | Explains supported mechanisms/limits, weighs material evidence and ties it to a scoped verdict and what would change it |
 
 Analyst acceptance: **usable after review**, **needs substantive revision**, or **unusable**, with why and minutes/edits required. An accurate unresolved answer can be usable. “The model generated something” or “I liked the layout” does not establish task completion.
 
@@ -184,5 +189,7 @@ These expected judgments are human-authored calibration targets, not executed gr
 Use actual strong ChatGPT and the built V2 with identical frozen sources and equivalent instructions to examine support/counterevidence automatically. Allow appropriate calculation tools. Record model/mode/tools, task/source/config versions, elapsed-to-useful result, total reviewed task time, corrective turns, quality findings, incomplete/failed outcome and cost when available. Do not substitute an API run and label it ChatGPT. Source preparation cost is reported separately.
 
 Suggested starter baseline prompt: “Using the attached frozen NVIDIA reports and fiscal facts, answer this research objective: [question]. Choose relevant comparisons, examine supporting and qualifying evidence, distinguish reported facts/outlook/inference, cite material claims, preserve definitions and explain what is unresolved. Offer at most one nonredundant next investigation tied to the objective, saying whether the supplied evidence can support it. Keep the answer concise and reusable.”
+
+D85 comparison procedure: retain the reported ChatGPT answer when provided and label unmatched sources/configuration honestly. For a controlled comparison, use equal evidence/objective and judge material support, explanatory depth, evidence weighting, synthesis, and checking/editing work rather than length or section count. Compare current prompt/contract at low effort against a richer contract at the same effort first; then hold the candidate contract fixed for an effort comparison if warranted. Version any wire/schema/output-cap changes and record them as confounders, not an isolated reasoning-effort effect. Preserve source checks and record all failures, first useful checked finding, completion, cost and reviewed task time. Higher effort is a candidate to test, not a promised fix; no paid trial or runtime change in this rubric update.
 
 No baseline/model/practitioner trial was run to prepare this pack. Live trials begin only after the new question contract exists or a separately approved prompt experiment is ready. A small successful pilot is not proof of general superiority or production reliability.
