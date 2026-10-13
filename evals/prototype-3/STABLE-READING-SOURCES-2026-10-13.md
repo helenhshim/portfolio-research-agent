@@ -25,4 +25,4 @@ Text fragments depend on the browser and current source DOM. Repeated amounts ca
 
 Validation resets or withdrawals still remove invalid content; preserving invalid text for stable geometry is forbidden. Source/model latency and pilot usefulness were not re-graded in this presentation-only change.
 
-Deployment: protected V3 Preview update pending at time of this checkpoint's initial commit. Production/V2 are outside this release.
+Deployment: source commit `43d315b`, READY protected Preview `dpl_BWVftmYjXFm8vtWJNXtb1bg9FVXk`. Stable V3-only alias updated to `portfolio-research-agent-1ms94bblq-helenhshims-projects.vercel.app`. Authenticated page returns 200 with source-excerpt metadata; unauthenticated stable alias returns 302. Production/V2 were not deployed or promoted. Refresh the existing hosted tab to load this renderer; saved history is restored without generation.
