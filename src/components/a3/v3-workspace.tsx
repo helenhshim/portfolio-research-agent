@@ -13,11 +13,13 @@ function groupPassages(artifact:V3Evidence|null,source:string){
  return [...groups.values()];
 }
 export default function V3Workspace({coverage,reference,liveConfigured}:{coverage:Coverage;reference:V3Artifact;liveConfigured:boolean}){
- const [expandedFindings,setExpandedFindings]=useState<Record<string,string[]>>({});
  const [value,setValue]=useState(''),[inspection,setInspection]=useState<V3Evidence|null>(null),[turns,setTurns]=useState<ResearchTurn[]>([]),[running,setRunning]=useState(false),[inputError,setInputError]=useState(''),[tab,setTab]=useState<SourceRef['id']>('current'),[narrow,setNarrow]=useState(false),[selectedPassage,setSelectedPassage]=useState<string|null>(null);
  const host=useRef<HTMLDivElement>(null),input=useRef<HTMLTextAreaElement>(null),gate=useRef<V2RevisionGate<V3Artifact>|null>(null),active=useRef<{token:ReturnType<V2RevisionGate<V3Artifact>['begin']>;abort:AbortController;turnId:string}|null>(null),runningRef=useRef(false),provisionalInspection=useRef(false),inspectionPane=useRef<HTMLDivElement>(null),threadPane=useRef<HTMLElement>(null),opener=useRef<HTMLElement|null>(null),position=useRef({window:0,pane:0});
  const session=()=>{if(!gate.current)gate.current=new V2RevisionGate(crypto.randomUUID());return gate.current;};
- const openerLocation=useRef<{turn:string;label:string}|null>(null);
+ const openerLocation=useRef<{turn:string;label:string;finding?:string;line?:string}|null>(null);
+ function citationSelector(location:{turn:string;label:string;finding?:string;line?:string}){
+  return `#${CSS.escape(location.turn)} ${location.finding?`[data-finding-id="${CSS.escape(location.finding)}"] `:''}${location.line!==undefined?`[data-analysis-line="${CSS.escape(location.line)}"] `:''}button[aria-label="${CSS.escape(location.label)}"]`;
+ }
  useEffect(()=>{const el=host.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);const threshold=parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--workspace-min-w'));setNarrow(entries[0].contentRect.width<threshold);});observer.observe(el);return()=>observer.disconnect();},[]);
  useEffect(()=>()=>active.current?.abort.abort(),[]);
  useEffect(()=>{
@@ -30,21 +32,21 @@ export default function V3Workspace({coverage,reference,liveConfigured}:{coverag
   // Capture only thread-origin openers so switching source tabs does not lose the return target.
   if(!inspectionPane.current?.contains(document.activeElement)){
    opener.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
-   const turn=opener.current?.closest('.a3-qa')?.id,label=opener.current?.getAttribute('aria-label');openerLocation.current=turn&&label?{turn,label}:null;
+   const turn=opener.current?.closest('.a3-qa')?.id,label=opener.current?.getAttribute('aria-label'),finding=opener.current?.closest('[data-finding-id]')?.getAttribute('data-finding-id')??undefined,line=opener.current?.closest('[data-analysis-line]')?.getAttribute('data-analysis-line')??undefined;openerLocation.current=turn&&label?{turn,label,finding,line}:null;
    position.current={window:window.scrollY,pane:threadPane.current?.scrollTop??0};
   }
   provisionalInspection.current=!('takeaway' in saved);setInspection(saved);setTab(id);setSelectedPassage(passage??null);
  }
  function closeInspection(restore=true){
   provisionalInspection.current=false;setInspection(null);setSelectedPassage(null);
-  if(restore)requestAnimationFrame(()=>{const location=openerLocation.current;const surviving=location?host.current?.querySelector<HTMLElement>(`#${CSS.escape(location.turn)} button[aria-label="${CSS.escape(location.label)}"]`):null;const target=opener.current?.isConnected?opener.current:surviving??input.current;target?.focus({preventScroll:true});window.scrollTo({top:position.current.window,behavior:'auto'});if(threadPane.current)threadPane.current.scrollTop=position.current.pane;});
+  if(restore)requestAnimationFrame(()=>{const location=openerLocation.current;const surviving=location?host.current?.querySelector<HTMLElement>(citationSelector(location)):null;const target=opener.current?.isConnected?opener.current:surviving??input.current;target?.focus({preventScroll:true});window.scrollTo({top:position.current.window,behavior:'auto'});if(threadPane.current)threadPane.current.scrollTop=position.current.pane;});
  }
  function stop(){
   const current=active.current;if(!current)return;
   session().stop(current.token);current.abort.abort();active.current=null;runningRef.current=false;setRunning(false);closeInspection();
   const now=performance.now();setTurns(t=>updateAttempt(t,current.turnId,current.token.turn_id,a=>finishAttempt(a,{status:'stopped',error_code:'stopped'},now)));
  }
- function reset(){stop();gate.current=null;setInspection(null);setTurns([]);setExpandedFindings({});setValue('');setInputError('');setTab('current');requestAnimationFrame(()=>input.current?.focus());}
+ function reset(){stop();gate.current=null;setInspection(null);setTurns([]);setValue('');setInputError('');setTab('current');requestAnimationFrame(()=>input.current?.focus());}
  function showReference(){
   if(runningRef.current)return;const g=session(),token=g.begin(crypto.randomUUID()),saved={...reference,revision:token.revision};g.commit(token,saved);
   setTurns(t=>[...t,{id:token.turn_id,question:saved.question,history:researchHistory(t),attempts:[],reference:saved}]);closeInspection(false);
@@ -72,19 +74,17 @@ export default function V3Workspace({coverage,reference,liveConfigured}:{coverag
     if(event.type==='finding'){setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>addFinding(a,event)));return;}
     if(event.type==='findings_reset'){setTurns(t=>updateAttempt(t,turnId,token.turn_id,resetFindings));closeInspection(Boolean(inspectionPane.current?.contains(document.activeElement)));return;}
     received=true;focusComposer=Boolean(document.activeElement?.hasAttribute('data-research-stop'));const result=event.result;
-    const focusedFinding=document.activeElement?.matches('[data-finding-id] > details > summary')?document.activeElement.closest('[data-finding-id]')?.getAttribute('data-finding-id'):null;
+    const focused=document.activeElement instanceof HTMLElement&&document.activeElement.matches('.a3-inline-citation')&&document.activeElement.closest('.a3-qa')?.id==='turn-'+turnId?document.activeElement:null;
+    const focusedCitation=focused?{turn:'turn-'+turnId,label:focused.getAttribute('aria-label')??'',finding:focused.closest('[data-finding-id]')?.getAttribute('data-finding-id')??undefined,line:focused.closest('[data-analysis-line]')?.getAttribute('data-analysis-line')??undefined}:null;
     // A source opened from developing findings must follow the final surviving
     // evidence, never retain a finding excluded by the complete dependency check.
     if(provisionalInspection.current){if(result.artifact){setInspection(result.artifact);setSelectedPassage(null);provisionalInspection.current=false;}else closeInspection();}
     // DESIGN-DECISION: D79 keeps completion in the thread. Inspection is user-selected.
     if(!result.artifact||!g.commit(token,result.artifact))g.fail(token);
     setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,result,now)));
-    // The final checked body replaces the provisional component. Restore the
-    // surviving disclosure's keyboard focus without changing its open state.
-    if(focusedFinding)requestAnimationFrame(()=>{
-     const target=host.current?.querySelector<HTMLElement>(`#${CSS.escape('turn-'+turnId)} [data-finding-id="${CSS.escape(focusedFinding)}"] > details > summary`);
-     (target??input.current)?.focus({preventScroll:true});
-    });
+    // D89: inline analysis replaces the finding disclosure. Keep the exact
+    // surviving bullet's citation focus when the completed body reconciles it.
+    if(focusedCitation)requestAnimationFrame(()=>{(host.current?.querySelector<HTMLElement>(citationSelector(focusedCitation))??input.current)?.focus({preventScroll:true});});
    };
    try{while(true){const chunk=await reader.read();if(chunk.done)break;buffer+=decoder.decode(chunk.value,{stream:true});let index;while((index=buffer.indexOf('\n'))>=0){process(buffer.slice(0,index));buffer=buffer.slice(index+1);}}buffer+=decoder.decode();process(buffer);if(!received)throw Error('research_failed');}
    finally{
@@ -102,14 +102,9 @@ export default function V3Workspace({coverage,reference,liveConfigured}:{coverag
  const signalRevision=turns.reduce((revision,turn)=>Math.max(revision,turnArtifact(turn)?.revision??0),0);
  const thread=<>{turns.length===0?<div className="a3-empty"><Text as="h1" style="display">A question. The evidence. A sharper thesis.</Text><Text as="p" style="secondary">Pressure-test NVIDIA’s operating profitability using two frozen SEC reports. Ask what supports your premise, what challenges it and what remains unanswered.</Text><div className="a3-examples"><Text style="meta">Start with a question</Text>{[reference.question,'Why did cash flow fall? Does that mean margins are deteriorating?'].map(q=><Button variant="link" key={q} onClick={()=>{setValue(q);input.current?.focus();}}>{q}</Button>)}<Button variant="quiet" onClick={showReference}>View saved reference</Button></div></div>:turns.map(turn=>{
   const attempt=latestAttempt(turn),saved=turnArtifact(turn),failed=attempt&&['failed','check_failed','stopped'].includes(attempt.status);
-  const owner=attempt?.id??turn.id;
-  const disclosure={openIds:expandedFindings[owner]??[],onToggle:(id:string,open:boolean)=>setExpandedFindings(previous=>{
-   const ids=previous[owner]??[];if(ids.includes(id)===open)return previous;
-   return {...previous,[owner]:open?[...ids,id]:ids.filter(value=>value!==id)};
-  })};
   return <QABlock key={turn.id} id={`turn-${turn.id}`} question={turn.question}>
    {attempt&&<StepLog key={attempt.id} attempt={attempt} attemptNumber={turn.attempts.length}/>}
-   {attempt?.status==='running'?attempt.developing?<><Text as="p" style="secondary">References checked for the findings below. The answer is still developing; interpretation requires review.</Text><ResearchFindings evidence={attempt.developing} developing disclosure={disclosure} onSource={(id,passage)=>inspect(attempt.developing!,id,passage)}/></>:<Text as="p" style="secondary">Complete findings will appear as their references pass checks.</Text>:failed?<><Outcome showStatus={false} status={attempt.status} message={recoveryMessage(attempt)} retry={!running&&canRetry(attempt)?()=>void run(turn.question,turn.id):undefined}/><EvidenceDiscrepancies discrepancies={attempt.discrepancies} sources={coverage.sources} onSource={id=>inspect({findings:[],facts:[],sources:coverage.sources,cutoff:coverage.cutoff},id)}/></>:saved?<ResearchAnswer artifact={saved} running={running} disclosure={disclosure} highlight={!inspection&&saved.revision===signalRevision} onSource={(id,passage)=>inspect(saved,id,passage)} onInvestigate={q=>void run(q)}/>:<Text as="p"><FigureText text={attempt?.message??''}/></Text>}
+   {attempt?.status==='running'?attempt.developing?<><Text as="p" style="secondary">References checked for the findings below. The answer is still developing; interpretation requires review.</Text><ResearchFindings evidence={attempt.developing} developing onSource={(id,passage)=>inspect(attempt.developing!,id,passage)}/></>:<Text as="p" style="secondary">Complete findings will appear as their references pass checks.</Text>:failed?<><Outcome showStatus={false} status={attempt.status} message={recoveryMessage(attempt)} retry={!running&&canRetry(attempt)?()=>void run(turn.question,turn.id):undefined}/><EvidenceDiscrepancies discrepancies={attempt.discrepancies} sources={coverage.sources} onSource={id=>inspect({findings:[],facts:[],sources:coverage.sources,cutoff:coverage.cutoff},id)}/></>:saved?<ResearchAnswer artifact={saved} running={running} highlight={!inspection&&saved.revision===signalRevision} onSource={(id,passage)=>inspect(saved,id,passage)} onInvestigate={q=>void run(q)}/>:<Text as="p"><FigureText text={attempt?.message??''}/></Text>}
    {failed&&['unavailable','spend_limit','provider_quota'].includes(attempt.errorCode??'')&&<Button variant="quiet" disabled={running} onClick={showReference}>View saved reference</Button>}
    {turn.attempts.length>1&&<details className="a3-detail"><summary className="text-secondary">Previous attempts <FigureText text={`(${turn.attempts.length-1})`}/></summary><div className="a3-detail-content">{turn.attempts.slice(0,-1).map((prior,index)=><div key={prior.id}><Text style="meta"><FigureText text={`Attempt ${index+1}`}/></Text><StepLog attempt={prior}/><Text as="p" style="secondary">{recoveryMessage(prior)}</Text></div>)}</div></details>}
   </QABlock>;

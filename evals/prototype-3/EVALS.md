@@ -18,6 +18,8 @@ E1 durability: current performance vs persistence, operating leverage, relevant 
 - Wrong units/fiscal/GAAP headings, inconsistent prior figures, invented guidance calculations, duplicate/overflow findings and malformed events must fail safely. Specific exhausted-credit errors get no automatic retry or false research answer.
 - Check keyboard disclosure/source focus, narrow layout overflow, retained composer/Stop access, reduced-motion styling and numbers in mono. UI proof and authored examples are not model quality passes.
 
+D89 moves checked analytical text out of the disclosure and into visible bullets under grouped role headings. Check that all sentences/material qualifications survive sentence grouping, source controls still belong to the correct finding and financial lineage, and grouped developing findings do not prematurely publish a verdict. Check exact bullet source-focus return, complete/partial/failure/Stop behavior, and the merged investigation section with zero or one user-triggered executable action. Missing external evidence remains a limitation, not an invented tool. This supersedes the collapsed-analysis check for the current V3 UI only; calculation and bridge disclosures still need keyboard verification.
+
 ## Trial procedure
 
 First complete one matched V2/V3 E1 pair and review it, preserving failed candidate attempts. Then run three attempts per E1–E5 on a frozen candidate, plus held-out paraphrases/real analyst tasks and needed live safety variants. Measure first useful checked finding, full completion, all failures/recoveries, source-checking/editing minutes, corrective prompts, tool/model counts and estimated/reserved usage. Tiny samples do not establish a latency guarantee or p95.

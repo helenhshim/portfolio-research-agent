@@ -24,7 +24,7 @@ Prompt `v3-thesis-research-1`, schema `v3-thesis-schema-1`: up to six findings w
 
 Output ceiling is 5,120 tokens rather than V2's 3,072, with a seven-hundred-word authored target and bounded fields. This intentionally permits fuller analysis at fixed effort; it is a richer-contract/checked-fact/output-budget experiment, not an isolated prompting or effort effect. Existing character, time, call and spend limits still apply. Record truncation/recovery rather than silently publish unfinished claims.
 
-UI: 06a thread with upfront completed verdict, short qualified findings, native expandable supporting analysis, thesis assessment and unanswered/next action. Source links open 06b inspection. Same data table/calculation/cash bridge. Developing answers publish complete reference-checked findings; the final verdict/assessment appears only after full checks. No automatic tab navigation. Authored example is explicitly labeled, not a generated V3 answer.
+Initial D86 UI: 06a thread with upfront completed verdict, short qualified findings, native expandable supporting analysis, thesis assessment and unanswered/next action. D89 supersedes the collapsed-analysis presentation as described below. Source links open 06b inspection. Same data table/calculation/cash bridge. Developing answers publish complete reference-checked findings; the final verdict/assessment appears only after full checks. No automatic tab navigation. Authored example is explicitly labeled, not a generated V3 answer.
 
 ## Execute and decide
 
@@ -54,3 +54,9 @@ Acceptance criteria: a matching reported metric is reused without redundant reco
 Status: D87 specification implemented in V3 under D88; V2 remains the preserved baseline. See `evals/prototype-3/D87-REPORTED-FIRST-2026-10-12.md` for actual acceptance evidence. No source expansion, paid calls, deployment or live-quality claim in this migration.
 
 D88 updates the executed candidate to fact preparation `v3-reported-first-1` and prompt `v3-thesis-research-2`. Reported entries carry exact source/column/token/scale; only missing eligible comparisons carry formulas/inputs. Conflicting compatible cached calculations or cross-report historical values are exposed; disputed comparisons/baselines and dependent calculations are unavailable. Evidence basis/discrepancy disclosures preserve A3 and partial/failure ownership. The earlier first-candidate trials and quota failures remain historical; they are not trials of this migration.
+
+## D89 reading hierarchy, 2026-10-13
+
+Current presentation groups findings under semantic support/challenge/context headings using A3's existing Text title style, as Helen explicitly requests header-level type/size. Qualified finding summaries become Text strong subheadings; the selected analytical text is visible as at most three cited bullet groups, preserving every sentence and qualification. Financial citations follow the actual placeholders in each point; qualitative support remains finding-level. The repeated challenge sections become distinct subpoints under one heading. Missing evidence and the existing zero/one feasible action share “What to investigate next.” Basis and complete bridge stay inspectable. Source focus survives developing-to-final reconciliation and inspection close.
+
+This is a presentation change to the D88 candidate, with identical provider prompt/schema/fact preparation and source scope. No additional model call, automatic follow-up, claim selection or effort change. V2 stays preserved; candidate-1 and candidate-2 tags retain the earlier layouts. Browser/scripted checks are recorded separately from live reasoning/latency evaluation.

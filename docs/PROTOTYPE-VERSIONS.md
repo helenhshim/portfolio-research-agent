@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D88.
+Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D89.
 
-Prototype numbers identify product experiments. PRD v0.58 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.59 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -44,3 +44,5 @@ To inspect Prototype 1, use the protected Preview or export its tag into a separ
 D86 preserves V2 without claiming its pilot gates passed. Use `/v2` alongside `/v3` to compare without changing branches. The [baseline manifest](prototypes/prototype-3/BASELINE.json), [V2 retrospective](prototypes/prototype-2/RETROSPECTIVE.md), [V3 plan](prototypes/prototype-3/PLAN.md) and [V3 evaluation record](../evals/prototype-3/RESULTS-2026-10-12.md) capture configuration, learning, failed attempts and next decisions. The first V3 experiment keeps model/effort/sources fixed while changing checked-fact coverage, analysis/schema/UI and output cap; do not label it a pure reasoning-effort test.
 
 D88 applies reported-first financial evidence to V3 without altering V2 or the source packet. `prototype-3-candidate-1` preserves the preceding candidate; the next local candidate checkpoint identifies fact/prompt versions and recorded acceptance results. These candidate tags are not release gates or live-model quality passes.
+
+D89 improves V3's reading hierarchy: grouped headings, visible cited analysis and one unanswered/next-investigation section. `prototype-3-candidate-2` retains the D88 layout; `prototype-3-candidate-3` records the reading-hierarchy checkpoint. Model/source/fact contracts remain identical; presentation checks do not score live research quality or latency.

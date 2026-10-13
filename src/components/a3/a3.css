@@ -79,6 +79,14 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-brief-header { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-4); border-bottom: var(--ink-rule); }
 .a3-takeaway { display: flex; flex-direction: column; gap: var(--space-2); }
 .a3-findings article { padding-block: var(--space-3); border-top: var(--hairline); display: flex; flex-direction: column; gap: var(--space-2); }
+/* D89: V3-only reading hierarchy; V2's findings keep their existing layout. */
+.a3-finding-group { border-top: var(--hairline); padding-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); }
+.a3-v3-findings article { border-top: 0; padding-block: 0 var(--space-3); }
+.a3-v3-findings article:last-child { padding-bottom: 0; }
+.a3-analysis-lines { list-style: disc; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+.a3-analysis-lines li { overflow-wrap: anywhere; }
+.a3-investigation-next { align-items: stretch; gap: var(--space-3); }
+.a3-investigation-action { display: flex; flex-direction: column; align-items: start; gap: var(--space-2); }
 .a3-evidence-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .a3-citation { min-width: var(--hit-area); min-height: var(--hit-area); display: inline-flex; justify-content: center; align-items: center; background: transparent; border: 0; position: relative; text-decoration: none; }
 .a3-citation::before { content: ''; position: absolute; inset: var(--space-3); border: var(--stroke) solid var(--accent); border-radius: var(--radius-cite); }
