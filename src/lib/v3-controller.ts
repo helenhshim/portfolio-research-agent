@@ -1,7 +1,7 @@
 // Reusable V3 controller core. No provider, credential or HTTP endpoint is installed here.
 import {createV3Toolbox,validateV3Request,V3RunBudget,V3PolicyError,exactKeys,type V3ToolCall,type V3Request} from './v3-safety.ts';
 import {verifyV3Draft,verifyV3Finding,v3DraftSchema,type VerifiedV3Finding} from './v3-verifier.ts';
-import type {V3Fact} from './v3-financials.ts';
+import type {V3Fact,V3Discrepancy} from './v3-financials.ts';
 export type V3ProviderInput={request:V3Request;source_context:ReturnType<ReturnType<typeof createV3Toolbox>['sourceContext']>;tool_results:unknown[];schema:typeof v3DraftSchema};
 export type V3ProviderObserver={onFinding:(candidate:unknown)=>void;onFindingsReset:()=>void;onFindingsComplete?:()=>void};
 export type V3Provider=(input:V3ProviderInput,signal:AbortSignal,observer?:V3ProviderObserver)=>Promise<unknown>;
@@ -20,11 +20,13 @@ function controlledWait<T>(work:(signal:AbortSignal)=>Promise<T>,budget:V3RunBud
   },error=>finish(error));
  });
 }
-export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Provider,options:{signal?:AbortSignal;deadlineMs?:number;onStage?:(stage:string)=>void;onTiming?:(timing:V3Timing)=>void;onFinding?:(finding:VerifiedV3Finding,facts:V3Fact[])=>void;onFindingsReset?:()=>void}={}){
+export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Provider,options:{signal?:AbortSignal;deadlineMs?:number;onStage?:(stage:string)=>void;onTiming?:(timing:V3Timing)=>void;onFinding?:(finding:VerifiedV3Finding,facts:V3Fact[],discrepancies:V3Discrepancy[])=>void;onFindingsReset?:()=>void}={}){
  const budget=new V3RunBudget(options);
+ let discrepancies:V3Discrepancy[]=[];
  const timing=(step:V3Timing['step'],started:number,extra:Partial<V3Timing>={})=>options.onTiming?.({step,elapsed_ms:Math.max(0,Math.round(performance.now()-started)),...extra});
  try{
   const request=validateV3Request(input);budget.assertActive();options.onStage?.('preparing');const preparing=performance.now(),toolbox=createV3Toolbox(packet);timing('preparing',preparing);
+  discrepancies=toolbox.discrepancies;
   let toolResults:unknown[]=[];let formatRetry=false;
   for(let attempt=0;attempt<2;attempt++){
    budget.reserveProvider();
@@ -41,7 +43,7 @@ export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Pr
      if(typeof id==='string')seen.add(id);
      const finding=verifyV3Finding(candidate,toolbox);if(!finding)return;
      if(!developing){developing=true;options.onStage?.('developing');}
-     options.onFinding?.(finding,structuredClone([...toolbox.facts.values()]));
+     options.onFinding?.(finding,structuredClone([...toolbox.facts.values()]),structuredClone(toolbox.discrepancies));
     },
     onFindingsComplete(){
      if(!callOpen||!progressive||!developing||synthesizing||signal.aborted||options.signal?.aborted)return;
@@ -66,7 +68,8 @@ export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Pr
     try{output=verifyV3Draft(result.draft,toolbox);}catch(error){reset();throw error;}
     if(['out_of_scope','clarification'].includes(output.answer_kind))reset();
     timing('checking',checking);
-    return {status:output.status,output:{...output,facts:[...toolbox.facts.values()],sources:toolbox.sourceContext().sources,source_cutoff:packet.source_cutoff},counts:budget.counts};
+    const status=output.status==='complete'&&toolbox.discrepancies.length?'partial':output.status;
+    return {status,output:{...output,status,discrepancies:toolbox.discrepancies,facts:[...toolbox.facts.values()],sources:toolbox.sourceContext().sources,source_cutoff:packet.source_cutoff},counts:budget.counts};
    }
    if(result.kind!=='tools'||Object.hasOwn(result,'draft')||!Object.hasOwn(result,'calls'))throw new V3PolicyError('invalid_provider_result');
    // A final model request cannot start another tool round or hidden third request.
@@ -78,6 +81,6 @@ export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Pr
  }catch(error){
   // Never return provider error text, prompts, credentials or failed draft contents.
   const error_code=error instanceof V3PolicyError?error.code:'research_failed';
-  return {status:error_code==='stopped'?'stopped':'failed',error_code,counts:budget.counts};
+  return {status:error_code==='stopped'?'stopped':'failed',error_code,discrepancies,counts:budget.counts};
  }
 }

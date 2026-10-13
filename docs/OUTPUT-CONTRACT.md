@@ -89,3 +89,16 @@ Primary full-report synthesis selects existing eligible fact/comparison IDs for 
 ## Advisor holding-explanation alignment (D54)
 
 Primary output reuses the selected evidence for one concise advisor discussion point instead of a forced three-talking-point list. All claims retain dependency and source checks; no separate model call is required merely for the discussion copy. Group takeaway, qualitative evidence, selected financial rows, unanswered/watch conditions and discussion point. Do not imply actual portfolio exposure, suitability or client goal progress. Revised full-source selection and rendering remain pending.
+
+
+## Reported-first financial evidence policy (D87, 2026-10-12)
+
+Prefer a directly reported figure, ratio or growth rate when its metric definition, fiscal period, comparison baseline, units and GAAP/non-GAAP basis match the research question. Do not routinely recalculate an already reported metric or require a second data source solely to certify the issuer's arithmetic. Validation means checking correct extraction, context and source references; it does not certify the issuer's accounts or the model's interpretation.
+
+Use deterministic code only for a needed comparison or calculation not explicitly reported on the required basis, such as a cross-release margin change or a reconciled cash-flow bridge. Preserve input references, formula, period/basis checks and source precision. Do not subtract cumulative EPS or mix incompatible definitions. If the reported value and an existing derived value disagree beyond explainable rounding, expose the discrepancy and withhold the disputed comparison rather than silently substitute a value or average them.
+
+Keep reported and derived provenance distinct: reported facts retain the exact source location and reporting basis; derived facts additionally retain their formula and input lineage. The model selects and interprets eligible evidence, without inventing numbers or performing unchecked arithmetic. Missing or incompatible evidence remains an explicit limitation.
+
+Acceptance criteria: a matching reported metric is reused without redundant recomputation; a missing eligible comparison is calculated with traceable inputs; wrong-period/unit/basis extraction is rejected; reported precision is preserved; contradictory values are surfaced. These are requirements, not newly executed evaluation results.
+
+Status: D87 specification implemented in V3 under D88; V2 remains the preserved baseline. See `evals/prototype-3/D87-REPORTED-FIRST-2026-10-12.md` for actual acceptance evidence. No source expansion, paid calls, deployment or live-quality claim in this migration.

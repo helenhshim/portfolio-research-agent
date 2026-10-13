@@ -8,6 +8,9 @@ const draft={answer_kind:'analysis',findings:[
  {id:'finding_1',role:'supports',summary:'Scripted UI check: operating leverage supports current profitability, not persistence.',text:'Revenue growth of {{fact:NVDA:revenue:yoy}} exceeded expense growth of {{fact:NVDA:operating_expenses:yoy}}. This supports current operating leverage; repeat demand remains unproven.',fact_ids:['NVDA:revenue:yoy','NVDA:operating_expenses:yoy'],evidence:[]},
  {id:'finding_2',role:'challenges',summary:'Scripted UI check: cash conversion qualifies the thesis, without establishing a business cause.',text:'Operating cash flow fell {{fact:NVDA:operating_cash_flow:qoq}} sequentially. Accounting contributors do not establish payment defaults or temporary timing.',fact_ids:['NVDA:operating_cash_flow:qoq'],evidence:[]}
 ],takeaway:{text:'Scripted UI check: the profitability thesis strengthened, with cash conversion unresolved.',finding_ids:['finding_1','finding_2']},assessment:{text:'Scripted UI check: operating leverage supports the thesis while cash conversion qualifies persistence. Collection evidence would help resolve the assessment.',finding_ids:['finding_1','finding_2']},financial_rows:[],unanswered:['What would establish repeat demand and realized cash?'],next_investigation:null};
+// Synthetic cached-comparison conflict; canonical report files stay unchanged.
+const discrepancyTest=process.argv.slice(2).includes('--discrepancy');
+if(discrepancyTest){packet.comparisons.find((c:any)=>c.id==='NVDA:revenue:yoy').percentage_change=90;draft.findings[0].text='Revenue growth is withheld for a cached-comparison conflict. Expense growth of {{fact:NVDA:operating_expenses:yoy}} remains available; persistence is unresolved.';draft.findings[0].fact_ids=['NVDA:operating_expenses:yoy'];}
 let attempts=0;
 const handler=createV3Handler({packet,configured:()=>true,provider:()=>{
  const attempt=++attempts;
@@ -18,7 +21,7 @@ const handler=createV3Handler({packet,configured:()=>true,provider:()=>{
    signal.addEventListener('abort',stop,{once:true});if(signal.aborted)stop();
   });
   await wait(500);observer?.onFinding(draft.findings[0]);
-  await wait(16000);observer?.onFinding(draft.findings[1]);observer?.onFindingsComplete?.();await wait(1000);
+  await wait(discrepancyTest?500:16000);observer?.onFinding(draft.findings[1]);observer?.onFindingsComplete?.();await wait(1000);
   if(attempt===3)return {kind:'answer',draft:{...draft,takeaway:{text:draft.takeaway.text,finding_ids:['finding_6']}}};
   return {kind:'answer',draft};
  };

@@ -1,7 +1,7 @@
 import {Ajv} from 'ajv';
 import {hasFreeQuantity} from './verifier.ts';
 import {hasIdentifiedSensitiveInput} from './v3-safety.ts';
-import type {V3Fact} from './v3-financials.ts';
+import type {V3Fact,V3Discrepancy} from './v3-financials.ts';
 const text={type:'string',minLength:1,maxLength:1600};
 const strings={type:'array',items:{type:'string'},maxItems:12,uniqueItems:true};
 const object=(properties:any)=>({type:'object',properties,required:Object.keys(properties),additionalProperties:false});
@@ -9,7 +9,7 @@ const array=(items:any,maxItems:number)=>({type:'array',items,maxItems});
 const linked=object({text,finding_ids:strings});
 export const v3FindingSchema=object({id:{type:'string',enum:['finding_1','finding_2','finding_3','finding_4','finding_5','finding_6']},role:{type:'string',enum:['supports','challenges','context']},summary:{...text,maxLength:500},text:{...text,maxLength:2200},fact_ids:strings,evidence:array(object({paragraph_id:{type:'string'},quote:{...text,maxLength:800}}),3)});
 export type VerifiedV3Finding={id:string;role:'supports'|'challenges'|'context';summary:string;text:string;fact_ids:string[];evidence:{paragraph_id:string;quote:string}[]};
-type Toolbox={facts:Map<string,V3Fact>;paragraphs:Map<string,any>};
+type Toolbox={facts:Map<string,V3Fact>;paragraphs:Map<string,any>;discrepancies?:V3Discrepancy[]};
 export const v3DraftSchema=object({
  takeaway:linked,
  assessment:linked,
@@ -34,6 +34,10 @@ function findingReason(f:VerifiedV3Finding,toolbox:Toolbox):string|null {
  // Reject obvious unfinished prose; punctuation is not a semantic-support check.
  if(!/[.!?]["'”’)]*\s*$/.test(f.text))return 'unfinished_prose';
  if(!f.fact_ids.every(id=>toolbox.facts.has(id)))return 'invalid_fact_reference';
+ // Financial rows containing a known disputed comparison cannot bypass the
+ // eligible-fact catalog through exact quotation. Other eligible values remain
+ // usable by fact ID; code-owned conflict details show both values separately.
+ if(f.evidence.some(e=>toolbox.discrepancies?.some(d=>d.source_ids.includes(e.paragraph_id))))return 'disputed_source_comparison';
  if(!f.fact_ids.length&&!f.evidence.length)return 'missing_support_or_duplicate';
  if(!f.evidence.every(e=>{const p=toolbox.paragraphs.get(e.paragraph_id);return typeof p?.text==='string'&&e.quote.trim().length>=3&&normalize(p.text).includes(normalize(e.quote));}))return 'quote_mismatch';
  return null;

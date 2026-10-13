@@ -38,7 +38,7 @@ export function createV3Handler(deps:Dependencies){
     const timings:V3Timing[]=[];let firstVerifiedFindingMs:number|null=null,verifiedFindings=0;
     const coverage=packetCoverage(deps.packet);
     const result=await runV3ControlledTurn(input,deps.packet,deps.provider(identity),{signal:abort.signal,onTiming:timing=>timings.push(timing),onStage:stage=>{if(progressive||legacyStages.has(stage))send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity});},
-     onFinding:(finding,facts)=>{if(!progressive)return;firstVerifiedFindingMs??=elapsed();verifiedFindings++;send({type:'finding',finding:presentV3Finding(finding,coverage.sources),facts,sources:coverage.sources,cutoff:coverage.cutoff,identity});},
+     onFinding:(finding,facts,discrepancies)=>{if(!progressive)return;firstVerifiedFindingMs??=elapsed();verifiedFindings++;send({type:'finding',finding:presentV3Finding(finding,coverage.sources),facts,sources:coverage.sources,cutoff:coverage.cutoff,identity,discrepancies});},
      onFindingsReset:()=>{if(progressive)send({type:'findings_reset',identity});},
     });
     const presenting=performance.now();
@@ -47,7 +47,7 @@ export function createV3Handler(deps:Dependencies){
     // DESIGN-DECISION: Coverage/clarification answers belong in the thread and preserve
     // the last useful brief. Mechanical success is not semantic task completion.
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);
-    send({type:'result',result:{status:preserve?artifact.answer_kind:result.status,identity,run:{elapsed_ms:elapsed(),...result.counts},
+    send({type:'result',result:{status:preserve?artifact.answer_kind:result.status,identity,run:{elapsed_ms:elapsed(),...result.counts},discrepancies:'output' in result?result.output?.discrepancies:result.discrepancies,
      ...(!preserve&&artifact?{artifact}:{}),...(preserve?{message:plainArtifactText(artifact)}:{}),...('error_code' in result?{error_code:result.error_code}:{})}});
    }catch{send({type:'result',result:{status:'failed',error_code:'research_failed',identity}});}
    finally{active--;request.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;controller.close();}}

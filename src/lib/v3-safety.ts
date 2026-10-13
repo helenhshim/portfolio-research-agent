@@ -1,4 +1,4 @@
-import {prepareV3Facts,prepareV3BaseFacts,V3_METRICS,type V3Metric} from './v3-financials.ts';
+import {prepareV3Facts,prepareV3BaseFacts,V3_METRICS,type V3Metric,type V3Discrepancy} from './v3-financials.ts';
 export class V3PolicyError extends Error {
  code:string;
  constructor(code:string){
@@ -47,9 +47,10 @@ export type V3ToolCall={name:string;arguments:unknown};
 export function createV3Toolbox(authoritativePacket:any){
  // Snapshot once: subsequent client/object mutations cannot change evidence during this run.
  const packet=structuredClone(authoritativePacket);
- const baseFacts=prepareV3BaseFacts(packet);let facts=baseFacts;
+ const discrepancies:V3Discrepancy[]=[];
+ const baseFacts=prepareV3BaseFacts(packet,discrepancies);let facts=baseFacts;
  const unavailableMetrics:V3Metric[]=[];
- try{facts=prepareV3Facts(packet);}catch{unavailableMetrics.push('cash_bridge');}
+ try{facts=prepareV3Facts(packet,discrepancies,baseFacts);}catch{unavailableMetrics.push('cash_bridge');}
  const paragraphs=new Map<string,any>(packet.release.paragraphs.map((p:any)=>[`NVDA:${p.id}`,p]));
  const sources={current:packet.comparison_context.current.url,prior:packet.comparison_context.prior.url};
  for(const url of Object.values(sources)){
@@ -73,8 +74,8 @@ export function createV3Toolbox(authoritativePacket:any){
   return reject('forbidden_tool');
  };
  return {
-  facts,paragraphs,
-  sourceContext(){return structuredClone({ticker:'NVDA',source_cutoff:packet.source_cutoff,sources,unavailable_metrics:unavailableMetrics,paragraphs:[...paragraphs].map(([id,p])=>({id,text:p.text,source_period:p.source_period})),facts:[...facts.values()]});},
+  facts,paragraphs,discrepancies,
+  sourceContext(){return structuredClone({ticker:'NVDA',source_cutoff:packet.source_cutoff,sources,unavailable_metrics:unavailableMetrics,discrepancies,paragraphs:[...paragraphs].map(([id,p])=>({id,text:p.text,source_period:p.source_period})),facts:[...facts.values()]});},
   executeRound(calls:V3ToolCall[],budget:V3RunBudget){
    if(!Array.isArray(calls))return reject('invalid_tools');
    // Validate the whole batch before any execution, including duplicates independent of key order.

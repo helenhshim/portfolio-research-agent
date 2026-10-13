@@ -39,3 +39,18 @@ UI: 06a thread with upfront completed verdict, short qualified findings, native 
 ## Constraints and live blocker
 
 Sessions remain memory-only. Prior checked turns survive failed follow-ups/Stop in the active session; reload loses the session. Live credit-limit errors are specifically sanitized and do not trigger an automatic retry. No secrets or raw user input in default logs; debug captures support only the fixed public E1 fixture and stay in ignored `.research-runs/`.
+
+
+## Reported-first financial evidence policy (D87, 2026-10-12)
+
+Prefer a directly reported figure, ratio or growth rate when its metric definition, fiscal period, comparison baseline, units and GAAP/non-GAAP basis match the research question. Do not routinely recalculate an already reported metric or require a second data source solely to certify the issuer's arithmetic. Validation means checking correct extraction, context and source references; it does not certify the issuer's accounts or the model's interpretation.
+
+Use deterministic code only for a needed comparison or calculation not explicitly reported on the required basis, such as a cross-release margin change or a reconciled cash-flow bridge. Preserve input references, formula, period/basis checks and source precision. Do not subtract cumulative EPS or mix incompatible definitions. If the reported value and an existing derived value disagree beyond explainable rounding, expose the discrepancy and withhold the disputed comparison rather than silently substitute a value or average them.
+
+Keep reported and derived provenance distinct: reported facts retain the exact source location and reporting basis; derived facts additionally retain their formula and input lineage. The model selects and interprets eligible evidence, without inventing numbers or performing unchecked arithmetic. Missing or incompatible evidence remains an explicit limitation.
+
+Acceptance criteria: a matching reported metric is reused without redundant recomputation; a missing eligible comparison is calculated with traceable inputs; wrong-period/unit/basis extraction is rejected; reported precision is preserved; contradictory values are surfaced. These are requirements, not newly executed evaluation results.
+
+Status: D87 specification implemented in V3 under D88; V2 remains the preserved baseline. See `evals/prototype-3/D87-REPORTED-FIRST-2026-10-12.md` for actual acceptance evidence. No source expansion, paid calls, deployment or live-quality claim in this migration.
+
+D88 updates the executed candidate to fact preparation `v3-reported-first-1` and prompt `v3-thesis-research-2`. Reported entries carry exact source/column/token/scale; only missing eligible comparisons carry formulas/inputs. Conflicting compatible cached calculations or cross-report historical values are exposed; disputed comparisons/baselines and dependent calculations are unavailable. Evidence basis/discrepancy disclosures preserve A3 and partial/failure ownership. The earlier first-candidate trials and quota failures remain historical; they are not trials of this migration.

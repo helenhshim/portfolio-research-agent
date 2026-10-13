@@ -19,5 +19,5 @@ export function presentV3Result(result:Awaited<ReturnType<typeof runV3Controlled
   findings:output.findings.map((f:any)=>presentV3Finding(f,coverage.sources)),
   rows:output.financial_rows.map((r:any)=>relatedRow(r.fact,facts,r.implication)),facts,
   unanswered:output.unanswered,next:next?{question:next.question,finding_ids:next.finding_ids,label:next.metric_ids.includes('cash_bridge')?'Inspect cash-flow contributors':next.metric_ids.includes('operating_cash_flow')?'Compare cash-flow trends':next.metric_ids.includes('operating_margin')?'Compare operating margins':'Investigate this question'}:null,
-  sources:coverage.sources,cutoff:coverage.cutoff};
+  sources:coverage.sources,cutoff:coverage.cutoff,discrepancies:output.discrepancies};
 }

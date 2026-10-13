@@ -34,3 +34,7 @@ node scripts/debug-v3.ts --replay /absolute/path/to/public-v3-capture/result.jso
 ```
 
 Each script ledger bounds that invocation including failures; it is not an account-wide or deployed aggregate spend limit. Captures are public-fixture-only and ignored by Git. Never run an attractive-samples-only batch or feed held-out reference answers into runtime prompts.
+
+## D87 / D88 reported-first acceptance slice
+
+Check direct reported rates/precision and source columns; missing-rate/ratio fallback with explicit formula/inputs; period/unit/GAAP/baseline rejection; optional legacy fact/cache data; compatible rounding vs actual discrepancy; cross-report baseline and dependent-comparison withholding; no exact-quote bypass of a disputed financial row; source-owned reported/calculated labels and visible discrepancies through progressive/partial/check-failed states. Version fact preparation in all new runs/replays. Preserve earlier candidate records without regrading silently. These deterministic/browser checks do not establish live synthesis quality or latency.

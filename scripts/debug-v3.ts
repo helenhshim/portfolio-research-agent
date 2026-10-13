@@ -4,6 +4,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {runV3ControlledTurn} from '../src/lib/v3-controller.ts';
 import {createV3Provider,V3SpendLedger,V3_MODEL,V3_SCHEMA_VERSION,V3_PROMPT_VERSION,type V3Trace} from '../src/lib/v3-provider.ts';
 import {hasIdentifiedSensitiveInput,createV3Toolbox} from '../src/lib/v3-safety.ts';
+import {V3_FACTS_VERSION} from '../src/lib/v3-financials.ts';
 import {verifyV3Draft} from '../src/lib/v3-verifier.ts';
 
 const bytes=await readFile(new URL('../src/data/nvda-quarter-pair.json',import.meta.url));
@@ -24,7 +25,7 @@ async function runPublicFixture(ledger:V3SpendLedger,directory:URL,run?:number){
  const draftSafe=draft!==undefined&&!hasIdentifiedSensitiveInput(JSON.stringify(draft));
  const resultSafe=!hasIdentifiedSensitiveInput(JSON.stringify(result));
  const incompleteSafe=typeof incompleteText==='string'&&!hasIdentifiedSensitiveInput(incompleteText);
- const capture={case_id:'E1',source_hash:sourceHash,model:V3_MODEL,effort:'low',prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,traces,timings,finding_milestones:findingMilestones,finding_resets:findingResets,elapsed_ms:elapsedMs,budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:Math.max(0,ledger.reservedOrEstimatedUsd-before),draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,
+ const capture={case_id:'E1',source_hash:sourceHash,fact_preparation_version:V3_FACTS_VERSION,model:V3_MODEL,effort:'low',prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,traces,timings,finding_milestones:findingMilestones,finding_resets:findingResets,elapsed_ms:elapsedMs,budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:Math.max(0,ledger.reservedOrEstimatedUsd-before),draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,
   ...(run!==undefined?{run}:{}),...(publicFixtureError?{public_fixture_error:publicFixtureError}:{}),...(draftSafe?{draft}:{}),...(incompleteSafe?{incomplete_text:incompleteText}:{}),...(resultSafe?{result}:{result:{status:result.status,counts:result.counts}})};
  const path=new URL('result.json',directory);await writeFile(path,JSON.stringify(capture,null,2),{mode:0o600});
  const summary={...(run!==undefined?{run}:{}),status:result.status,counts:result.counts,finding_milestones:findingMilestones,finding_resets:findingResets,elapsed_ms:elapsedMs,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,run_reserved_or_estimated_usd:capture.run_reserved_or_estimated_usd,draft_saved:draftSafe,incomplete_text_saved:incompleteSafe,capture:path.pathname,
@@ -47,6 +48,7 @@ if(args[0]==='--replay'&&args.length===2){
  let capture:any;try{capture=JSON.parse(await readFile(args[1],'utf8'));}catch{throw Error('Cannot read a public debug capture.');}
  if(capture.case_id!=='E1')throw Error('Only the public E1 fixture is supported.');
  if(capture.source_hash!==sourceHash)throw Error('Source version mismatch; do not silently replay against different evidence.');
+ if(capture.fact_preparation_version!==V3_FACTS_VERSION)throw Error('Fact preparation version mismatch; replay with the original candidate code.');
  if(!capture.draft)throw Error('This capture contains no completed replayable draft.');
  if(hasIdentifiedSensitiveInput(JSON.stringify(capture.draft)))throw Error('This capture contains identified sensitive patterns and cannot be replayed.');
  const result=verifyV3Draft(capture.draft,createV3Toolbox(packet));
@@ -66,7 +68,7 @@ if(args[0]==='--replay'&&args.length===2){
   if('error_code' in result&&result.error_code==='spend_limit')break;
  }
  const checked=runs.filter(run=>['complete','partial'].includes(run.status));
- const summary={event:'v3_public_benchmark',case_id:'E1',source_hash:sourceHash,model:V3_MODEL,effort:'low',prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,runs_requested:count,runs_completed:runs.length,checked_completions:checked.length,complete_without_drops:runs.filter(run=>run.status==='complete').length,checked_completion_rate:checked.length/runs.length,all_attempt_durations:durationSummary(runs.map(run=>run.elapsed_ms)),checked_answer_durations:durationSummary(checked.map(run=>run.elapsed_ms)),budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,stopped_due_to_spend_cap:runs.some(run=>'error_code' in run&&run.error_code==='spend_limit'),runs};
+ const summary={event:'v3_public_benchmark',case_id:'E1',source_hash:sourceHash,fact_preparation_version:V3_FACTS_VERSION,model:V3_MODEL,effort:'low',prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,runs_requested:count,runs_completed:runs.length,checked_completions:checked.length,complete_without_drops:runs.filter(run=>run.status==='complete').length,checked_completion_rate:checked.length/runs.length,all_attempt_durations:durationSummary(runs.map(run=>run.elapsed_ms)),checked_answer_durations:durationSummary(checked.map(run=>run.elapsed_ms)),budget_cap_usd:ledger.capUsd,reserved_or_estimated_usd:ledger.reservedOrEstimatedUsd,stopped_due_to_spend_cap:runs.some(run=>'error_code' in run&&run.error_code==='spend_limit'),runs};
  const path=new URL('summary.json',directory);await writeFile(path,JSON.stringify(summary,null,2),{mode:0o600});
  console.log(JSON.stringify({...summary,runs:undefined,capture:path.pathname}));
  process.exitCode=checked.length===count?0:1;

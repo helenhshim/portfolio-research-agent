@@ -1,7 +1,8 @@
 import {plainArtifactText,type ResearchStage,type V3Artifact,type V3RunSummary,type V3TurnResult,type V3Event,type V3Evidence,type TurnIdentity} from './v3-display.ts';
+import type {V3Discrepancy} from './v3-financials.ts';
 export type HistoryEntry={role:'user'|'assistant';text:string};
 export type TimedStep={stage:ResearchStage;startedMs:number;endedMs?:number;receivedAt:number;state:'live'|'done'|'failed'|'idle'};
-export type ResearchAttempt={id:string;startedAt:number;endedAt?:number;status:string;steps:TimedStep[];message?:string;errorCode?:string;artifact?:V3Artifact;run?:V3RunSummary;developing?:V3Evidence};
+export type ResearchAttempt={id:string;startedAt:number;endedAt?:number;status:string;steps:TimedStep[];message?:string;errorCode?:string;artifact?:V3Artifact;run?:V3RunSummary;developing?:V3Evidence;discrepancies?:V3Discrepancy[]};
 export type ResearchTurn={id:string;question:string;history:HistoryEntry[];attempts:ResearchAttempt[];reference?:V3Artifact};
 export const stageLabels:Record<ResearchStage,string>={preparing:'Preparing report evidence',researching:'Generating the research answer',investigating:'Inspecting approved evidence or metrics',developing:'Developing the remaining findings',synthesizing:'Writing the takeaway and remaining details',checking:'Checking references and dependencies',recovering:'Retrying response formatting'};
 export const latestAttempt=(turn:ResearchTurn)=>turn.attempts.at(-1);
@@ -25,7 +26,7 @@ export function addFinding(attempt:ResearchAttempt,event:Extract<V3Event,{type:'
  if(attempt.status!=='running'||attempt.developing?.findings.some(f=>f.id===event.finding.id))return attempt;
  const findings=[...(attempt.developing?.findings??[]),event.finding];
  if(findings.length>6)return attempt;
- return {...attempt,developing:{findings,facts:event.facts,sources:event.sources,cutoff:event.cutoff}};
+ return {...attempt,developing:{findings,facts:event.facts,sources:event.sources,cutoff:event.cutoff,discrepancies:event.discrepancies}};
 }
 export function resetFindings(attempt:ResearchAttempt):ResearchAttempt{return {...attempt,developing:undefined};}
 export function matchesTurnEvent(candidate:unknown,token:TurnIdentity,activeTurnId:string|undefined,received:boolean):boolean{
@@ -36,10 +37,10 @@ export function matchesTurnEvent(candidate:unknown,token:TurnIdentity,activeTurn
  const identity=event.type==='result'?event.result?.identity:event.identity;
  return Boolean(identity)&&!received&&activeTurnId===token.turn_id&&identity.session_id===token.session_id&&identity.turn_id===token.turn_id&&identity.revision===token.revision;
 }
-export function finishAttempt(attempt:ResearchAttempt,result:Pick<V3TurnResult,'status'|'message'|'error_code'|'artifact'|'run'>,now:number):ResearchAttempt{
+export function finishAttempt(attempt:ResearchAttempt,result:Pick<V3TurnResult,'status'|'message'|'error_code'|'artifact'|'run'|'discrepancies'>,now:number):ResearchAttempt{
  const last=attempt.steps.at(-1),end=result.run?.elapsed_ms??(last?last.startedMs+Math.max(0,now-last.receivedAt):0);
  const success=['complete','partial','out_of_scope','clarification','source_limited'].includes(result.status);
- return {...attempt,status:result.status,endedAt:now,message:result.message,errorCode:result.error_code,artifact:result.artifact,run:result.run,developing:undefined,
+ return {...attempt,status:result.status,endedAt:now,message:result.message,errorCode:result.error_code,artifact:result.artifact,run:result.run,developing:undefined,discrepancies:result.discrepancies,
   steps:attempt.steps.map(s=>s.state==='live'?{...s,endedMs:Math.max(s.startedMs,end),state:success?'done':result.status==='stopped'?'idle':'failed'}:s)};
 }
 export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{

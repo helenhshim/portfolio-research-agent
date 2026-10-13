@@ -1,0 +1,30 @@
+{
+  "decision": "D87 runtime implementation under D88",
+  "prototype": 3,
+  "fact_preparation_version": "v3-reported-first-1",
+  "prompt_version": "v3-thesis-research-2",
+  "generated_schema_version": "v3-thesis-schema-1",
+  "model": "gpt-6.1-sol",
+  "effort": "low",
+  "output_limit": 5120,
+  "canonical_source_sha256": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+  "deterministic_tests": {
+    "total": 141,
+    "passed": 141,
+    "failed": 0,
+    "new_reported_first_cases": 13
+  },
+  "typecheck": "passed",
+  "production_build": "passed",
+  "browser": {
+    "reported_precision_and_provenance": "passed on authored example",
+    "explicit_periods_and_derived_formulas": "passed on authored example",
+    "visible_withheld_comparison": "passed synthetic fixture",
+    "keyboard_discrepancy_disclosure": "passed synthetic fixture",
+    "failed_answer_keeps_discrepancy_and_prior_results": "passed synthetic fixture"
+  },
+  "paid_calls": 0,
+  "source_retrievals": 0,
+  "live_model_quality": "pending; prior V3 trial returned exhausted-credit error",
+  "v2_source_manifest_unchanged": true
+}

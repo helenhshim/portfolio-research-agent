@@ -362,3 +362,10 @@ D82 implementation checks also preserve keyboard focus when a developing citatio
 - **Variants/states:** independently checked developing finding, completed/partial answer, authored reference; collapsed/expanded analysis. Expanded state is attempt-owned and retained at final completion; new attempts/sessions have independent state. Stop/recovery clears provisional content as before.
 - **Reuse:** Text/FactProse/FigureText, existing inline citations/source inspection, native CalculationDetail disclosure classes/hit areas, DataTable, Q/A, StepLog and WorkspaceLayout. No new colors, sizes, spacing, motion, pills, shadows or tabs.
 - **Precedence:** D86 adds typed interpretive roles and a checked summary to V3. This supersedes the historical lack of role fields for V3 only; roles are model interpretations, not verification or investment ratings. Both summary/detail need valid facts/references, and essential qualifications must remain visible in the summary. V2 styling/contract remains unchanged.
+
+### V3 evidence basis and discrepancy disclosures (D88)
+
+- **Use case:** D87 extraction/provenance/discrepancy acceptance in Prototype 3 E1–E4; failed-answer transparency.
+- **Anatomy:** existing native detail for evidence basis, reported/calculated labels, explicit fiscal periods/comparison baselines, source token/scale or formula/input values. A source conflict adds a short visible notice and native “Inspect discrepancies” detail with code-owned values and existing inline source controls.
+- **States:** collapsed/expanded, reported/derived/rounded-input calculation; developing/complete/partial/failed answer with known discrepancy. A failed answer can show source issues while retaining earlier checked work.
+- **Reuse:** Text, FigureText/mono data, InlineCitation/source inspection, existing limitation/disclosure classes and accessible hit areas. No new colors, typography, space, radius, lines, motion or tabs. Source context/basis inspection replaces the misleading all-calculated label in V3 only.
