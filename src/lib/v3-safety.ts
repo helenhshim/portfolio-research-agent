@@ -4,7 +4,7 @@ export {hasIdentifiedSensitiveInput} from './v3-input-policy.ts';
 export class V3PolicyError extends Error {
  code:string;
  constructor(code:string){
-  const allowed=['invalid_shape','invalid_input','input_limit','invalid_text','sensitive_input','history_limit','invalid_role','invalid_deadline','stopped','deadline','provider_limit','tool_limit','source_url','invalid_period','invalid_paragraph','invalid_metric','unavailable_metric','forbidden_tool','invalid_tools','duplicate_tool','invalid_provider_result','spend_limit','provider_incomplete','provider_whitespace_loop','provider_quota'];
+  const allowed=['invalid_shape','invalid_input','input_limit','invalid_text','sensitive_input','history_limit','invalid_role','invalid_deadline','stopped','deadline','provider_limit','tool_limit','source_url','invalid_period','invalid_paragraph','invalid_metric','unavailable_metric','forbidden_tool','invalid_tools','duplicate_tool','invalid_provider_result','spend_limit','budget_unavailable','provider_incomplete','provider_whitespace_loop','provider_quota'];
   const safeCode=allowed.includes(code)?code:'research_failed';super(safeCode);this.name='V3PolicyError';this.code=safeCode;
  }
 }

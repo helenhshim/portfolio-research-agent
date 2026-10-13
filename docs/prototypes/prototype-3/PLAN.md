@@ -101,3 +101,13 @@ Stable V3 testing URL: https://portfolio-research-agent-v3-helenhshims-projects.
 ## D97 follow-up before remaining priorities
 
 Helen explicitly approves stable streaming presentation and exact-location citation work. Implemented reserved verdict, append-order findings, user-opened context summary and original-source text fragments with inspectable financial excerpts/periods. These changes precede remaining spending/hosted-browser/latency/pilot work. They add no paid generation or source expansion. See `evals/prototype-3/STABLE-READING-SOURCES-2026-10-13.md` for verification and external-link limitations.
+
+## D98 release-check status
+
+Authenticated browser journey is now exercised on the stable D97 Preview, including default research, two follow-ups, incremental findings, stable verdict, original-source highlights/Excerpt, Stop/manual retry, reload/history and phone-width navigation. See `evals/prototype-3/HOSTED-JOURNEY-2026-10-13.md`. Existing user answers were retained.
+
+Still open before calling spending/credential safeguards complete: shared atomic budget counter installation/implementation and confirmation the pasted key was revoked/replaced. Proposed free Preview-only Upstash resource is not installed; auto-review blocked provisioning and Helen requested an explanation. No terms or paid upgrade was accepted. Completion-time tuning and pilot remain subsequent work.
+
+## D99 shared budget follow-through
+
+Approved free Preview-only Redis is installed. New V3 Preview runtime uses a shared $1 total allowance with atomic pre-call reservations and conservative settlement. No automatic reset, no client budget control, fail closed when storage is unavailable. See `evals/prototype-3/SHARED-BUDGET-2026-10-13.md`. Old immutable deployments and local development do not gain this shared guard. Key rotation confirmation remains open.

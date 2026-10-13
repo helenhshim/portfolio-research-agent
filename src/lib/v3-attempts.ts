@@ -53,7 +53,7 @@ export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{
  }).slice(-6);
 }
 const retryCodes=new Set(['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped','interrupted']);
-const inputCodes=new Set(['unavailable','spend_limit','provider_quota','origin','sensitive_input','invalid_text','invalid_input','input_limit','history_limit']);
+const inputCodes=new Set(['unavailable','budget_unavailable','spend_limit','provider_quota','origin','sensitive_input','invalid_text','invalid_input','input_limit','history_limit']);
 export const canRetry=(attempt:ResearchAttempt)=>retryCodes.has(attempt.errorCode??attempt.status);
 // Internal JS/transport exception text is not a public recovery code. Preserve
 // known input/config blocks; unexpected processing failures remain retryable.
@@ -77,6 +77,7 @@ export function recoveryMessage(attempt:ResearchAttempt){
   stopped:'You stopped this attempt. No new answer was published.',
   busy:'Another research request is running. Wait for it to finish, then try again.',
   unavailable:'Live research is not configured for this preview. You can view the saved reference.',
+  budget_unavailable:'The research budget check is temporarily unavailable. No new model call was started. Please try again later.',
   spend_limit:'This preview’s research budget has been reached. You can view the saved reference.',
   provider_quota:'The API reports that this preview has no research credits remaining. Existing checked answers remain available. Live research can resume after credits are added; you can view the saved reference now.',
   origin:'Reload this page before submitting from the same app address.',

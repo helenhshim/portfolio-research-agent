@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.67. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; aggregate spending, authenticated-browser and actual pilot gates remain separate · Last updated: 2026-10-13
+Owner: Helen Shim · Status: v0.69. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; authenticated hosted journey checked; shared Preview budget implemented; credential-rotation confirmation and actual pilot gates remain open · Last updated: 2026-10-13
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. V2 is preserved at `prototype-2-baseline-2026-10-12`; current local experiments are on `prototype-3`, not a released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -842,3 +842,13 @@ Helen approves fixing completion layout shifts and linking evidence to its origi
 Source opens the original SEC report with checked text-fragment targets. Financial lineage preserves the original row excerpt and column; derived comparisons recursively expose reported inputs. Current/prior reports have distinct links; multiple locations in one report are included in its fragment. Excerpt opens the existing source panel at the cited paragraph with numeric basis. Restore reconstructs location text from authoritative data, not browser-supplied excerpts. Location metadata is excluded from model fact context to avoid repeating full-report evidence.
 
 External text fragments are best effort: table cells require ranges or distinctive amounts, repeated values can target the first match, and unsupported browsers/source changes can prevent highlighting. The exact frozen excerpt, paragraph identifier and period/column are the reliable fallback. Qualitative support remains finding-level; do not claim automated sentence-level semantic verification. No source/model/provider budget expansion.
+
+## D98 authenticated hosted journey checkpoint
+
+Authenticated hosted research, incremental checked findings, stable final verdict, source excerpts/original highlights, follow-up, Stop/manual retry, reload/history and narrow-screen navigation were exercised on the D97 deployment. Public test completions were 31s, 25s and 23s; these are not a controlled speed comparison. The repeated local Production-mode privacy audit found no configured secret exposure in tested bundles, files, history or responses. Full evidence and limits: `evals/prototype-3/HOSTED-JOURNEY-2026-10-13.md`.
+
+The deployment-wide spending cap is still open: the current per-instance ledger is insufficient. A Preview-only free Redis counter store was proposed with paid auto-upgrades/eviction disabled, but provisioning was blocked by automatic approval review and awaits explicit approval. No integration was installed. Revocation/replacement of the previously pasted API key remains unconfirmed. Neither gate is waived by the passing browser checks.
+
+## D99 shared Preview budget
+
+Helen approves Upstash Redis free plan and completes terms. Preview now uses an atomic, server-only shared $1 total allowance, without expiry or automatic reset across deployments. Reserve before every model call, settle from token usage, retain unknown usage conservatively, and reject new calls if storage is unavailable. No question/answer data is sent to Redis. Local development remains per-instance; older immutable Preview deployments are not retroactively covered. Key-rotation confirmation is still outstanding. Implementation and actual checks: `evals/prototype-3/SHARED-BUDGET-2026-10-13.md`.

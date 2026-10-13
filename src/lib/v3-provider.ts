@@ -83,7 +83,7 @@ const toolDefinitions=[
  {type:'function',name:'read_approved_evidence',description:'Read full approved current/prior report or selected paragraph IDs. Never retrieves new sources.',strict:true,parameters:{type:'object',properties:{period:{type:'string',enum:['current','prior']},paragraph_ids:{anyOf:[{type:'null'},{type:'array',items:{type:'string'},maxItems:20}]}},required:['period','paragraph_ids'],additionalProperties:false}},
  {type:'function',name:'get_checked_metrics',description:'Select source-backed reported metrics, attributed management outlook or the fully reconciled cash-flow bridge. No arbitrary formulas.',strict:true,parameters:{type:'object',properties:{metric_ids:{type:'array',items:{type:'string',enum:[...V3_METRICS]},minItems:1,maxItems:V3_METRICS.length}},required:['metric_ids'],additionalProperties:false}},
 ];
-export function createV3Provider(apiKey:string,options:{effort?:'low'|'medium'|'high';fetch?:typeof fetch;ledger?:V3SpendLedger;onTrace?:(trace:V3Trace)=>void;onProgress?:(progress:V3Progress)=>void;onDraft?:(draft:unknown)=>void;onIncompleteText?:(text:string)=>void;onPublicFixtureError?:(event:unknown)=>void}={}):V3Provider {
+export function createV3Provider(apiKey:string,options:{effort?:'low'|'medium'|'high';fetch?:typeof fetch;ledger?:{reserve:(bytes:number)=>((usage:V3Usage|null)=>void|Promise<void>)|Promise<(usage:V3Usage|null)=>void|Promise<void>>};onTrace?:(trace:V3Trace)=>void;onProgress?:(progress:V3Progress)=>void;onDraft?:(draft:unknown)=>void;onIncompleteText?:(text:string)=>void;onPublicFixtureError?:(event:unknown)=>void}={}):V3Provider {
  const fetcher=options.fetch??fetch,effort=options.effort??'low';
  let previousOutput:any[]=[],pendingCalls:any[]=[],initialInput:any[]=[],providerCall=0,formatRetry=false;
  return async (input,signal,observer)=>{
@@ -97,13 +97,14 @@ export function createV3Provider(apiKey:string,options:{effort?:'low'|'medium'|'
   const serialized=JSON.stringify(body),bytes=new TextEncoder().encode(serialized).length;
   if(bytes>240000)throw new V3PolicyError('input_limit');
   const schemaHash=createHash('sha256').update(JSON.stringify(body.text.format.schema)).digest('hex');
-  const settle=options.ledger?.reserve(bytes),started=Date.now();providerCall++;let usage:V3Usage|null=null,status='failed',incompleteReason:string|null=null;
+  const settle=await options.ledger?.reserve(bytes),started=Date.now();providerCall++;let usage:V3Usage|null=null,status='failed',incompleteReason:string|null=null;
   let firstEventMs:number|null=null,firstTextMs:number|null=null,lastTextMs:number|null=null,outputChars=0;
   let responseReceivedMs:number|null=null,bodyReadMs:number|null=null,httpStatus:number|null=null,requestId:string|null=null;
   let stream:V2StreamDiagnostics|null=null;const outputMonitor=createV2OutputMonitor();
   const findingStream=observer?createV3FindingStream(observer.onFinding,observer.onFindingsReset,observer.onFindingsComplete):null;
   let textChannel:string|undefined;
   const progress=(phase:V3Progress['phase'])=>options.onProgress?.({provider_call:providerCall,phase,elapsed_ms:Date.now()-started,output_chars:outputChars,last_text_ms:lastTextMs,request_bytes:bytes});
+  signal.throwIfAborted();
   progress('request_started');
   const timer=options.onProgress?setInterval(()=>progress('progress'),10000):null;
   try{
@@ -160,6 +161,6 @@ export function createV3Provider(apiKey:string,options:{effort?:'low'|'medium'|'
    if(failure instanceof V3PolicyError&&failure.code==='provider_whitespace_loop')formatRetry=true;
    throw failure;
   }
-  finally{if(timer)clearInterval(timer);if(responseReceivedMs!==null&&bodyReadMs===null)bodyReadMs=Date.now()-started-responseReceivedMs;settle?.(usage);options.onTrace?.({model:V3_MODEL,effort,verbosity:V3_VERBOSITY,output_limit:V3_OUTPUT_LIMIT,prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,schema_hash:schemaHash,fact_preparation_version:V3_FACTS_VERSION,provider_call:providerCall,request_bytes:bytes,first_event_ms:firstEventMs,first_text_ms:firstTextMs,last_text_ms:lastTextMs,output_chars:outputChars,elapsed_ms:Date.now()-started,response_received_ms:responseReceivedMs,body_read_ms:bodyReadMs,http_status:httpStatus,request_id:requestId,status,incomplete_reason:incompleteReason,usage,stream});}
+  finally{if(timer)clearInterval(timer);if(responseReceivedMs!==null&&bodyReadMs===null)bodyReadMs=Date.now()-started-responseReceivedMs;await settle?.(usage);options.onTrace?.({model:V3_MODEL,effort,verbosity:V3_VERBOSITY,output_limit:V3_OUTPUT_LIMIT,prompt_version:V3_PROMPT_VERSION,schema_version:V3_SCHEMA_VERSION,schema_hash:schemaHash,fact_preparation_version:V3_FACTS_VERSION,provider_call:providerCall,request_bytes:bytes,first_event_ms:firstEventMs,first_text_ms:firstTextMs,last_text_ms:lastTextMs,output_chars:outputChars,elapsed_ms:Date.now()-started,response_received_ms:responseReceivedMs,body_read_ms:bodyReadMs,http_status:httpStatus,request_id:requestId,status,incomplete_reason:incompleteReason,usage,stream});}
  };
 }
