@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D92.
+Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D93.
 
-Prototype numbers identify product experiments. PRD v0.62 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.63 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -52,3 +52,5 @@ D90 replaces V3 numeral tiles with inline Source links, relocates context under 
 D91 fixes local preview delivery with `npm run dev:v3` and isolated Fast Refresh output. It is an operational correction to candidate-4, not a new answer/model experiment. The stale user's production-loaded tab is preserved; further UI tests use a fresh development-loaded preview. Do not infer a frontend update from a successful model response alone.
 
 D92 accepts Helen's usefulness feedback and implements bounded memory-only navigation plus privacy/control hardening. `prototype-3-candidate-5` records this local checkpoint; candidate-4 preserves the preceding layout. Model/prompt/facts/sources/output limits remain fixed. Two public/synthetic live control probes and credential/bundle/response tests are recorded separately from unscored E1–E5 quality cases. V3 is not deployed; durable history and completion-time tuning remain later.
+
+D93 replaces the D92 header entry with a collapsible session rail and Back/New navigation. `prototype-3-candidate-6` records this local UI checkpoint; candidate-5 preserves the centered-index entry. In-tab retention and research/privacy contracts remain unchanged; no model call or deployment in this change.

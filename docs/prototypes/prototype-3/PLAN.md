@@ -61,6 +61,10 @@ Current presentation groups findings under semantic support/challenge/context he
 
 This is a presentation change to the D88 candidate, with identical provider prompt/schema/fact preparation and source scope. No additional model call, automatic follow-up, claim selection or effort change. V2 stays preserved; candidate-1 and candidate-2 tags retain the earlier layouts. Browser/scripted checks are recorded separately from live reasoning/latency evaluation.
 
+## D93 navigation refinement, 2026-10-13
+
+Helen replaces the D92 wordmark history entry with a visible left session rail and hide/show icon. Back sits before the toggle; New research is top-right. Keep the same bounded in-page sessions, preserving answers/drafts/source inspection and one-run ownership. The actual 545px preview has a left rail; phone-sized views get a dismissible left drawer. Back uses prior in-app views, without adding durable/device history or external navigation. This is a navigation refinement to candidate-5, not a research/model experiment. See `evals/prototype-3/SESSION-RAIL-2026-10-13.md`.
+
 ## D90 inline sources and verdict context, 2026-10-13
 
 Current V3 uses underlined native “Source” anchors flowing immediately after evidence sentences. Removing the previous 44px citation-button line boxes fixes stretched prose spacing; standard standalone controls keep their hit areas. Actual report hrefs, names/dates, source inspection and exact opener focus remain. Completed context-role findings move under Verdict; developing findings still appear before a final verdict exists. Remove the orange financial-value underline and two generic closing sentences, retaining specific limits, unanswered criteria and the existing optional action. Model/facts/checks/budgets are identical to D88/D89. The preceding user-run D89 answer completed in 37.222s with five checked findings/no drops; it remains unscored, and earlier quota failures remain historical records.

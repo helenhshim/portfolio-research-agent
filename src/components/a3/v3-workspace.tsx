@@ -3,16 +3,16 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import type {Coverage,V3Artifact} from '../../lib/v3-display.ts';
 import {emptyV3Session,sortedV3Sessions,updateV3Session,V3_SESSION_LIMIT,type V3SessionSummary} from '../../lib/v3-sessions.ts';
 import {Button,FigureText,Text} from './primitives';
-import {TickerChip} from './kit';
 import V3ResearchSession from './v3-session';
+import V3Navigation from './v3-navigation';
 type Props={coverage:Coverage;reference:V3Artifact;liveConfigured:boolean};
 // Intent: analysts return to an existing thesis investigation or begin another.
 // Domain: thesis, evidence, fiscal comparison, source lineage, investigation.
 // Signature: question-titled sessions retain their own checked evidence and draft.
 // Palette/depth: A3 white, paper grey, ink, source blue and status marks; hairlines.
 // Typography/space: existing Geist/mono styles and A3's four-unit spacing scale.
-// DESIGN-DECISION: D92 uses a centered index with RailItem-like ruled rows,
-// rather than adding a permanent command rail or unsupported watchlist/commands.
+// DESIGN-DECISION: D93 adds the collapsible 06c session rail; checked answers
+// retain 06a/06b and the D92 memory-only session ownership contract.
 export default function V3Workspace(props:Props){
  const [sessions,setSessions]=useState<V3SessionSummary[]>(()=>[emptyV3Session('initial-session',0)]);
  const [selected,setSelected]=useState<string|null>('initial-session'),[runningId,setRunningId]=useState<string|null>(null),[notice,setNotice]=useState(''),[narrow,setNarrow]=useState(false);
@@ -37,16 +37,13 @@ export default function V3Workspace(props:Props){
  }
  function removeSession(id:string){
   if(active.current?.id===id)return;
+  if(selected===id)open(null);
   setSessions(s=>s.filter(item=>item.id!==id));scroll.current.delete(id);setNotice('Session deleted.');
-  requestAnimationFrame(()=>indexTitle.current?.focus({preventScroll:true}));
+  requestAnimationFrame(()=>(indexTitle.current??host.current?.querySelector<HTMLElement>('[data-sidebar-heading]'))?.focus({preventScroll:true}));
  }
- const current=sessions.find(s=>s.id===selected),onActiveResearch=()=>{if(active.current)open(active.current.id);};
- return <div className="a3-app" ref={host} data-narrow={narrow}>
-  <header className="a3-header a3-v3-header"><nav className="a3-brand" aria-label="Research navigation">
-   <Button variant="icon" className="a3-home" onClick={()=>open(null)} aria-label="All research sessions"><span className="a3-logo" aria-hidden="true"/><Text style="strong">Research</Text></Button>
-   <Button variant="icon" onClick={createSession} disabled={Boolean(runningId)} aria-label="New research session" title="New research session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9 3H3v10h10V7M8 8l5-5 1 1-5 5H8V8Z"/></svg></Button>
-   <Text style="meta"><FigureText text="Prototype 3"/></Text>{current?.hasAnswer?<TickerChip coverage={props.coverage}/>:<Text style="secondary">{selected?'NVIDIA profitability':'All sessions'}</Text>}
-  </nav>{runningId&&selected!==runningId&&<div className="a3-header-actions"><Button variant="link" onClick={onActiveResearch}>Return to active research</Button><Button variant="outline" onClick={()=>active.current?.stop()}>Stop research</Button></div>}</header>
+ const onActiveResearch=()=>{if(active.current)open(active.current.id);};
+ return <div className="a3-app a3-v3-shell" ref={host} data-narrow={narrow}>
+  <V3Navigation sessions={sessions} selected={selected} runningId={runningId} coverage={props.coverage} notice={notice} onOpen={id=>open(id)} onNew={createSession} onDelete={removeSession} onStop={()=>active.current?.stop()} onActiveResearch={onActiveResearch}/>
   {selected===null&&<main className="a3-thread-layout a3-session-index" aria-labelledby="session-index-title"><div className="a3-session-index-heading"><h1 className="text-title" id="session-index-title" tabIndex={-1} ref={indexTitle}>Research sessions</h1><Button variant="outline" onClick={createSession} disabled={Boolean(runningId)}>New research</Button></div>
    <Text as="p" style="secondary">Available in this open app. Reloading or closing the page clears them.</Text>
    {notice&&<Text as="p" style="secondary" role="status">{notice}</Text>}
