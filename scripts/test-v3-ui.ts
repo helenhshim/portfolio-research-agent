@@ -6,7 +6,8 @@ import {V3PolicyError} from '../src/lib/v3-safety.ts';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
 const draft={answer_kind:'analysis',findings:[
  {id:'finding_1',role:'supports',summary:'Scripted UI check: operating leverage supports current profitability, not persistence.',text:'Revenue growth of {{fact:NVDA:revenue:yoy}} exceeded expense growth of {{fact:NVDA:operating_expenses:yoy}}. This supports current operating leverage; repeat demand remains unproven.',fact_ids:['NVDA:revenue:yoy','NVDA:operating_expenses:yoy'],evidence:[]},
- {id:'finding_2',role:'challenges',summary:'Scripted UI check: cash conversion qualifies the thesis, without establishing a business cause.',text:'Operating cash flow fell {{fact:NVDA:operating_cash_flow:qoq}} sequentially. Accounting contributors do not establish payment defaults or temporary timing.',fact_ids:['NVDA:operating_cash_flow:qoq'],evidence:[]}
+ {id:'finding_2',role:'challenges',summary:'Scripted UI check: cash conversion qualifies the thesis, without establishing a business cause.',text:'Operating cash flow fell {{fact:NVDA:operating_cash_flow:qoq}} sequentially. Accounting contributors do not establish payment defaults or temporary timing.',fact_ids:['NVDA:operating_cash_flow:qoq'],evidence:[]},
+ {id:'finding_3',role:'context',summary:'Scripted UI check: management outlook contextualizes the verdict; it is not realized demand.',text:'Management expects next-quarter revenue of {{fact:NVDA:guidance_revenue:guidance}}. Guidance does not establish realized demand or durable profitability.',fact_ids:['NVDA:guidance_revenue:guidance'],evidence:[]}
 ],takeaway:{text:'Scripted UI check: the profitability thesis strengthened, with cash conversion unresolved.',finding_ids:['finding_1','finding_2']},assessment:{text:'Scripted UI check: operating leverage supports the thesis while cash conversion qualifies persistence. Collection evidence would help resolve the assessment.',finding_ids:['finding_1','finding_2']},financial_rows:[],unanswered:['What would establish repeat demand and realized cash?'],next_investigation:null};
 // Synthetic cached-comparison conflict; canonical report files stay unchanged.
 const discrepancyTest=process.argv.slice(2).includes('--discrepancy');
@@ -20,7 +21,7 @@ const handler=createV3Handler({packet,configured:()=>true,provider:()=>{
    const timer=setTimeout(()=>{signal.removeEventListener('abort',stop);resolve();},ms);
    signal.addEventListener('abort',stop,{once:true});if(signal.aborted)stop();
   });
-  await wait(500);observer?.onFinding(draft.findings[0]);
+  await wait(500);observer?.onFinding(draft.findings[0]);observer?.onFinding(draft.findings[2]);
   await wait(discrepancyTest?500:16000);observer?.onFinding(draft.findings[1]);observer?.onFindingsComplete?.();await wait(1000);
   if(attempt===3)return {kind:'answer',draft:{...draft,takeaway:{text:draft.takeaway.text,finding_ids:['finding_6']}}};
   return {kind:'answer',draft};

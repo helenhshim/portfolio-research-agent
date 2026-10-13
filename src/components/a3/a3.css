@@ -72,6 +72,10 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-inline-source { border: 0; background: transparent; color: var(--accent); text-decoration: underline; min-height: var(--hit-area); padding: var(--space-2); }
 .a3-inline-citation { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; min-width: var(--hit-area); min-height: var(--hit-area); border: 0; background: transparent; color: var(--accent); padding: 0; border-radius: var(--radius-cite); }
 .a3-inline-citation:hover { background: var(--surface-hover); }
+/* DESIGN-DECISION: D90 uses native inline Source links in V3 prose. Keep their
+   text line box rather than applying the separate-control hit-area geometry. */
+.a3-inline-citation.a3-v3-source-link { display: inline; min-width: 0; min-height: 0; vertical-align: baseline; font: inherit; text-decoration: underline; white-space: nowrap; }
+.a3-inline-citation.a3-v3-source-link:hover { background: transparent; }
 .a3-thread-pane[hidden] { display: none; }
 .a3-thread-pane { flex: 1 1 var(--pane-min-w); min-width: 0; padding: var(--space-5) var(--space-4) var(--space-4); border-right: var(--hairline); display: flex; flex-direction: column; gap: var(--space-6); }
 .a3-brief-pane { flex: 999 1 var(--workspace-min-w); min-width: 0; }
@@ -85,6 +89,8 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-v3-findings article:last-child { padding-bottom: 0; }
 .a3-analysis-lines { list-style: disc; padding-left: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
 .a3-analysis-lines li { overflow-wrap: anywhere; }
+.a3-v3-findings .a3-analysis-lines { gap: var(--space-1); }
+.a3-verdict-context .a3-finding-group { border-top: 0; padding-top: var(--space-1); }
 .a3-investigation-next { align-items: stretch; gap: var(--space-3); }
 .a3-investigation-action { display: flex; flex-direction: column; align-items: start; gap: var(--space-2); }
 .a3-evidence-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }

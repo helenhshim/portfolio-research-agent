@@ -1,14 +1,14 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D89.
+Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D90.
 
-Prototype numbers identify product experiments. PRD v0.59 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.60 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
 | Prototype 1 | Can complete earnings evidence become a specific, inspectable holding explanation for an advisor's context? | Git tag `prototype-1`; exact deployed source manifest; original protected Preview linked in its release record | Frozen baseline, with known failures |
 | Prototype 2 | Can an analyst ask an open-ended question, inspect evidence and continue research with less effort? | Branch `prototype-2`; annotated tag `prototype-2-baseline-2026-10-12` at `89d9641`; `/v2` | Preserved local baseline with known limits; no pilot/release pass |
-| Prototype 3 | Does evidence-weighted reasoning with qualified summaries and expandable detail reduce analyst prompting/checking work? | Branch `prototype-3`; `/v3`; isolated experiment contracts; [plan](prototypes/prototype-3/PLAN.md) | Local candidate implemented; live comparison blocked by API credit exhaustion; semantic/pilot gates pending |
+| Prototype 3 | Does evidence-weighted reasoning with qualified summaries and inspectable evidence reduce analyst prompting/checking work? | Branch `prototype-3`; `/v3`; isolated experiment contracts; [plan](prototypes/prototype-3/PLAN.md) | Local candidate implemented; user-run answer completed, live quality/latency review and semantic/pilot gates pending |
 
 Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](prototypes/prototype-1/LEARNINGS.md), [source manifest](prototypes/prototype-1/source-manifest.json).
 
@@ -46,3 +46,5 @@ D86 preserves V2 without claiming its pilot gates passed. Use `/v2` alongside `/
 D88 applies reported-first financial evidence to V3 without altering V2 or the source packet. `prototype-3-candidate-1` preserves the preceding candidate; the next local candidate checkpoint identifies fact/prompt versions and recorded acceptance results. These candidate tags are not release gates or live-model quality passes.
 
 D89 improves V3's reading hierarchy: grouped headings, visible cited analysis and one unanswered/next-investigation section. `prototype-3-candidate-2` retains the D88 layout; `prototype-3-candidate-3` records the reading-hierarchy checkpoint. Model/source/fact contracts remain identical; presentation checks do not score live research quality or latency.
+
+D90 replaces V3 numeral tiles with inline Source links, relocates context under Verdict and removes the key-value underline and two generic closing lines. `prototype-3-candidate-3` preserves the preceding layout; `prototype-3-candidate-4` records this presentation checkpoint. Existing live user-run completion is an observation, not a semantic/pilot pass.
