@@ -91,3 +91,7 @@ Ordered as Helen requests; these are planned, not implemented:
 5. **Adjustable sidebar width.** Support user-controlled resizing with token-defined bounds, keyboard-accessible controls and a sensible compact-screen drawer. Keep thread/evidence readable; resizing must preserve session, draft and focus. Choose/reset a default width and document whether the preference persists.
 
 For an AI PM, the test is whether these changes reduce the effort to continue a useful investigation, while keeping evidence boundaries and user control clear. "More agentic" is not a reason to add automatic tools, parallel agents or hidden research.
+
+### D96 hosted execution update
+
+History is implemented and tested locally and through the hosted stateless restoration endpoint. The corrected protected Preview is https://portfolio-research-agent-6e1ghb8u7-helenhshims-projects.vercel.app/v3 , source `3e9e6dd`. Hosted access, checked incremental output and upstream cancellation pass their HTTP checks; native browser interaction on that hostname still requires Vercel sign-in. Original cancellation failure and corrected 3.4s stop are recorded in `evals/prototype-3/PROTECTED-PREVIEW-2026-10-13.md`. Normal post-abort completion is 33.094s, not a controlled latency gain. Aggregate/provider spending limits, credential-rotation confirmation and actual participant access remain pre-pilot gates. The five follow-on UX items remain after the four priorities; this deployment does not move them ahead.

@@ -1,0 +1,18 @@
+{
+  "commit": "3e9e6dd",
+  "deployment": "dpl_9hU8YiFZpcuEqhc3fbmK1HL5rU5r",
+  "url": "https://portfolio-research-agent-6e1ghb8u7-helenhshims-projects.vercel.app/v3",
+  "status": "complete",
+  "run": {
+    "elapsed_ms": 33094,
+    "provider_calls": 1,
+    "tool_calls": 0,
+    "tool_rounds": 0
+  },
+  "findings": 5,
+  "observedDuringGeneration": {
+    "checkedFindings": 4,
+    "finalResult": false
+  },
+  "secretMatch": false
+}

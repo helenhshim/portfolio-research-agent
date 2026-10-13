@@ -1,0 +1,20 @@
+[
+  {
+    "status": "complete",
+    "elapsed_ms": 34871,
+    "counts": {
+      "provider_calls": 1,
+      "tool_calls": 0,
+      "tool_rounds": 0
+    }
+  },
+  {
+    "status": "complete",
+    "elapsed_ms": 43343,
+    "counts": {
+      "provider_calls": 1,
+      "tool_calls": 0,
+      "tool_rounds": 0
+    }
+  }
+]

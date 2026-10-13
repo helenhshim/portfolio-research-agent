@@ -22,3 +22,15 @@ Enable `supportsCancellation` specifically for `src/app/api/v3/research/route.ts
 ## Remaining gates
 
 Production remains unchanged/live V3 research disabled there. Instance-local $1 reservation/estimated ledger and one concurrent run are not a deployment-wide hard cap. Resolve aggregate spending/provider project limits and auto-recharge assumptions before wider sharing. Previously pasted credential revocation is not verified. Participant recruitment and pilot results are not fabricated; protocol prepared separately. Latency tuning remains a separate experiment, with current observed 43s final result as a baseline. Browser history is per origin, so localhost history does not transfer to a new Preview hostname.
+
+## Corrected Preview: executed retest
+
+Source commit `3e9e6dd`; deployment `dpl_9hU8YiFZpcuEqhc3fbmK1HL5rU5r`.
+Current URL: https://portfolio-research-agent-6e1ghb8u7-helenhshims-projects.vercel.app/v3
+
+- Vercel build succeeds with the exact V3 route cancellation opt-in. Unauthenticated page and both API requests remain SSO redirects.
+- Authenticated restoration endpoint returns HTTP 200, the public reference answer and its public draft, without a model call.
+- A request disconnected after four seconds records `v3_cancelled` at 3.403s and checked-controller status `stopped` at 3.405s. Provider fetch terminates at 3.383s. In contrast, the original disconnected request actually completed generation at 34.871s; that failure is retained in `D96-ORIGINAL-CANCEL-DIAGNOSTICS.json`.
+- Subsequent authenticated public completion returns 200/complete, five checked findings, one model call/zero tools and final result at 33.094s. Four checked findings were observed in the response file while no final result existed, confirming incremental delivery. This proves normal execution after the abort; it does not prove both calls used the same server instance or a latency improvement. Full browser Stop/retry on this protected hostname still needs an authenticated browser session.
+- Safe diagnostics and result summaries contain no local configured secret. No provider/key value was printed. The exact hosted key was not retrieved; this equality check does not claim to audit an unknown different credential value.
+- Production untouched; previous V2 baseline remains recoverable. Existing localhost sessions restore locally, not across the new hostname. No participant results or aggregate spending-cap pass is claimed.
