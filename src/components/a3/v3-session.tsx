@@ -28,7 +28,7 @@ export default function V3ResearchSession({id,summary,historyLoading,visible,cov
  }
  useEffect(()=>{const el=host.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);const threshold=parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--workspace-min-w'));setNarrow(entries[0].contentRect.width<threshold);});observer.observe(el);return()=>observer.disconnect();},[]);
  useEffect(()=>()=>active.current?.abort.abort(),[]);
- useEffect(()=>{const turn=turns.at(-1),attempt=turn&&latestAttempt(turn);onSummary(id,{title:turns[0]?.question.slice(0,140)??'New research',updatedAt:Date.now(),outcome:turn?.reference?'Saved reference':v3SessionOutcome(attempt?.status),hasAnswer:turns.some(t=>Boolean(turnArtifact(t)))});},[id,turns,onSummary]);
+ useEffect(()=>{const turn=turns.at(-1),attempt=turn&&latestAttempt(turn);onSummary(id,{title:turns[0]?.question.slice(0,140)??'New research',updatedAt:gate.current?Date.now():summary.updatedAt,outcome:turn?.reference?'Saved reference':v3SessionOutcome(attempt?.status),hasAnswer:turns.some(t=>Boolean(turnArtifact(t)))});},[id,turns,onSummary]);
  useEffect(()=>{
   if(!inspection||!visible)return;
   if(!selectedPassage&&inspectionPane.current?.contains(document.activeElement))return;

@@ -3,7 +3,7 @@ import {exactKeys,validateV3Request,V3PolicyError,V3_LIMITS} from './v3-safety.t
 import {packetCoverage,presentV3Result,presentV3Finding} from './v3-presentation.ts';
 import {plainArtifactText,V3_RESEARCH_PROTOCOL,type ResearchStage,type TurnIdentity} from './v3-display.ts';
 import {createHash} from 'node:crypto';
-type Dependencies={packet:unknown;configured:()=>boolean;provider:(identity:TurnIdentity)=>V3Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void};
+type Dependencies={packet:unknown;configured:()=>boolean;provider:(identity:TurnIdentity)=>V3Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void;onCancellation?:(data:{run_id:string;elapsed_ms:number})=>void};
 const legacyStages=new Set(['preparing','researching','investigating','checking','recovering']);
 export function createV3Handler(deps:Dependencies){
  let active=0;return async function POST(request:Request){
@@ -32,7 +32,7 @@ export function createV3Handler(deps:Dependencies){
   active++;
   const encoder=new TextEncoder(),abort=new AbortController();let closed=false;
   const started=performance.now(),elapsed=()=>Math.max(0,Math.round(performance.now()-started));
-  const disconnect=()=>abort.abort();request.signal.addEventListener('abort',disconnect,{once:true});if(request.signal.aborted)abort.abort();
+  const disconnect=()=>{if(abort.signal.aborted)return;abort.abort();deps.onCancellation?.({run_id:createHash('sha256').update(JSON.stringify(identity)).digest('hex'),elapsed_ms:elapsed()});};request.signal.addEventListener('abort',disconnect,{once:true});if(request.signal.aborted)abort.abort();
   const stream=new ReadableStream({async start(controller){
    const send=(data:unknown)=>{if(closed)return;try{controller.enqueue(encoder.encode(JSON.stringify(data)+'\n'));}catch{closed=true;abort.abort();}};
    try{
@@ -55,7 +55,7 @@ export function createV3Handler(deps:Dependencies){
      ...(!preserve&&artifact?{artifact}:{}),...(preserve?{message:plainArtifactText(artifact)}:{}),...('error_code' in result?{error_code:result.error_code}:{})}});
    }catch{send({type:'result',result:{status:'failed',error_code:'research_failed',identity}});}
    finally{active--;request.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;controller.close();}}
-  },cancel(){closed=true;abort.abort();}});
+  },cancel(){closed=true;disconnect();}});
   return new Response(stream,{headers:{...headers,'Content-Type':'application/x-ndjson','Content-Encoding':'identity'}});
  };
 }

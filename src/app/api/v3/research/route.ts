@@ -8,5 +8,6 @@ export const maxDuration=150;
 export const POST=createV3Handler({packet,
  configured:isV3LiveConfigured,
  provider:v3ServerProvider,
+ onCancellation:data=>console.info(JSON.stringify({event:'v3_cancelled',data})),
  onDiagnostics:data=>console.info(JSON.stringify({event:'v3_checks',data})),
 });

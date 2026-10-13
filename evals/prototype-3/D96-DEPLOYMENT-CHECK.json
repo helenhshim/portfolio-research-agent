@@ -1,0 +1,17 @@
+{
+  "commit": "70316c6",
+  "deployment": "dpl_E89jix6CrGhmqRnr31cmR6zcnihn",
+  "status": "complete",
+  "run": {
+    "elapsed_ms": 43344,
+    "provider_calls": 1,
+    "tool_calls": 0,
+    "tool_rounds": 0
+  },
+  "checkedFindings": 6,
+  "findingsBeforeResult": true,
+  "artifactAvailable": true,
+  "reportedFacts": 54,
+  "derivedFacts": 21,
+  "localConfiguredSecretInResponse": false
+}

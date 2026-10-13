@@ -1,0 +1,26 @@
+[
+  {
+    "event": "v3_provider",
+    "status": "completed",
+    "elapsed_ms": 43318,
+    "first_text_ms": 5803,
+    "usage": {
+      "input_tokens": 34504,
+      "output_tokens": 1832,
+      "reasoning_tokens": 72,
+      "cached_input_tokens": 0
+    }
+  },
+  {
+    "event": "v3_checks",
+    "status": "complete",
+    "elapsed_ms": 43343,
+    "first_verified_finding_ms": 12126,
+    "counts": {
+      "provider_calls": 1,
+      "tool_calls": 0,
+      "tool_rounds": 0
+    },
+    "drops": []
+  }
+]

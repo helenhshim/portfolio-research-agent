@@ -49,3 +49,12 @@ test('A stale browser tab cannot overwrite or resurrect newer history; storage f
  writeStoredHistory(storage,'updated history','newer history');assert.equal(stored,'updated history');
  assert.throws(()=>writeStoredHistory({getItem:()=>null,setItem:()=>{throw Error('quota');}},'snapshot',null),/quota/);
 });
+
+test('Request abort cancels upstream research and emits only content-free cancellation diagnostics',async()=>{
+ const {createV3Handler}=await import('../src/lib/v3-http.ts');
+ const controller=new AbortController(),diagnostics:any[]=[];let upstreamAborted=false;
+ const handler=createV3Handler({packet,configured:()=>true,onCancellation:data=>diagnostics.push(data),provider:()=>async(_input,signal)=>new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>{upstreamAborted=true;reject(Error('stopped'));},{once:true}))});
+ const response=await handler(new Request('http://localhost/api/v3/research',{method:'POST',signal:controller.signal,headers:{Origin:'http://localhost','Content-Type':'application/json'},body:JSON.stringify({question:'Pressure-test profitability.',identity:{session_id:'private-marker',turn_id:'abort-test',revision:1}})}));
+ controller.abort();const events=(await response.text()).trim().split('\n').map(line=>JSON.parse(line));
+ assert.equal(upstreamAborted,true);assert.equal(events.at(-1).result.status,'stopped');assert.equal(diagnostics.length,1);assert.match(diagnostics[0].run_id,/^[a-f0-9]{64}$/);assert.doesNotMatch(JSON.stringify(diagnostics),/private-marker/);
+});
