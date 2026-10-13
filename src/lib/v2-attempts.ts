@@ -28,9 +28,13 @@ export function addFinding(attempt:ResearchAttempt,event:Extract<V2Event,{type:'
  return {...attempt,developing:{findings,facts:event.facts,sources:event.sources,cutoff:event.cutoff}};
 }
 export function resetFindings(attempt:ResearchAttempt):ResearchAttempt{return {...attempt,developing:undefined};}
-export function matchesTurnEvent(event:V2Event,token:TurnIdentity,activeTurnId:string|undefined,received:boolean):boolean{
- const identity=event.type==='result'?event.result.identity:event.identity;
- return !received&&activeTurnId===token.turn_id&&identity.session_id===token.session_id&&identity.turn_id===token.turn_id&&identity.revision===token.revision;
+export function matchesTurnEvent(candidate:unknown,token:TurnIdentity,activeTurnId:string|undefined,received:boolean):boolean{
+ if(!candidate||typeof candidate!=='object')return false;
+ const event=candidate as V2Event;
+ if(!['stage','finding','findings_reset','result'].includes(event.type))return false;
+ if(event.type==='stage'&&!Object.hasOwn(stageLabels,event.stage))return false;
+ const identity=event.type==='result'?event.result?.identity:event.identity;
+ return Boolean(identity)&&!received&&activeTurnId===token.turn_id&&identity.session_id===token.session_id&&identity.turn_id===token.turn_id&&identity.revision===token.revision;
 }
 export function finishAttempt(attempt:ResearchAttempt,result:Pick<V2TurnResult,'status'|'message'|'error_code'|'artifact'|'run'>,now:number):ResearchAttempt{
  const last=attempt.steps.at(-1),end=result.run?.elapsed_ms??(last?last.startedMs+Math.max(0,now-last.receivedAt):0);
@@ -47,7 +51,15 @@ export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{
   return answer?[{role:'user' as const,text:turn.question},{role:'assistant' as const,text:answer.slice(0,1600)}]:[];
  }).slice(-6);
 }
-export const canRetry=(attempt:ResearchAttempt)=>['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped'].includes(attempt.errorCode??attempt.status);
+const retryCodes=new Set(['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped']);
+const inputCodes=new Set(['unavailable','spend_limit','origin','sensitive_input','invalid_text','invalid_input','input_limit','history_limit']);
+export const canRetry=(attempt:ResearchAttempt)=>retryCodes.has(attempt.errorCode??attempt.status);
+// Internal JS/transport exception text is not a public recovery code. Preserve
+// known input/config blocks; unexpected processing failures remain retryable.
+export function researchFailureCode(error:unknown){
+ const code=error instanceof Error?error.message:'';
+ return retryCodes.has(code)||inputCodes.has(code)?code:'research_failed';
+}
 export function recoveryMessage(attempt:ResearchAttempt){
  const code=attempt.errorCode??attempt.status;
  const prepared=attempt.steps.some(s=>s.stage==='researching');

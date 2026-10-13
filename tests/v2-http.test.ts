@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createV2Handler} from '../src/lib/v2-http.ts';
 import {createV2Provider,V2SpendLedger,type V2Trace} from '../src/lib/v2-provider.ts';
 import {runV2ControlledTurn} from '../src/lib/v2-controller.ts';
-import {plainArtifactText} from '../src/lib/v2-display.ts';
+import {plainArtifactText,V2_RESEARCH_PROTOCOL} from '../src/lib/v2-display.ts';
 import {verifyV2Draft} from '../src/lib/v2-verifier.ts';
 import {createV2Toolbox} from '../src/lib/v2-safety.ts';
 import {V2PolicyError} from '../src/lib/v2-safety.ts';
@@ -18,6 +18,44 @@ function draft(kind='analysis'){return {answer_kind:kind,
  findings:[{id:'finding_1',text:'Operating margin is {{fact:NVDA:operating_margin:current}}.',fact_ids:['NVDA:operating_margin:current'],evidence:[{paragraph_id:'NVDA:p41',quote:'ramping into full production with racks running at partners'}]}],
  financial_rows:[{fact_id:'NVDA:operating_margin:current',implication:'Current profitability, not proof of persistence.',finding_ids:['finding_1']}],unanswered:['Future product economics remain unresolved.'],next_investigation:null};}
 const events=async(response:Response)=>(await response.text()).trim().split('\n').map(line=>JSON.parse(line));
+test('An older loaded frontend completes after a server upgrade without seeing new event types or stages',async()=>{
+ for(const protocol of [undefined,'future-unsupported-version']){
+  let calls=0;const diagnostics:any[]=[];
+  const handler=createV2Handler({packet,configured:()=>true,onDiagnostics:data=>diagnostics.push(data),provider:()=>async(_input,_signal,hooks)=>{
+   calls++;hooks?.onFinding(draft().findings[0]);hooks?.onFindingsComplete?.();
+   if(calls===1)throw new V2PolicyError('provider_whitespace_loop');return {kind:'answer',draft:draft()};
+  }});
+  const incoming=request();if(protocol)incoming.headers.set('X-Research-Protocol',protocol);
+  const response=await handler(incoming),output=await events(response);
+  assert.equal(response.headers.get('X-Research-Protocol'),'result-v1');
+  // Reproduce the old shipped consumer: every non-stage event MUST contain
+  // result.identity. A finding event would throw here at time-to-first-finding.
+  const oldStageLabels:Record<string,string>={preparing:'Preparing',researching:'Generating',investigating:'Inspecting',checking:'Checking',recovering:'Retrying'};
+  let completed=0,lastArtifact:any;
+  assert.doesNotThrow(()=>{for(const event of output){
+   const eventIdentity=event.type==='stage'?event.identity:event.result.identity;
+   assert.deepEqual(eventIdentity,identity);
+   if(event.type==='stage'){assert.equal(typeof oldStageLabels[event.stage],'string');continue;}
+   completed++;assert.equal(event.result.status,'complete');lastArtifact=event.result.artifact;
+  }});
+  assert.equal(completed,1);assert.equal(calls,2);assert.match(plainArtifactText(lastArtifact),/profitability improved/);
+  assert.equal(diagnostics[0].verified_findings_published,0);assert.equal(diagnostics[0].first_verified_finding_ms,null);
+ }
+});
+test('The exact findings protocol opt-in receives checked objects, resets and real new stages',async()=>{
+ let calls=0;const handler=createV2Handler({packet,configured:()=>true,provider:()=>async(_input,_signal,hooks)=>{
+  calls++;hooks?.onFinding(draft().findings[0]);hooks?.onFindingsComplete?.();
+  if(calls===1)throw new V2PolicyError('provider_whitespace_loop');return {kind:'answer',draft:draft()};
+ }});
+ const incoming=request();incoming.headers.set('X-Research-Protocol',V2_RESEARCH_PROTOCOL);
+ const response=await handler(incoming),output=await events(response);
+ assert.equal(response.headers.get('X-Research-Protocol'),V2_RESEARCH_PROTOCOL);
+ assert.deepEqual(output.filter(e=>['finding','findings_reset'].includes(e.type)).map(e=>e.type),['finding','findings_reset','finding']);
+ assert.equal(output.filter(e=>e.type==='stage'&&e.stage==='developing').length,2);
+ assert.equal(output.filter(e=>e.type==='stage'&&e.stage==='synthesizing').length,2);
+ for(const event of output)assert.deepEqual(event.type==='result'?event.result.identity:event.identity,identity);
+ assert.equal(output.at(-1).result.status,'complete');assert.equal(calls,2);
+});
 test('HTTP runs core checks and displays authoritative comparisons with matching turn identity',async()=>{
  const handler=createV2Handler({packet,configured:()=>true,provider:()=>async()=>({kind:'answer',draft:draft()})});
  const response=await handler(request());assert.equal(response.status,200);assert.equal(response.headers.get('Cache-Control'),'no-store');

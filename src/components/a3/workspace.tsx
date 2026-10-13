@@ -1,8 +1,8 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {addStage,addFinding,resetFindings,matchesTurnEvent,canRetry,finishAttempt,latestAttempt,recoveryMessage,researchHistory,startAttempt,turnArtifact,updateAttempt,type ResearchTurn} from '../../lib/v2-attempts.ts';
+import {addStage,addFinding,resetFindings,matchesTurnEvent,researchFailureCode,canRetry,finishAttempt,latestAttempt,recoveryMessage,researchHistory,startAttempt,turnArtifact,updateAttempt,type ResearchTurn} from '../../lib/v2-attempts.ts';
 import {V2RevisionGate} from '../../lib/v2-revisions.ts';
-import {type Coverage,type V2Artifact,type V2Evidence,type V2Event,type SourceRef,type Passage} from '../../lib/v2-display.ts';
+import {V2_RESEARCH_PROTOCOL,type Coverage,type V2Artifact,type V2Evidence,type V2Event,type SourceRef,type Passage} from '../../lib/v2-display.ts';
 import {Button,FigureText,Text} from './primitives';
 import {Composer,QABlock,SourcePassage,StepLog,Tabs,TickerChip} from './kit';
 import {WorkspaceLayout} from './layouts';
@@ -60,7 +60,7 @@ export default function V2Workspace({coverage,reference,liveConfigured}:{coverag
   let received=false,focusComposer=false;
   try{
    if(!liveConfigured)throw Error('unavailable');
-   const response=await fetch('/api/v2/research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,history:previous,identity:token}),signal:abort.signal});
+   const response=await fetch('/api/v2/research',{method:'POST',headers:{'Content-Type':'application/json','X-Research-Protocol':V2_RESEARCH_PROTOCOL},body:JSON.stringify({question:q,history:previous,identity:token}),signal:abort.signal});
    if(!response.ok){const data=await response.json();throw Error(data.error_code??'research_failed');}if(!response.body)throw Error('research_failed');
    const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='';
    const process=(line:string)=>{
@@ -79,9 +79,13 @@ export default function V2Workspace({coverage,reference,liveConfigured}:{coverag
     setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,result,now)));
    };
    try{while(true){const chunk=await reader.read();if(chunk.done)break;buffer+=decoder.decode(chunk.value,{stream:true});let index;while((index=buffer.indexOf('\n'))>=0){process(buffer.slice(0,index));buffer=buffer.slice(index+1);}}buffer+=decoder.decode();process(buffer);if(!received)throw Error('research_failed');}
-   finally{reader.releaseLock();}
+   finally{
+    // A client-side processing failure must release the server request too, rather
+    // than leave paid generation running after the visible turn has failed.
+    if(!received){abort.abort();await reader.cancel().catch(()=>{});}reader.releaseLock();
+   }
   }catch(error){
-   if(active.current?.token.turn_id===token.turn_id&&!received){g.fail(token);focusComposer=Boolean(document.activeElement?.hasAttribute('data-research-stop'));closeInspection(Boolean(inspectionPane.current?.contains(document.activeElement)));const code=error instanceof Error?error.message:'research_failed',now=performance.now();setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,{status:'failed',error_code:code},now)));}
+   if(active.current?.token.turn_id===token.turn_id&&!received){g.fail(token);focusComposer=Boolean(document.activeElement?.hasAttribute('data-research-stop'));closeInspection(Boolean(inspectionPane.current?.contains(document.activeElement)));const code=researchFailureCode(error),now=performance.now();setTurns(t=>updateAttempt(t,turnId,token.turn_id,a=>finishAttempt(a,{status:'failed',error_code:code},now)));}
   }finally{if(active.current?.token.turn_id===token.turn_id){active.current=null;runningRef.current=false;setRunning(false);if(focusComposer)requestAnimationFrame(()=>input.current?.focus());}}
  }
  // Source provenance remains inspectable; D75's removed scope/banner copy stays removed.

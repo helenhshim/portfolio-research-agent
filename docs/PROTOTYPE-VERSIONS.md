@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D82.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D83.
 
-Prototype numbers identify product experiments. PRD v0.52 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.53 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -14,6 +14,8 @@ Prototype 1: [release record](prototypes/prototype-1/RELEASE.md), [learnings](pr
 Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision memo](prototypes/prototype-2/V1-V2-PRODUCT-DECISION-MEMO.md) captures Helen's analyst-first pivot. Direction is documented; the initial D64 launch scope is approved under D65, and benefit remains to be tested.
 
 D82 implements complete independently checked findings during the existing model request, followed by the final checked answer in the same thread. Compact inline source inspection replaces Open brief and bottom source-list rows; actual stage changes animate with one timer. This is an iteration within Prototype 2, not a new prototype, deployment or release gate pass. [Progressive-findings checkpoint](checkpoints/V2-PROGRESSIVE-FINDINGS-2026-10-12.md) records implementation verification separately from live latency, semantic quality and user benefit.
+
+D83 corrects a preview regression where an already-open older client could not process D82's new finding events. Explicit progressive-protocol negotiation preserves the original stage/result stream for older callers; current clients tolerate unknown event types and cancel interrupted processing. The corresponding model run completed successfully, so do not count this browser failure as a model/reference-check failure. [Compatibility checkpoint](checkpoints/V2-STREAM-COMPATIBILITY-2026-10-12.md) records 119 passing tests, same-tab live completion and scripted progressive/cancellation verification. This remains Prototype 2 with unchanged research scope/model/budgets. Sessions remain memory-only and are lost on reload.
 
 ## How we will work
 

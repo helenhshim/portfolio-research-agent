@@ -1,11 +1,16 @@
 import {runV2ControlledTurn,type V2Provider,type V2Timing} from './v2-controller.ts';
 import {exactKeys,validateV2Request,V2PolicyError,V2_LIMITS} from './v2-safety.ts';
 import {packetCoverage,presentV2Result,presentV2Finding} from './v2-presentation.ts';
-import {plainArtifactText,type ResearchStage,type TurnIdentity} from './v2-display.ts';
+import {plainArtifactText,V2_RESEARCH_PROTOCOL,type ResearchStage,type TurnIdentity} from './v2-display.ts';
 type Dependencies={packet:unknown;configured:()=>boolean;provider:(identity:TurnIdentity)=>V2Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void};
+const legacyStages=new Set(['preparing','researching','investigating','checking','recovering']);
 export function createV2Handler(deps:Dependencies){
  let active=0;return async function POST(request:Request){
-  const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
+  // A tab may still run the prior JS bundle after a server upgrade. Its parser
+  // understands only stage/result, so new events require explicit capability opt-in.
+  const progressive=request.headers.get('x-research-protocol')===V2_RESEARCH_PROTOCOL;
+  const protocol=progressive?V2_RESEARCH_PROTOCOL:'result-v1';
+  const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','X-Research-Protocol':protocol};
   const reject=(code:string,status:number)=>Response.json({error_code:code},{status,headers});
   let origin:URL;try{origin=new URL(request.headers.get('origin')??'');}catch{return reject('origin',403);}
   const requestUrl=new URL(request.url),host=request.headers.get('host')??requestUrl.host;
@@ -32,13 +37,13 @@ export function createV2Handler(deps:Dependencies){
    try{
     const timings:V2Timing[]=[];let firstVerifiedFindingMs:number|null=null,verifiedFindings=0;
     const coverage=packetCoverage(deps.packet);
-    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(identity),{signal:abort.signal,onTiming:timing=>timings.push(timing),onStage:stage=>send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity}),
-     onFinding:(finding,facts)=>{firstVerifiedFindingMs??=elapsed();verifiedFindings++;send({type:'finding',finding:presentV2Finding(finding,coverage.sources),facts,sources:coverage.sources,cutoff:coverage.cutoff,identity});},
-     onFindingsReset:()=>send({type:'findings_reset',identity}),
+    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(identity),{signal:abort.signal,onTiming:timing=>timings.push(timing),onStage:stage=>{if(progressive||legacyStages.has(stage))send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity});},
+     onFinding:(finding,facts)=>{if(!progressive)return;firstVerifiedFindingMs??=elapsed();verifiedFindings++;send({type:'finding',finding:presentV2Finding(finding,coverage.sources),facts,sources:coverage.sources,cutoff:coverage.cutoff,identity});},
+     onFindingsReset:()=>{if(progressive)send({type:'findings_reset',identity});},
     });
     const presenting=performance.now();
     const artifact=presentV2Result(result,coverage,input.question,identity.revision);
-    deps.onDiagnostics?.({identity,elapsed_ms:elapsed(),first_verified_finding_ms:firstVerifiedFindingMs,verified_findings_published:verifiedFindings,timings,presentation_ms:Math.max(0,Math.round(performance.now()-presenting)),status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
+    deps.onDiagnostics?.({identity,protocol,elapsed_ms:elapsed(),first_verified_finding_ms:firstVerifiedFindingMs,verified_findings_published:verifiedFindings,timings,presentation_ms:Math.max(0,Math.round(performance.now()-presenting)),status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
     // DESIGN-DECISION: Coverage/clarification answers belong in the thread and preserve
     // the last useful brief. Mechanical success is not semantic task completion.
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);

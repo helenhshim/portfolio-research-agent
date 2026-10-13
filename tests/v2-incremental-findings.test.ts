@@ -5,6 +5,7 @@ import {createV2FindingStream} from '../src/lib/v2-finding-stream.ts';
 import {runV2ControlledTurn,type V2ProviderObserver} from '../src/lib/v2-controller.ts';
 import {createV2Provider} from '../src/lib/v2-provider.ts';
 import {createV2Handler} from '../src/lib/v2-http.ts';
+import {V2_RESEARCH_PROTOCOL} from '../src/lib/v2-display.ts';
 import {V2PolicyError,createV2Toolbox} from '../src/lib/v2-safety.ts';
 import {verifyV2Draft,verifyV2Finding} from '../src/lib/v2-verifier.ts';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
@@ -145,7 +146,7 @@ test('SSE function-call events reset streamed objects before bounded tool synthe
 test('HTTP releases checked findings with the owning identity while synthesis remains unresolved',async()=>{
  const identity={session_id:'stream-session',turn_id:'stream-turn',revision:1};let hooks!:V2ProviderObserver,resolve!:(value:unknown)=>void;
  const handler=createV2Handler({packet,configured:()=>true,provider:()=>async(_input,_signal,h)=>{hooks=h!;return new Promise(r=>resolve=r);}});
- const response=await handler(new Request('http://localhost/api/v2/research',{method:'POST',headers:{Origin:'http://localhost','Content-Type':'application/json'},body:JSON.stringify({...question,identity})}));
+ const response=await handler(new Request('http://localhost/api/v2/research',{method:'POST',headers:{Origin:'http://localhost','Content-Type':'application/json','X-Research-Protocol':V2_RESEARCH_PROTOCOL},body:JSON.stringify({...question,identity})}));
  await new Promise(r=>setImmediate(r));const reader=response.body!.getReader(),decoder=new TextDecoder();
  const bad=finding('finding_2');bad.evidence[0].quote='Made-up excerpt.';hooks.onFinding(bad);hooks.onFinding(finding());
  let text='';while(!text.includes('"type":"finding"'))text+=decoder.decode((await reader.read()).value,{stream:true});

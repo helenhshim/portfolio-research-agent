@@ -9,6 +9,7 @@ const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json
 let attempt=0;
 const formatRecovery=process.argv.slice(2).includes('--format-recovery');
 const progressive=process.argv.slice(2).includes('--progressive');
+const malformedEvent=process.argv.slice(2).includes('--malformed-event');
 const draft={answer_kind:'analysis',takeaway:{text:'Scripted UI test: current profitability improved; persistence remains unresolved.',finding_ids:['finding_1']},
  findings:[{id:'finding_1',text:'Operating margin is {{fact:NVDA:operating_margin:current}}.',fact_ids:['NVDA:operating_margin:current'],evidence:[{paragraph_id:'NVDA:p41',quote:'ramping into full production with racks running at partners'}]}],
  financial_rows:[{fact_id:'NVDA:operating_margin:current',implication:'Current profitability at {{fact:NVDA:operating_margin:current}} does not establish persistence.',finding_ids:['finding_1']}],unanswered:['Future product economics remain unresolved.'],next_investigation:null};
@@ -16,7 +17,7 @@ const handler=createV2Handler({packet,configured:()=>true,provider:()=>{
  const number=++attempt;let calls=0;
  return async(_input,signal,observer)=>{
   const wait=(ms:number)=>new Promise<void>((resolve,reject)=>{
-   const abort=()=>{clearTimeout(timer);reject(new V2PolicyError('stopped'));};
+   const abort=()=>{clearTimeout(timer);if(malformedEvent)console.log(JSON.stringify({event:'scripted_provider_aborted',attempt:number}));reject(new V2PolicyError('stopped'));};
    const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},ms);
    signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();
   });
@@ -42,12 +43,13 @@ const server=createServer(async(req,res)=>{
   let response:Response;
   if(req.url==='/api/v2/research'){
    const chunks:Buffer[]=[];for await(const chunk of req)chunks.push(Buffer.from(chunk));
-   response=await handler(new Request('http://127.0.0.1:3006/api/v2/research',{method:'POST',headers:{'Content-Type':'application/json',Origin:req.headers.origin??'',Host:'127.0.0.1:3006'},body:Buffer.concat(chunks).toString(),signal:abort.signal}));
+   response=await handler(new Request('http://127.0.0.1:3006/api/v2/research',{method:'POST',headers:{'Content-Type':'application/json',Origin:req.headers.origin??'',Host:'127.0.0.1:3006',...(typeof req.headers['x-research-protocol']==='string'?{'X-Research-Protocol':req.headers['x-research-protocol']}:{})},body:Buffer.concat(chunks).toString(),signal:abort.signal}));
   }else{
    response=await fetch(new URL(req.url??'/v2','http://127.0.0.1:3005'),{signal:abort.signal});
   }
   res.writeHead(response.status,Object.fromEntries([...response.headers].filter(([key])=>!['content-encoding','content-length','transfer-encoding'].includes(key))));
-  if(response.body)for await(const chunk of response.body as any)res.write(chunk);
+  let injected=false;
+  if(response.body)for await(const chunk of response.body as any){res.write(chunk);if(malformedEvent&&req.url==='/api/v2/research'&&!injected&&Buffer.from(chunk).toString().includes('"type":"finding"')){injected=true;res.write('malformed-test-event\n');}}
   res.end();
  }catch{if(!res.destroyed){res.writeHead(502);res.end('Local UI harness could not complete.');}}
 });

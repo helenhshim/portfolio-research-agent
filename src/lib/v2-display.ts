@@ -1,6 +1,7 @@
 import type {V2Fact} from './v2-financials.ts';
 
 // Browser-safe presentation contracts. Provider, source preparation and secrets stay server-side.
+export const V2_RESEARCH_PROTOCOL='findings-v1';
 export type SourceRef={id:'current'|'prior';label:string;date:string;url:string};
 export type Passage={id:string;quote:string;source:'current'|'prior'};
 export type DisplayFinding={id:string;text:string;fact_ids:string[];passages:Passage[]};

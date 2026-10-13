@@ -1,0 +1,100 @@
+{
+  "observed_failures": [
+    {
+      "client_elapsed_seconds": 6,
+      "first_verified_finding_ms": 6152,
+      "server_elapsed_ms": 15262,
+      "server_status": "complete",
+      "drops": []
+    },
+    {
+      "client_elapsed_seconds": 6,
+      "first_verified_finding_ms": 6904,
+      "server_elapsed_ms": 17335,
+      "server_status": "complete",
+      "drops": []
+    }
+  ],
+  "legacy_tab_retest": [
+    {
+      "event": "v2_provider",
+      "identity": {
+        "session_id": "e76e40ca-f4f4-4d02-ae17-3a0835fc1459",
+        "turn_id": "3448747d-4c88-4d16-b4a6-2768bf6f0db7",
+        "revision": 2
+      },
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "verbosity": "low",
+      "output_limit": 3072,
+      "prompt_version": "v2-public-research-7",
+      "schema_version": "v2-brief-schema-5",
+      "schema_hash": "ce33c6d789e1497ad377da528debe6d299173ccfe450fc5e5d614aafdb1eb8f0",
+      "provider_call": 1,
+      "request_bytes": 116885,
+      "first_event_ms": 1236,
+      "first_text_ms": 3565,
+      "last_text_ms": 16665,
+      "output_chars": 3995,
+      "elapsed_ms": 16760,
+      "response_received_ms": 1234,
+      "body_read_ms": 15526,
+      "http_status": 200,
+      "request_id": "req_a43c88925b06450c9235d95a324a56b8",
+      "status": "completed",
+      "incomplete_reason": null,
+      "usage": {
+        "input_tokens": 28783,
+        "output_tokens": 943,
+        "reasoning_tokens": 28,
+        "cached_input_tokens": 28780
+      },
+      "stream": {
+        "received_bytes": 324528,
+        "event_count": 911,
+        "last_event_type": "response.completed",
+        "terminal_event": "response.completed",
+        "failure": null
+      }
+    },
+    {
+      "event": "v2_checks",
+      "data": {
+        "identity": {
+          "session_id": "e76e40ca-f4f4-4d02-ae17-3a0835fc1459",
+          "turn_id": "3448747d-4c88-4d16-b4a6-2768bf6f0db7",
+          "revision": 2
+        },
+        "protocol": "result-v1",
+        "elapsed_ms": 16766,
+        "first_verified_finding_ms": null,
+        "verified_findings_published": 0,
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 16763,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 1
+          }
+        ],
+        "presentation_ms": 0,
+        "status": "complete",
+        "counts": {
+          "provider_calls": 1,
+          "tool_calls": 0,
+          "tool_rounds": 0
+        },
+        "drops": []
+      }
+    }
+  ],
+  "note": "Same legacy tab retested without reload; UI completed. Mechanical checks do not certify semantic support."
+}

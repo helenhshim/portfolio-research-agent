@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {addStage,addFinding,resetFindings,matchesTurnEvent,canRetry,finishAttempt,formatDuration,latestAttempt,recoveryMessage,researchHistory,startAttempt,turnArtifact,updateAttempt,type ResearchTurn} from '../src/lib/v2-attempts.ts';
+import {addStage,addFinding,resetFindings,matchesTurnEvent,researchFailureCode,canRetry,finishAttempt,formatDuration,latestAttempt,recoveryMessage,researchHistory,startAttempt,turnArtifact,updateAttempt,type ResearchTurn} from '../src/lib/v2-attempts.ts';
 import type {V2Artifact,V2Event} from '../src/lib/v2-display.ts';
 const artifact={question:'Original question',takeaway:'Checked prior answer',facts:[],revision:1} as unknown as V2Artifact;
 test('Retry groups attempts under one question and retains the original research context',()=>{
@@ -90,5 +90,23 @@ test('Every progressive event is bound to its session, attempt and revision, bef
   for(const wrong of [{...token,session_id:'other'},{...token,turn_id:'old'},{...token,revision:2}])assert.equal(matchesTurnEvent(event,wrong,wrong.turn_id,false),false);
   assert.equal(matchesTurnEvent(event,token,undefined,false),false);
   assert.equal(matchesTurnEvent(event,token,'a',true),false);
+ }
+});
+test('Future events, unknown stages and malformed identities are ignored without crashing a running client',()=>{
+ for(const event of [null,{},'unexpected',{type:'future_progress',identity:token},{type:'stage',stage:'future_task',identity:token},{type:'finding'},{type:'result'},{type:'result',result:{}},{type:'stage',stage:'preparing',identity:null}]){
+  assert.equal(matchesTurnEvent(event,token,'a',false),false);
+ }
+ assert.equal(matchesTurnEvent({type:'stage',stage:'preparing',elapsed_ms:0,identity:token},token,'a',false),true);
+});
+test('Unexpected stream exceptions use a retryable public code without weakening input/config blocks',()=>{
+ const attempt=latestAttempt(startAttempt([],'q','Question','a',0)[0])!;
+ for(const error of [new TypeError('Cannot read private internal details'),new SyntaxError('Malformed response containing private content'),'unknown']){
+  const failed=finishAttempt(attempt,{status:'failed',error_code:researchFailureCode(error)},1);
+  assert.equal(failed.errorCode,'research_failed');assert.equal(canRetry(failed),true);
+  assert.doesNotMatch(recoveryMessage(failed),/private|Malformed|Cannot read/);
+ }
+ for(const code of ['sensitive_input','unavailable','spend_limit','input_limit']){
+  const failed=finishAttempt(attempt,{status:'failed',error_code:researchFailureCode(new Error(code))},1);
+  assert.equal(failed.errorCode,code);assert.equal(canRetry(failed),false);
  }
 });
