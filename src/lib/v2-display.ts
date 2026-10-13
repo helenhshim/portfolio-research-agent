@@ -13,8 +13,9 @@ export type V2Artifact={
 };
 export type ResearchStage='preparing'|'researching'|'investigating'|'checking';
 export type TurnIdentity={session_id:string;turn_id:string;revision:number};
-export type V2TurnResult={status:string;artifact?:V2Artifact;error_code?:string;message?:string;identity:TurnIdentity};
-export type V2Event={type:'stage';stage:ResearchStage;identity:TurnIdentity}|{type:'result';result:V2TurnResult};
+export type V2RunSummary={elapsed_ms:number;provider_calls:number;tool_calls:number;tool_rounds:number};
+export type V2TurnResult={status:string;artifact?:V2Artifact;error_code?:string;message?:string;identity:TurnIdentity;run?:V2RunSummary};
+export type V2Event={type:'stage';stage:ResearchStage;elapsed_ms:number;identity:TurnIdentity}|{type:'result';result:V2TurnResult};
 export type Coverage={ticker:string;period:string;cutoff:string;sources:SourceRef[]};
 const labels:Record<string,string>={revenue:'Revenue',operating_income:'GAAP operating income',operating_cash_flow:'Operating cash flow',operating_margin:'GAAP operating margin'};
 export function metricLabel(fact:V2Fact){

@@ -1,6 +1,7 @@
 'use client';
-import {useId,useRef,useState,type ReactNode} from 'react';
+import {useEffect,useId,useRef,useState,type ReactNode} from 'react';
 import {Button,Chip,FigureText,StatusSquare,Text,type SquareState} from './primitives';
+import {formatDuration,stageLabels,type ResearchAttempt} from '../../lib/v2-attempts.ts';
 import type {Coverage,MetricRow,Passage,ResearchStage,SourceRef} from '../../lib/v2-display.ts';
 export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inputRef}:{value:string;onChange:(text:string)=>void;onSubmit:()=>void;running:boolean;onStop:()=>void;scope?:ReactNode;error?:string;inputRef?:React.RefObject<HTMLTextAreaElement|null>}){
  const id=useId();const description=[scope?`${id}-scope`:null,error?`${id}-error`:null].filter(Boolean).join(' ')||undefined;return <div className="a3-composer-wrap"><form className="a3-composer" onSubmit={e=>{e.preventDefault();if(!running)onSubmit();}}>
@@ -14,11 +15,23 @@ export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inp
 // only explicitly supplied, supported actions, never the canvas's placeholder commands.
 export function CommandComposer({actions,...props}:React.ComponentProps<typeof Composer>&{actions:{label:string;run:()=>void}[]}){return <><Composer {...props}/>{actions.length>0&&<div className="a3-command-hints">{actions.map(a=><Button key={a.label} variant="link" onClick={a.run}>{a.label}</Button>)}</div>}</>;}
 export function QABlock({question,children,id}:{question:string;children:ReactNode;id?:string}){return <section id={id} className="a3-qa"><div className="a3-q"><Text style="meta">Q</Text><Text style="strong"><FigureText text={question}/></Text></div><div className="a3-a"><Text style="meta">A</Text><div className="a3-answer-content">{children}</div></div></section>;}
-export type Step={stage:ResearchStage;state:SquareState};
-const stageNames:Record<ResearchStage,string>={preparing:'Preparing frozen source evidence',researching:'Examining the research question',investigating:'Inspecting approved evidence or metrics',checking:'Checking references and dependencies'};
-export function StepLog({steps,expanded=false}:{steps:Step[];expanded?:boolean}){
- const [open,setOpen]=useState(false);if(!steps.length)return null;
- const active=steps.at(-1)!;return <div className="a3-step-log"><div className="a3-step-summary text-meta"><StatusSquare state={active.state}/><span>{stageNames[active.stage]} · {active.state==='live'?'running':active.state==='done'?'finished':active.state==='failed'?'failed':'stopped'}</span>{!expanded&&<Button variant="link" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'Hide steps':'Show steps'}</Button>}</div>{(expanded||open)&&<ul className="a3-steps">{steps.map((step,i)=><li key={i} className="text-meta"><StatusSquare state={step.state}/><span>{stageNames[step.stage]} · {step.state==='done'?'finished':step.state==='live'?'running':step.state==='failed'?'failed':'stopped'}</span></li>)}</ul>}</div>;
+export function StepLog({attempt}:{attempt:ResearchAttempt}){
+ const [open,setOpen]=useState(false),[clock,setClock]=useState(attempt.startedAt);
+ const running=attempt.status==='running';
+ useEffect(()=>{if(!running)return;const timer=setInterval(()=>setClock(performance.now()),500);return()=>clearInterval(timer);},[running]);
+ const now=attempt.endedAt??Math.max(clock,attempt.startedAt),last=attempt.steps.at(-1);
+ const duration=(step:ResearchAttempt['steps'][number])=>formatDuration(step.endedMs!==undefined?step.endedMs-step.startedMs:Math.max(0,now-step.receivedAt));
+ const state:SquareState=running?'live':attempt.status==='stopped'?'idle':['failed','check_failed'].includes(attempt.status)?'failed':'done';
+ const label=running?(last?stageLabels[last.stage]:'Sending research request'):attempt.status==='stopped'?'Stopped':state==='failed'?'Attempt failed':attempt.status==='partial'?'Completed with exclusions':'Completed';
+ return <div className="a3-step-log">
+  <div className="a3-step-summary text-meta"><StatusSquare state={state}/><span>{label}</span>
+   {running&&last&&<span aria-live="off">{duration(last)} in this action</span>}
+   <span aria-live="off">Attempt total {formatDuration(now-attempt.startedAt)}</span>
+   {attempt.steps.length>0&&<Button variant="link" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'Hide actions':'Show actions'}</Button>}
+  </div>
+  <span className="a3-sr" role="status">{label}</span>
+  {open&&<ol className="a3-steps">{attempt.steps.map((step,i)=><li key={i} className="text-meta"><StatusSquare state={step.state}/><span>{stageLabels[step.stage]} · {step.state==='live'?'running':step.state==='done'?'finished':step.state==='failed'?'failed':'stopped'} · <span aria-live="off">{duration(step)}</span></span></li>)}</ol>}
+ </div>;
 }
 export function Citation({index,source,onOpen}:{index:number;source:SourceRef;onOpen?:()=>void}){
  return onOpen?<button className="text-cite a3-citation" aria-label={`Open cited passage in ${source.label}`} onClick={onOpen}>{index}</button>:<a className="text-cite a3-citation" href={source.url} target="_blank" rel="noreferrer">{index}</a>;

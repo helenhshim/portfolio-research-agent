@@ -25,17 +25,18 @@ export function createV2Handler(deps:Dependencies){
   if(active>=(deps.maxConcurrent??1))return reject('busy',429);
   active++;
   const encoder=new TextEncoder(),abort=new AbortController();let closed=false;
+  const started=performance.now(),elapsed=()=>Math.max(0,Math.round(performance.now()-started));
   const disconnect=()=>abort.abort();request.signal.addEventListener('abort',disconnect,{once:true});if(request.signal.aborted)abort.abort();
   const stream=new ReadableStream({async start(controller){
    const send=(data:unknown)=>{if(closed)return;try{controller.enqueue(encoder.encode(JSON.stringify(data)+'\n'));}catch{closed=true;abort.abort();}};
    try{
-    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(),{signal:abort.signal,onStage:stage=>send({type:'stage',stage:stage as ResearchStage,identity})});
+    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(),{signal:abort.signal,onStage:stage=>send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity})});
     deps.onDiagnostics?.({status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
     const artifact=presentV2Result(result,packetCoverage(deps.packet),input.question,identity.revision);
     // DESIGN-DECISION: Coverage/clarification answers belong in the thread and preserve
     // the last useful brief. Mechanical success is not semantic task completion.
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);
-    send({type:'result',result:{status:preserve?artifact.answer_kind:result.status,identity,
+    send({type:'result',result:{status:preserve?artifact.answer_kind:result.status,identity,run:{elapsed_ms:elapsed(),...result.counts},
      ...(!preserve&&artifact?{artifact}:{}),...(preserve?{message:plainArtifactText(artifact)}:{}),...('error_code' in result?{error_code:result.error_code}:{})}});
    }catch{send({type:'result',result:{status:'failed',error_code:'research_failed',identity}});}
    finally{active--;request.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;controller.close();}}

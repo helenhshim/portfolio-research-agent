@@ -284,3 +284,12 @@ Approved by Helen after the pre-code use-case mapping on 2026-10-12. Product sco
 ### Composer · optional scope (D75)
 
 Helen requests removing the repeated composer helper copy and header evidence badge. Composer reuses the existing question input, Text, Button and error state; scope content is optional, and accessibility descriptions reference only rendered scope/error elements. Empty, running, stopped and error behavior remains unchanged. This is a placement override; source provenance remains in the brief and source tabs.
+
+### Timed StepLog and attempt recovery (D78)
+
+- **Use case:** D77 Priority 1; E5 recovery and C6 cancellation/late results.
+- **Anatomy:** question-owned attempt number, active/completed summary, current-action duration and attempt total, expandable action list, one current outcome, retry and expandable previous attempts. The brief header exposes its producing attempt’s total duration.
+- **Variants/states:** sending, running, complete, partial, failed, stopped and saved reference (no invented execution duration). Server events determine stage boundaries; local Stop freezes observed timing. Retry creates an attempt under the same question and preserves its original conversation context.
+- **Reuses:** StepLog, StatusSquare, Text meta/data, FigureText, Quiet/Link Button, QABlock, existing native disclosures and Outcome panel. All existing A3 tokens and reduced-motion rules apply; no new visual tokens or animation dependencies.
+- **Accessibility/performance:** elapsed text stays outside live announcements; announce stage/status changes only. Clock updates are local to an active StepLog and cleaned up on terminal state/unmount. Historical timers remain fixed. Keyboard controls retain visible focus and native disclosure behavior.
+- **Scope:** the current success navigation remains until Priority 2. Per-turn brief selection fixes provenance ownership without introducing thread persistence or the new header/index.

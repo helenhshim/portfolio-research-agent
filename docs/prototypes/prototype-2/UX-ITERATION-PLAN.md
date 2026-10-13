@@ -1,6 +1,6 @@
 # V2 UX iteration priorities
 
-2026-10-12 · D77 · Helen feedback captured; implementation recommendation, not completed functionality.
+2026-10-12 · D77 · Helen feedback captured; scope aligned. Priority 1 implemented under D78; remaining priorities planned.
 
 ## Product direction
 
@@ -33,3 +33,7 @@ Real stage events, elapsed time and confirmed source availability may appear imm
 - Inline source links open the intended passage and do not overstate the scope of evidentiary support; numerical values still come from code-owned facts.
 - New-thread/back/reopen actions preserve correct thread ownership. If device-local persistence is adopted, reload, schema migration, storage failure, deletion and in-flight restoration are covered; a reloaded in-flight run becomes interrupted, not falsely running or complete.
 - E1/E2/E3 content, E4 continuation and E5 failures remain part of evaluation. Measure time to a usable checked answer, user checking effort and recovery success as well as animation responsiveness.
+
+## D78 progress
+
+Priority 1 is implemented and verified with deterministic state/HTTP tests and a scripted browser harness. See [attempt recovery checkpoint](../../checkpoints/V2-ATTEMPT-RECOVERY-2026-10-12.md). The in-thread answer redesign, inline evidence and site navigation/history remain subsequent work. Helen has aligned with the proposed scope; this checkpoint does not require repeating general scope approval.

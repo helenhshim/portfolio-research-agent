@@ -21,6 +21,10 @@ test('HTTP runs core checks and displays authoritative comparisons with matching
  const handler=createV2Handler({packet,configured:()=>true,provider:()=>async()=>({kind:'answer',draft:draft()})});
  const response=await handler(request());assert.equal(response.status,200);assert.equal(response.headers.get('Cache-Control'),'no-store');
  const output=await events(response);assert.deepEqual(output.filter(e=>e.type==='stage').map(e=>e.stage),['preparing','researching','checking']);
+ const times=output.filter(e=>e.type==='stage').map(e=>e.elapsed_ms);
+ assert.ok(times.every((time,i)=>Number.isFinite(time)&&time>=0&&(i===0||time>=times[i-1])));
+ assert.ok(output.at(-1).result.run.elapsed_ms>=times.at(-1)!);
+ assert.equal(output.at(-1).result.run.provider_calls,1);
  const result=output.at(-1).result;assert.deepEqual(result.identity,identity);assert.equal(result.artifact.rows[0].change.unit,'percentage_points');assert.equal(result.artifact.rows[0].prior.display,'65.6%');assert.equal(result.artifact.cutoff,packet.source_cutoff);assert.match(plainArtifactText(result.artifact),/profitability improved/);
 });
 test('HTTP blocks foreign origin, identity fields and sensitive input before dispatch',async()=>{
