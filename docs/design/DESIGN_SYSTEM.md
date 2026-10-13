@@ -407,3 +407,11 @@ D82 implementation checks also preserve keyboard focus when a developing citatio
 - **Lifecycle/accessibility:** mounted D92 sessions retain answers, drafts/disclosures/source ownership through hide/show/Back. Native labeled buttons keep tokenized hit targets; Escape restores toggle focus. Narrow drawer dismiss control is a real labeled button, with no pretend modal semantics. Bound view history in memory only. Existing source Escape takes precedence over rail dismissal. No persistence or new model work.
 
 D94 removes the All sessions link beneath the Sessions heading; direct session rows are the history navigation. Other D93 controls and fixed A3 rules remain unchanged.
+
+### Browser history controls and recovery (D95)
+
+- **Use case:** retain V3 public-company research across reload; storage failure, source incompatibility and interrupted runs.
+- **Anatomy:** existing session rail/index with Delete and a quiet Clear history button; native explicit clear confirmation; existing status notice and Composer/Outcome for restoring/interrupted/error states.
+- **States:** saving/restoring, completed restored evidence, interrupted/manual retry, corrupt/expired/unavailable storage and conflicting newer tab. Cross-reload disclosure/source/scroll state is not retained.
+- **Reuse:** Button quiet/icon, Text meta/secondary, existing session rows and failure/retry components; no new tokens, raw visual values, colour, theme or motion. D92–D94's memory-only copy is superseded by D95's approved browser retention. Clear is disabled while research is running.
+- **Later, not implemented:** Helen authorizes planning removal of prose dividers and adjustable rail width after four MVP priorities. Keep current A3 styles until that phase; record any visual override explicitly.

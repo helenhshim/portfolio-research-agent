@@ -1,0 +1,42 @@
+{
+  "private_config_values_checked": 3,
+  "client_files_scanned": 67,
+  "client_secret_matches": 0,
+  "tracked_secret_matches": 0,
+  "sensitive_files_tracked": 0,
+  "git_revisions_scanned": 37,
+  "historical_secret_matches": 0,
+  "pages": [
+    {
+      "path": "/v3",
+      "status": 200,
+      "secretFound": false
+    },
+    {
+      "path": "/.env.local",
+      "status": 404,
+      "secretFound": false
+    },
+    {
+      "path": "/.env",
+      "status": 404,
+      "secretFound": false
+    },
+    {
+      "path": "/.git/config",
+      "status": 404,
+      "secretFound": false
+    },
+    {
+      "path": "/.research-runs/result.json",
+      "status": 404,
+      "secretFound": false
+    },
+    {
+      "path": "/api/v3/research",
+      "status": 405,
+      "secretFound": false
+    }
+  ],
+  "production_live_disabled": true
+}

@@ -4,13 +4,13 @@ import type {Coverage} from '../../lib/v3-display.ts';
 import {sortedV3Sessions,type V3SessionSummary} from '../../lib/v3-sessions.ts';
 import {Button,FigureText,Text} from './primitives';
 import {TickerChip} from './kit';
-type Props={sessions:V3SessionSummary[];selected:string|null;runningId:string|null;coverage:Coverage;notice:string;onOpen:(id:string|null)=>void;onNew:()=>void;onDelete:(id:string)=>void;onStop:()=>void;onActiveResearch:()=>void};
+type Props={sessions:V3SessionSummary[];selected:string|null;runningId:string|null;coverage:Coverage;notice:string;historyLoading:boolean;onClear:()=>void;onOpen:(id:string|null)=>void;onNew:()=>void;onDelete:(id:string)=>void;onStop:()=>void;onActiveResearch:()=>void};
 // Intent: an analyst sees current/prior investigations without leaving the answer.
 // A3: existing 06c rail, Geist/mono, white/ink, hairlines and token-only geometry.
 // DESIGN-DECISION: D93 keeps the rail on the left in the working preview;
 // phone-sized views use a dismissible left drawer rather than stacking a list
 // above the answer. Its threshold derives from existing A3 geometry tokens.
-export default function V3Navigation({sessions,selected,runningId,coverage,notice,onOpen,onNew,onDelete,onStop,onActiveResearch}:Props){
+export default function V3Navigation({sessions,selected,runningId,coverage,notice,historyLoading,onClear,onOpen,onNew,onDelete,onStop,onActiveResearch}:Props){
  const [expanded,setExpanded]=useState(true),[previousViews,setPreviousViews]=useState<(string|null)[]>([]),[compact,setCompact]=useState(false);
  const previous=useRef(selected),goingBack=useRef(false),toggle=useRef<HTMLButtonElement>(null),header=useRef<HTMLElement>(null);
  useEffect(()=>{const el=header.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);setCompact(entries[0].contentRect.width<parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--space-8')));});observer.observe(el);return()=>observer.disconnect();},[]);
@@ -39,13 +39,14 @@ export default function V3Navigation({sessions,selected,runningId,coverage,notic
    <button ref={toggle} type="button" className="a3-button a3-button-icon text-strong" aria-label={expanded?'Hide session sidebar':'Show session sidebar'} aria-expanded={expanded} aria-controls="research-session-sidebar" title={expanded?'Hide session sidebar':'Show session sidebar'} onClick={()=>setExpanded(v=>!v)}><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2h12v12H2ZM6 2v12"/></svg></button>
    <span className="a3-brand"><span className="a3-logo" aria-hidden="true"/><Text style="strong">Research</Text></span>
    <span className="a3-nav-scope"><Text style="meta"><FigureText text="Prototype 3"/></Text>{current?.hasAnswer?<TickerChip coverage={coverage}/>:<Text style="secondary">{selected?'NVIDIA profitability':'All sessions'}</Text>}</span>
-  </nav><Button variant="icon" className="a3-new-research" onClick={()=>{if(compact)setExpanded(false);onNew();}} disabled={Boolean(runningId)} aria-label="New research session" title="New research session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9 3H3v10h10V7M8 8l5-5 1 1-5 5H8V8Z"/></svg></Button>
+  </nav><Button variant="icon" className="a3-new-research" onClick={()=>{if(compact)setExpanded(false);onNew();}} disabled={Boolean(runningId)||historyLoading} aria-label="New research session" title="New research session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9 3H3v10h10V7M8 8l5-5 1 1-5 5H8V8Z"/></svg></Button>
   {runningId&&selected!==runningId&&<div className="a3-nav-running"><Button variant="link" onClick={onActiveResearch}>Return to active research</Button><Button variant="outline" onClick={onStop}>Stop research</Button></div>}</header>
   <aside id="research-session-sidebar" className="a3-session-sidebar" data-compact={compact} aria-label="Session sidebar" hidden={!expanded} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();setExpanded(false);toggle.current?.focus();}}}>
    <h2 className="text-meta" data-sidebar-heading tabIndex={-1}>Sessions</h2>
    {notice&&<Text as="p" style="secondary" role="status">{notice}</Text>}
    {sessions.length?<ul className="a3-sidebar-sessions">{sortedV3Sessions(sessions).map(s=><li key={s.id} className="a3-sidebar-session-row"><button type="button" className={`a3-rail-item a3-sidebar-session ${selected===s.id?'a3-rail-active':''}`} aria-label={`Switch to research session: ${s.title}`} title={s.title} aria-current={selected===s.id?'page':undefined} onClick={()=>choose(s.id)}><Text style={selected===s.id?'strong':'secondary'} className="a3-sidebar-title"><FigureText text={s.title}/></Text><Text style="meta">{s.outcome}{selected===s.id?' · Current':''}</Text></button><Button variant="icon" onClick={()=>onDelete(s.id)} disabled={runningId===s.id} aria-label={`Delete sidebar session: ${s.title}`} title="Delete session"><svg className="a3-nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4h10M6 4V2h4v2M4 4l1 10h6l1-10M7 6v6M9 6v6"/></svg></Button></li>)}</ul>:<Text as="p" style="secondary">No sessions yet.</Text>}
-   <Text as="p" style="meta" className="a3-sidebar-retention">History clears on reload.</Text>
+   <Button variant="quiet" onClick={onClear} disabled={Boolean(runningId)||historyLoading}>Clear history</Button>
+   <Text as="p" style="meta" className="a3-sidebar-retention">{/could not|another tab|storage is unavailable/.test(notice)?'History saving unavailable.':'Saved in this browser.'}</Text>
   </aside>
   {compact&&expanded&&<button type="button" className="a3-sidebar-backdrop" aria-label="Close session sidebar" onClick={()=>{setExpanded(false);toggle.current?.focus();}}/>}
  </>;

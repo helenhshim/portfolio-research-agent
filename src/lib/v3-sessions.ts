@@ -1,8 +1,8 @@
 export const V3_SESSION_LIMIT=10;
 export type V3SessionSummary={id:string;title:string;updatedAt:number;outcome:string;hasAnswer:boolean};
 export const emptyV3Session=(id:string,now:number):V3SessionSummary=>({id,title:'New research',updatedAt:now,outcome:'Draft',hasAnswer:false});
-// Metadata only: actual turns, drafts, source state and revision gate are held by
-// their mounted session. No browser storage or server history is installed.
+// Metadata only: mounted sessions own their live turns/source state/revision gate.
+// D95 persists bounded public turns/drafts separately; no server history is stored.
 export function updateV3Session(sessions:V3SessionSummary[],id:string,patch:Partial<Omit<V3SessionSummary,'id'>>){
  return sessions.map(s=>s.id===id?{...s,...patch}:s);
 }

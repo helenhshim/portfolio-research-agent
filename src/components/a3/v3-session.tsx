@@ -8,6 +8,7 @@ import {V3_RESEARCH_PROTOCOL,type Coverage,type V3Artifact,type V3Evidence,type 
 import {Button,FigureText,Text} from './primitives';
 import {Composer,QABlock,SourcePassage,StepLog,Tabs} from './kit';
 import {WorkspaceLayout} from './layouts';
+import {SessionHistoryBridge} from './v3-history-bridge';
 import {Outcome,ResearchAnswer,ResearchFindings,EvidenceDiscrepancies} from './v3-research-answer';
 function groupPassages(artifact:V3Evidence|null,source:string){
  const groups=new Map<string,{passage:Passage;quotes:string[]}>();
@@ -16,7 +17,7 @@ function groupPassages(artifact:V3Evidence|null,source:string){
 }
 // Intent: preserve an analyst's question, evidence and draft while navigating.
 // A3: ink on white, hairlines only, Geist/mono and the existing spacing scale.
-export default function V3ResearchSession({id,visible,coverage,reference,liveConfigured,busyElsewhere,claimRun,releaseRun,onSummary,onActiveResearch}:{id:string;visible:boolean;coverage:Coverage;reference:V3Artifact;liveConfigured:boolean;busyElsewhere:boolean;claimRun:(id:string,stop:()=>void)=>boolean;releaseRun:(id:string)=>void;onSummary:(id:string,patch:Partial<Omit<V3SessionSummary,'id'>>)=>void;onActiveResearch:()=>void}){
+export default function V3ResearchSession({id,summary,historyLoading,visible,coverage,reference,liveConfigured,busyElsewhere,claimRun,releaseRun,onSummary,onActiveResearch}:{id:string;summary:V3SessionSummary;historyLoading:boolean;visible:boolean;coverage:Coverage;reference:V3Artifact;liveConfigured:boolean;busyElsewhere:boolean;claimRun:(id:string,stop:()=>void)=>boolean;releaseRun:(id:string)=>void;onSummary:(id:string,patch:Partial<Omit<V3SessionSummary,'id'>>)=>void;onActiveResearch:()=>void}){
  const [value,setValue]=useState(''),[inspection,setInspection]=useState<V3Evidence|null>(null),[turns,setTurns]=useState<ResearchTurn[]>([]),[running,setRunning]=useState(false),[inputError,setInputError]=useState(''),[tab,setTab]=useState<SourceRef['id']>('current'),[narrow,setNarrow]=useState(false),[selectedPassage,setSelectedPassage]=useState<string|null>(null);
  const host=useRef<HTMLDivElement>(null),input=useRef<HTMLTextAreaElement>(null),gate=useRef<V2RevisionGate<V3Artifact>|null>(null),active=useRef<{token:ReturnType<V2RevisionGate<V3Artifact>['begin']>;abort:AbortController;turnId:string}|null>(null),runningRef=useRef(false),provisionalInspection=useRef(false),inspectionPane=useRef<HTMLDivElement>(null),threadPane=useRef<HTMLElement>(null),opener=useRef<HTMLElement|null>(null),position=useRef({window:0,pane:0});
  const session=()=>{if(!gate.current)gate.current=new V2RevisionGate(crypto.randomUUID());return gate.current;};
@@ -53,11 +54,11 @@ export default function V3ResearchSession({id,visible,coverage,reference,liveCon
   const now=performance.now();setTurns(t=>updateAttempt(t,current.turnId,current.token.turn_id,a=>finishAttempt(a,{status:'stopped',error_code:'stopped'},now)));
  }
  function showReference(){
-  if(runningRef.current||busyElsewhere)return;const g=session(),token=g.begin(crypto.randomUUID()),saved={...reference,revision:token.revision};g.commit(token,saved);
+  if(runningRef.current||busyElsewhere||historyLoading)return;const g=session(),token=g.begin(crypto.randomUUID()),saved={...reference,revision:token.revision};g.commit(token,saved);
   setTurns(t=>[...t,{id:token.turn_id,question:saved.question,history:researchHistory(t),attempts:[],reference:saved}]);closeInspection(false);
  }
  async function run(question=value,retryTurnId?:string){
-  if(runningRef.current||busyElsewhere)return;const q=question.trim();if(!q){setInputError('Enter a research question.');return;}
+  if(runningRef.current||busyElsewhere||historyLoading)return;const q=question.trim();if(!q){setInputError('Enter a research question.');return;}
   const retryTurn=retryTurnId?turns.find(t=>t.id===retryTurnId):undefined;
   if(retryTurnId&&(!retryTurn||!latestAttempt(retryTurn)||!canRetry(latestAttempt(retryTurn)!)))return;
   const previous=retryTurn?.history??researchHistory(turns),issue=v3InputIssue(q,previous);
@@ -105,7 +106,7 @@ export default function V3ResearchSession({id,visible,coverage,reference,liveCon
  }
  // Source provenance remains inspectable; D75's removed scope/banner copy stays removed.
  const composerProps={value,onChange:(v:string)=>{setValue(v);setInputError('');},onSubmit:()=>void run(),running,onStop:stop,error:inputError,inputRef:input};
- const composer=busyElsewhere?<div className="a3-composer-wrap"><Text as="p" style="secondary">Another session is researching. Your draft stays here.</Text><Button variant="link" onClick={onActiveResearch}>Return to active research</Button></div>:<Composer {...composerProps}/>;
+ const composer=historyLoading?<Text as="p" style="secondary">Restoring saved research…</Text>:busyElsewhere?<div className="a3-composer-wrap"><Text as="p" style="secondary">Another session is researching. Your draft stays here.</Text><Button variant="link" onClick={onActiveResearch}>Return to active research</Button></div>:<Composer {...composerProps}/>;
  const thread=<>{turns.length===0?<div className="a3-empty"><Text as="h1" style="display">A question. The evidence. A sharper thesis.</Text><Text as="p" style="secondary">Pressure-test NVIDIA’s operating profitability using two frozen SEC reports. Ask what supports your premise, what challenges it and what remains unanswered.</Text><div className="a3-examples"><Text style="meta">Start with a question</Text>{[reference.question,'Why did cash flow fall? Does that mean margins are deteriorating?'].map(q=><Button variant="link" key={q} disabled={busyElsewhere} onClick={()=>{setValue(q);input.current?.focus();}}>{q}</Button>)}<Button variant="quiet" disabled={busyElsewhere} onClick={showReference}>View saved reference</Button></div></div>:turns.map(turn=>{
   const attempt=latestAttempt(turn),saved=turnArtifact(turn),failed=attempt&&['failed','check_failed','stopped'].includes(attempt.status);
   return <QABlock key={turn.id} id={`turn-${turn.id}`} question={turn.question}>
@@ -121,6 +122,7 @@ export default function V3ResearchSession({id,visible,coverage,reference,liveCon
   <Tabs items={tabs} value={tab} onChange={source=>{setTab(source as SourceRef['id']);setSelectedPassage(null);}} id={`${id}-workspace`}/>{tabs.map(item=><div key={item.id} id={`${id}-workspace-panel-${item.id}`} role="tabpanel" aria-labelledby={`${id}-workspace-tab-${item.id}`} hidden={tab!==item.id} className="a3-brief-panel" tabIndex={0}><div className="a3-brief"><Text as="h2" style="title"><FigureText text={item.label}/></Text><Text as="p" style="meta"><FigureText text={`${coverage.sources.find(s=>s.id===item.id)?.date} · cutoff ${inspection.cutoff}`}/></Text>{groupPassages(inspection,item.id).map(({passage:p,quotes})=><SourcePassage key={p.id} idPrefix={`${id}-`} passage={p} quotes={quotes} source={coverage.sources.find(s=>s.id===p.source)!} index={p.source==='current'?1:2}/>)}<a className="a3-source-link text-secondary" href={coverage.sources.find(s=>s.id===item.id)?.url} target="_blank" rel="noreferrer">Open original SEC release</a><Text as="p" style="secondary">{groupPassages(inspection,item.id).length?'Shown passages are the evidence cited by this answer.':'This citation supports code-owned financial facts. Inspect calculation basis in the thread for metric lineage.'} The full report remains available at the original source.</Text></div></div>)}</div>:null;
  return <div className="a3-session-app" ref={host} data-narrow={narrow}>
   {/* DESIGN-DECISION: No global Thread/Brief or layout navigation. The pane exists only after explicit inspection. */}
+  <SessionHistoryBridge id={id} summary={summary} draft={value} turns={turns} onRestore={saved=>{setValue(saved.draft);setTurns(saved.turns);}}/>
   <WorkspaceLayout thread={thread} brief={workspace} narrow={narrow} threadRef={threadPane}/>
  </div>;
 }

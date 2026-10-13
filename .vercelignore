@@ -5,3 +5,11 @@ node_modules
 .research-data
 .research-runs
 .git
+
+.next-v3-dev
+.vercel
+*.tsbuildinfo
+test-results
+playwright-report
+evals
+docs/product

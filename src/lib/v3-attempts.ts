@@ -52,7 +52,7 @@ export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{
   return answer?[{role:'user' as const,text:turn.question},{role:'assistant' as const,text:answer.slice(0,1600)}]:[];
  }).slice(-6);
 }
-const retryCodes=new Set(['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped']);
+const retryCodes=new Set(['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped','interrupted']);
 const inputCodes=new Set(['unavailable','spend_limit','provider_quota','origin','sensitive_input','invalid_text','invalid_input','input_limit','history_limit']);
 export const canRetry=(attempt:ResearchAttempt)=>retryCodes.has(attempt.errorCode??attempt.status);
 // Internal JS/transport exception text is not a public recovery code. Preserve
@@ -73,6 +73,7 @@ export function recoveryMessage(attempt:ResearchAttempt){
   provider_whitespace_loop:'The response stalled while formatting. No new answer was published. You can try again.',
   check_failed:'The answer was generated, but its takeaway did not pass reference and dependency checks. No new answer was published. You can try again or revise your question.',
   research_failed:`${prefix}This attempt could not finish. The available diagnostics do not establish a more specific cause. Try again.`,
+  interrupted:'This research was interrupted when the page closed or reloaded. It has not resumed. Retry to start a new attempt.',
   stopped:'You stopped this attempt. No new answer was published.',
   busy:'Another research request is running. Wait for it to finish, then try again.',
   unavailable:'Live research is not configured for this preview. You can view the saved reference.',
