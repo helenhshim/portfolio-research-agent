@@ -23,7 +23,7 @@ const bridgeRows = [
 const fail = ():never => {throw new Error('Invalid authoritative financial evidence');};
 const money=(value:number)=>`${value<0?'−':''}$${(Math.abs(value)/1e9).toFixed(3)} billion`;
 export type V3Discrepancy={fact_id:string;kind:'reported_derived_mismatch'|'cross_report_mismatch';reported_value:number;other_value:number;unit:string;tolerance:number;source_ids:string[]};
-export type V3Provenance={kind:'reported';paragraph_id:string;column:string;source_value:string;unit_scale:number;precision_note?:string}|{kind:'derived';formula:string;input_ids:string[];precision_note?:string};
+export type V3Provenance={kind:'reported';paragraph_id:string;column:string;source_value:string;source_excerpt?:string;unit_scale:number;precision_note?:string}|{kind:'derived';formula:string;input_ids:string[];precision_note?:string};
 const signed=(value:number,unit:string,digits:number)=>`${value<0?'−':value>0?'+':''}${Math.abs(value).toFixed(digits)}${unit==='percentage_points'?' percentage points':'%'}`;
 export function prepareV3BaseFacts(packet:any,discrepancies:V3Discrepancy[]=[]):Map<string,V3Fact> {
  if(packet?.ticker!=='NVDA'||!Array.isArray(packet.release?.paragraphs)||packet.comparison_context?.current?.end!=='2026-07-26'||packet.comparison_context?.prior?.end!=='2026-04-26')return fail();
@@ -39,7 +39,7 @@ export function prepareV3BaseFacts(packet:any,discrepancies:V3Discrepancy[]=[]):
  if(hasPriorSummary){passage('prior_p18','prior',/^GAAP$/);passage('prior_p19','prior',/^\(\$ in millions, except earnings per share\) Q1 FY27 Q4 FY26 Q1 FY26 Q\/Q Y\/Y$/);}
  const addReported=(metric:string,period:string,value:number,unit:string,basis:string,id:string,column:string,token:string,scale:number,display:string,precision_note?:string)=>{
   if(!Number.isFinite(value))return fail();const fact_id=`NVDA:${metric}:${period}`;
-  facts.set(fact_id,{id:fact_id,metric,period,value,unit,basis,source_ids:[`NVDA:${id}`],display,provenance:{kind:'reported',paragraph_id:`NVDA:${id}`,column,source_value:token,unit_scale:scale,...(precision_note?{precision_note}:{})}});
+  facts.set(fact_id,{id:fact_id,metric,period,value,unit,basis,source_ids:[`NVDA:${id}`],display,provenance:{kind:'reported',paragraph_id:`NVDA:${id}`,column,source_value:token,source_excerpt:paragraphs.get(id).text,unit_scale:scale,...(precision_note?{precision_note}:{})}});
  };
  const tokenValue=(token:string)=>Number(token.replace(/[(),+−]/g,'').replace(/^-/,'').replaceAll(',',''))*(/^[−-]|^\(/.test(token)?-1:1);
  const digits=(token:string)=>token.replace(/[()]/g,'').split('.')[1]?.length??0;
@@ -145,7 +145,7 @@ export function prepareV3Facts(packet:any,discrepancies:V3Discrepancy[]=[],baseF
   currentSum+=current;priorSum+=prior;
   for(const [period,value,sourceIds] of [['current',current,[`NVDA:${currentId}`]],['prior_quarter',prior,[`NVDA:${priorId}`]],['qoq',current-prior,[`NVDA:${currentId}`,`NVDA:${priorId}`]]] as const){
    const id=`NVDA:cash_bridge:${name}:${period}`;
-   facts.set(id,{id,value,unit:'USD',display:money(value),basis:`Operating cash-flow ${name}; accounting contribution, not a balance or business cause`,metric:'cash_bridge',period,source_ids:[...sourceIds],provenance:period==='qoq'?{kind:'derived',formula:'current cash-flow contribution − prior-quarter cash-flow contribution',input_ids:[`NVDA:cash_bridge:${name}:current`,`NVDA:cash_bridge:${name}:prior_quarter`]}:{kind:'reported',paragraph_id:sourceIds[0],column:period==='current'?'Three months ended July 26, 2026':'Three months ended April 26, 2026',source_value:paragraphs.get(period==='current'?currentId:priorId).text.match(/\(?-?\d[\d,]*\)?/g)[0],unit_scale:1e6}});
+   facts.set(id,{id,value,unit:'USD',display:money(value),basis:`Operating cash-flow ${name}; accounting contribution, not a balance or business cause`,metric:'cash_bridge',period,source_ids:[...sourceIds],provenance:period==='qoq'?{kind:'derived',formula:'current cash-flow contribution − prior-quarter cash-flow contribution',input_ids:[`NVDA:cash_bridge:${name}:current`,`NVDA:cash_bridge:${name}:prior_quarter`]}:{kind:'reported',paragraph_id:sourceIds[0],column:period==='current'?'Three months ended July 26, 2026':'Three months ended April 26, 2026',source_value:paragraphs.get(period==='current'?currentId:priorId).text.match(/\(?-?\d[\d,]*\)?/g)[0],source_excerpt:paragraphs.get(period==='current'?currentId:priorId).text,unit_scale:1e6}});
   }
  }
  const currentTotal=extract('p171','current',/^Net cash provided by operating activities /,4), priorTotal=extract('prior_p166','prior',/^Net cash provided by operating activities /,2);

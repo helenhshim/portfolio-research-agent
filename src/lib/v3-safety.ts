@@ -1,4 +1,4 @@
-import {prepareV3Facts,prepareV3BaseFacts,V3_METRICS,type V3Metric,type V3Discrepancy} from './v3-financials.ts';
+import {prepareV3Facts,prepareV3BaseFacts,V3_METRICS,type V3Metric,type V3Discrepancy,type V3Fact} from './v3-financials.ts';
 import {hasIdentifiedSensitiveInput,V3_QUESTION_LIMIT} from './v3-input-policy.ts';
 export {hasIdentifiedSensitiveInput} from './v3-input-policy.ts';
 export class V3PolicyError extends Error {
@@ -72,9 +72,15 @@ export function createV3Toolbox(authoritativePacket:any){
   }
   return reject('forbidden_tool');
  };
+ // Location excerpts are UI metadata. Full report text already reaches the model;
+ // avoid repeating it in every fact or changing the provider's reasoning input.
+ const modelFacts=(items:V3Fact[])=>items.map(f=>{
+  if(f.provenance.kind!=='reported')return f;
+  const {source_excerpt,...provenance}=f.provenance;return {...f,provenance};
+ });
  return {
   facts,paragraphs,discrepancies,
-  sourceContext(){return structuredClone({ticker:'NVDA',source_cutoff:packet.source_cutoff,sources,unavailable_metrics:unavailableMetrics,discrepancies,paragraphs:[...paragraphs].map(([id,p])=>({id,text:p.text,source_period:p.source_period})),facts:[...facts.values()]});},
+  sourceContext(){return structuredClone({ticker:'NVDA',source_cutoff:packet.source_cutoff,sources,unavailable_metrics:unavailableMetrics,discrepancies,paragraphs:[...paragraphs].map(([id,p])=>({id,text:p.text,source_period:p.source_period})),facts:modelFacts([...facts.values()])});},
   executeRound(calls:V3ToolCall[],budget:V3RunBudget){
    if(!Array.isArray(calls))return reject('invalid_tools');
    // Validate the whole batch before any execution, including duplicates independent of key order.
@@ -83,7 +89,7 @@ export function createV3Toolbox(authoritativePacket:any){
    budget.reserveRound(requests.length);
    return requests.map(request=>{
     budget.assertActive();
-    if(request.name==='get_checked_metrics')return {name:request.name,facts:structuredClone([...facts.values()].filter(f=>(request.arguments as any).metric_ids.includes(f.metric)))};
+    if(request.name==='get_checked_metrics')return {name:request.name,facts:structuredClone(modelFacts([...facts.values()].filter(f=>(request.arguments as any).metric_ids.includes(f.metric))))};
     const args=request.arguments as any;
     const selected=[...paragraphs].filter(([id,p])=>p.source_period===args.period&&(!args.paragraph_ids||args.paragraph_ids.includes(id))).map(([id,p])=>({id,text:p.text,source_period:p.source_period}));
     return {name:request.name,source_url:sources[args.period as 'current'|'prior'],paragraphs:structuredClone(selected)};

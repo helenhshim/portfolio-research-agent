@@ -415,3 +415,11 @@ D94 removes the All sessions link beneath the Sessions heading; direct session r
 - **States:** saving/restoring, completed restored evidence, interrupted/manual retry, corrupt/expired/unavailable storage and conflicting newer tab. Cross-reload disclosure/source/scroll state is not retained.
 - **Reuse:** Button quiet/icon, Text meta/secondary, existing session rows and failure/retry components; no new tokens, raw visual values, colour, theme or motion. D92–D94's memory-only copy is superseded by D95's approved browser retention. Clear is disabled while research is running.
 - **Later, not implemented:** Helen authorizes planning removal of prose dividers and adjustable rail width after four MVP priorities. Keep current A3 styles until that phase; record any visual override explicitly.
+
+### Stable V3 answer and located source links (D97)
+
+- Use case: read incrementally without reordering; inspect original financial/qualitative support.
+- Anatomy: existing Text title/strong, token-sized verdict region, native context disclosure, persistent arrival-order finding blocks, appended DataTable/assessment/actions. Source is a native external link; Excerpt is an inline source-inspection button using D90 typography/focus. Current/prior links remain distinct.
+- States: pending verdict, checked findings, complete/partial answer, long scrollable verdict, empty context, original source highlight or exact excerpt fallback.
+- Reuses FactProse, ResearchFindings, SourcePassage, FactBasis and existing source-panel focus restoration. No new color/type/spacing token.
+- Authorized override: supersedes D89 role regrouping and D90 automatic context relocation. Context summaries may be repeated in the user-opened verdict disclosure; detailed evidence is not moved on completion. Invalid withdrawn evidence is not kept for visual stability.
