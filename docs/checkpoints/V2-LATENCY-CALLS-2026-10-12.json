@@ -1,0 +1,465 @@
+{
+  "case_id": "E1",
+  "slow_preview": {
+    "provider_calls": 1,
+    "tool_calls": 0,
+    "elapsed_ms": 106048,
+    "http_status": 200,
+    "response_received_ms": 923,
+    "first_text_ms": 3358,
+    "output_chars": 57189,
+    "status": "incomplete",
+    "incomplete_reason": "max_output_tokens",
+    "usage": {
+      "input_tokens": 28533,
+      "output_tokens": 8192,
+      "reasoning_tokens": 46,
+      "cached_input_tokens": 28530
+    },
+    "stream": {
+      "received_bytes": 2467333,
+      "event_count": 8143,
+      "terminal_event": "response.incomplete",
+      "failure": null
+    }
+  },
+  "rejected_compact_candidate": {
+    "summary": {
+      "event": "v2_public_benchmark",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-4",
+      "schema_version": "v2-brief-schema-3",
+      "runs_requested": 3,
+      "runs_completed": 3,
+      "checked_completions": 0,
+      "complete_without_drops": 0,
+      "checked_completion_rate": 0,
+      "all_attempt_durations": {
+        "median_ms": 15738,
+        "max_ms": 44037
+      },
+      "checked_answer_durations": null,
+      "budget_cap_usd": 1,
+      "reserved_or_estimated_usd": 0.2561625,
+      "stopped_due_to_spend_cap": false
+    },
+    "runs": [
+      {
+        "run": 1,
+        "status": "check_failed",
+        "elapsed_ms": 9380,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-4",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 115553,
+            "first_event_ms": 1035,
+            "first_text_ms": 3147,
+            "last_text_ms": 9294,
+            "output_chars": 1370,
+            "elapsed_ms": 9375,
+            "response_received_ms": 1032,
+            "body_read_ms": 8343,
+            "http_status": 200,
+            "request_id": "req_1d14417d7fa9474f91fbf7167166c8b2",
+            "status": "completed",
+            "incomplete_reason": null,
+            "usage": {
+              "input_tokens": 28555,
+              "output_tokens": 406,
+              "reasoning_tokens": 34,
+              "cached_input_tokens": 0
+            },
+            "stream": {
+              "received_bytes": 167967,
+              "event_count": 368,
+              "last_event_type": "response.completed",
+              "terminal_event": "response.completed",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 9376,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 2
+          }
+        ],
+        "drops": [
+          {
+            "kind": "finding",
+            "id": "finding_1",
+            "reason": "quote_mismatch"
+          },
+          {
+            "kind": "takeaway_dependency",
+            "id": "takeaway",
+            "reason": "invalid_dependency"
+          }
+        ],
+        "incomplete_text_stats": null
+      },
+      {
+        "run": 2,
+        "status": "check_failed",
+        "elapsed_ms": 15738,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-4",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 115553,
+            "first_event_ms": 874,
+            "first_text_ms": 4685,
+            "last_text_ms": 15665,
+            "output_chars": 2576,
+            "elapsed_ms": 15733,
+            "response_received_ms": 872,
+            "body_read_ms": 14861,
+            "http_status": 200,
+            "request_id": "req_bba81d4b700e47ed86527f6f309a0d49",
+            "status": "completed",
+            "incomplete_reason": null,
+            "usage": {
+              "input_tokens": 28555,
+              "output_tokens": 722,
+              "reasoning_tokens": 45,
+              "cached_input_tokens": 28552
+            },
+            "stream": {
+              "received_bytes": 252980,
+              "event_count": 673,
+              "last_event_type": "response.completed",
+              "terminal_event": "response.completed",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 15734,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 2
+          }
+        ],
+        "drops": [
+          {
+            "kind": "finding",
+            "id": "finding_1",
+            "reason": "quote_mismatch"
+          },
+          {
+            "kind": "takeaway_dependency",
+            "id": "takeaway",
+            "reason": "invalid_dependency"
+          }
+        ],
+        "incomplete_text_stats": null
+      },
+      {
+        "run": 3,
+        "status": "failed",
+        "elapsed_ms": 44037,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-4",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 115553,
+            "first_event_ms": 1251,
+            "first_text_ms": 3259,
+            "last_text_ms": 43940,
+            "output_chars": 33294,
+            "elapsed_ms": 44033,
+            "response_received_ms": 1250,
+            "body_read_ms": 42782,
+            "http_status": 200,
+            "request_id": "req_c40f48e2e80c482188b70d8221f8f3bf",
+            "status": "incomplete",
+            "incomplete_reason": "max_output_tokens",
+            "usage": {
+              "input_tokens": 28555,
+              "output_tokens": 3072,
+              "reasoning_tokens": 36,
+              "cached_input_tokens": 28552
+            },
+            "stream": {
+              "received_bytes": 1006735,
+              "event_count": 3033,
+              "last_event_type": "response.incomplete",
+              "terminal_event": "response.incomplete",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 44036,
+            "provider_call": 1,
+            "result_kind": "failed"
+          }
+        ],
+        "drops": [],
+        "incomplete_text_stats": {
+          "characters": 33294,
+          "whitespace_characters": 32002,
+          "max_whitespace_run": 31923
+        }
+      }
+    ]
+  },
+  "fact_linked_candidate": {
+    "summary": {
+      "event": "v2_public_benchmark",
+      "case_id": "E1",
+      "source_hash": "4c68ec8c2039671971ea9b86ce4a84c1747c2ca81887af44f39fc159af98cd49",
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "prompt_version": "v2-public-research-5",
+      "schema_version": "v2-brief-schema-3",
+      "runs_requested": 3,
+      "runs_completed": 3,
+      "checked_completions": 3,
+      "complete_without_drops": 3,
+      "checked_completion_rate": 1,
+      "all_attempt_durations": {
+        "median_ms": 13644,
+        "max_ms": 14693
+      },
+      "checked_answer_durations": {
+        "median_ms": 13644,
+        "max_ms": 14693
+      },
+      "budget_cap_usd": 0.7,
+      "reserved_or_estimated_usd": 0.24162249999999996,
+      "stopped_due_to_spend_cap": false
+    },
+    "runs": [
+      {
+        "run": 1,
+        "status": "complete",
+        "elapsed_ms": 13644,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-5",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 116181,
+            "first_event_ms": 969,
+            "first_text_ms": 1885,
+            "last_text_ms": 13520,
+            "output_chars": 3553,
+            "elapsed_ms": 13637,
+            "response_received_ms": 965,
+            "body_read_ms": 12672,
+            "http_status": 200,
+            "request_id": "req_7efc69d0e63345a6a2c61402e18e0b88",
+            "status": "completed",
+            "incomplete_reason": null,
+            "usage": {
+              "input_tokens": 28663,
+              "output_tokens": 872,
+              "reasoning_tokens": 0,
+              "cached_input_tokens": 0
+            },
+            "stream": {
+              "received_bytes": 304459,
+              "event_count": 868,
+              "last_event_type": "response.completed",
+              "terminal_event": "response.completed",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 13638,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 3
+          }
+        ],
+        "drops": [],
+        "incomplete_text_stats": null
+      },
+      {
+        "run": 2,
+        "status": "complete",
+        "elapsed_ms": 13218,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-5",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 116181,
+            "first_event_ms": 414,
+            "first_text_ms": 1428,
+            "last_text_ms": 13166,
+            "output_chars": 3625,
+            "elapsed_ms": 13211,
+            "response_received_ms": 412,
+            "body_read_ms": 12799,
+            "http_status": 200,
+            "request_id": "req_a43e64ed5e2443829ea2bf5a043dbf0f",
+            "status": "completed",
+            "incomplete_reason": null,
+            "usage": {
+              "input_tokens": 28663,
+              "output_tokens": 876,
+              "reasoning_tokens": 0,
+              "cached_input_tokens": 28660
+            },
+            "stream": {
+              "received_bytes": 305781,
+              "event_count": 872,
+              "last_event_type": "response.completed",
+              "terminal_event": "response.completed",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 13213,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 3
+          }
+        ],
+        "drops": [],
+        "incomplete_text_stats": null
+      },
+      {
+        "run": 3,
+        "status": "complete",
+        "elapsed_ms": 14693,
+        "traces": [
+          {
+            "model": "gpt-6.1-sol",
+            "effort": "low",
+            "verbosity": "low",
+            "output_limit": 3072,
+            "prompt_version": "v2-public-research-5",
+            "schema_version": "v2-brief-schema-3",
+            "schema_hash": "9895cfcab47bc5c45b18b62da616fa6d5edb22ac0ac6b0a0466c6072ad22133b",
+            "provider_call": 1,
+            "request_bytes": 116181,
+            "first_event_ms": 801,
+            "first_text_ms": 2276,
+            "last_text_ms": 14623,
+            "output_chars": 3599,
+            "elapsed_ms": 14689,
+            "response_received_ms": 800,
+            "body_read_ms": 13889,
+            "http_status": 200,
+            "request_id": "req_f81d1c4ec7b6445bbbdeb3304b455306",
+            "status": "completed",
+            "incomplete_reason": null,
+            "usage": {
+              "input_tokens": 28663,
+              "output_tokens": 917,
+              "reasoning_tokens": 31,
+              "cached_input_tokens": 28660
+            },
+            "stream": {
+              "received_bytes": 313341,
+              "event_count": 882,
+              "last_event_type": "response.completed",
+              "terminal_event": "response.completed",
+              "failure": null
+            }
+          }
+        ],
+        "timings": [
+          {
+            "step": "preparing",
+            "elapsed_ms": 1
+          },
+          {
+            "step": "provider",
+            "elapsed_ms": 14691,
+            "provider_call": 1,
+            "result_kind": "answer"
+          },
+          {
+            "step": "checking",
+            "elapsed_ms": 0
+          }
+        ],
+        "drops": [],
+        "incomplete_text_stats": null
+      }
+    ]
+  },
+  "total_estimated_usd": 0.49778500000000003,
+  "scope": "Fixed public E1 only. Incomplete text retained only in ignored captures; no raw prompt, text, reasoning or credentials in this metadata."
+}

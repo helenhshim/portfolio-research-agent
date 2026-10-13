@@ -2,7 +2,7 @@ import {prepareV2Facts,prepareV2BaseFacts,V2_METRICS,type V2Metric} from './v2-f
 export class V2PolicyError extends Error {
  code:string;
  constructor(code:string){
-  const allowed=['invalid_shape','invalid_input','input_limit','invalid_text','sensitive_input','history_limit','invalid_role','invalid_deadline','stopped','deadline','provider_limit','tool_limit','source_url','invalid_period','invalid_paragraph','invalid_metric','unavailable_metric','forbidden_tool','invalid_tools','duplicate_tool','invalid_provider_result','spend_limit','provider_incomplete'];
+  const allowed=['invalid_shape','invalid_input','input_limit','invalid_text','sensitive_input','history_limit','invalid_role','invalid_deadline','stopped','deadline','provider_limit','tool_limit','source_url','invalid_period','invalid_paragraph','invalid_metric','unavailable_metric','forbidden_tool','invalid_tools','duplicate_tool','invalid_provider_result','spend_limit','provider_incomplete','provider_whitespace_loop'];
   const safeCode=allowed.includes(code)?code:'research_failed';super(safeCode);this.name='V2PolicyError';this.code=safeCode;
  }
 }

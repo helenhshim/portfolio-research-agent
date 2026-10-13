@@ -52,3 +52,9 @@ test('Duration formatting and history bound preserve short stages and recent val
  const turns:ResearchTurn[]=Array.from({length:5},(_,i)=>({id:String(i),question:`Question ${i}`,history:[],attempts:[],reference:artifact}));
  assert.equal(researchHistory(turns).length,6);assert.equal(researchHistory(turns)[0].text,'Question 2');
 });
+test('Formatting recovery records the abandoned stage as failed and keeps one active action',()=>{
+ let attempt=latestAttempt(startAttempt([],'q','Question','a',0)[0])!;
+ attempt=addStage(attempt,'researching',0,0);attempt=addStage(attempt,'recovering',5000,5000);
+ assert.equal(attempt.steps[0].state,'failed');assert.equal(attempt.steps[0].endedMs,5000);assert.equal(attempt.steps[1].state,'live');
+ assert.equal(attempt.steps.filter(s=>s.state==='live').length,1);
+});

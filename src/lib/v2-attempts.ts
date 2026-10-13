@@ -3,7 +3,7 @@ export type HistoryEntry={role:'user'|'assistant';text:string};
 export type TimedStep={stage:ResearchStage;startedMs:number;endedMs?:number;receivedAt:number;state:'live'|'done'|'failed'|'idle'};
 export type ResearchAttempt={id:string;startedAt:number;endedAt?:number;status:string;steps:TimedStep[];message?:string;errorCode?:string;artifact?:V2Artifact;run?:V2RunSummary};
 export type ResearchTurn={id:string;question:string;history:HistoryEntry[];attempts:ResearchAttempt[];reference?:V2Artifact};
-export const stageLabels:Record<ResearchStage,string>={preparing:'Preparing report evidence',researching:'Generating the research answer',investigating:'Inspecting approved evidence or metrics',checking:'Checking references and dependencies'};
+export const stageLabels:Record<ResearchStage,string>={preparing:'Preparing report evidence',researching:'Generating the research answer',investigating:'Inspecting approved evidence or metrics',checking:'Checking references and dependencies',recovering:'Retrying response formatting'};
 export const latestAttempt=(turn:ResearchTurn)=>turn.attempts.at(-1);
 export const turnArtifact=(turn:ResearchTurn)=>latestAttempt(turn)?.artifact??(turn.attempts.length===0?turn.reference:undefined);
 export function startAttempt(turns:ResearchTurn[],turnId:string,question:string,attemptId:string,now:number):ResearchTurn[]{
@@ -17,7 +17,7 @@ export function updateAttempt(turns:ResearchTurn[],turnId:string,attemptId:strin
 }
 export function addStage(attempt:ResearchAttempt,stage:ResearchStage,elapsedMs:number,now:number):ResearchAttempt{
  const previous=attempt.steps.at(-1),time=Math.max(previous?.startedMs??0,Number.isFinite(elapsedMs)?elapsedMs:0);
- return {...attempt,steps:[...attempt.steps.map(s=>s.state==='live'?{...s,endedMs:time,state:'done' as const}:s),{stage,startedMs:time,receivedAt:now,state:'live'}]};
+ return {...attempt,steps:[...attempt.steps.map(s=>s.state==='live'?{...s,endedMs:time,state:stage==='recovering'?'failed' as const:'done' as const}:s),{stage,startedMs:time,receivedAt:now,state:'live'}]};
 }
 export function finishAttempt(attempt:ResearchAttempt,result:Pick<V2TurnResult,'status'|'message'|'error_code'|'artifact'|'run'>,now:number):ResearchAttempt{
  const last=attempt.steps.at(-1),end=result.run?.elapsed_ms??(last?last.startedMs+Math.max(0,now-last.receivedAt):0);
@@ -34,7 +34,7 @@ export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{
   return answer?[{role:'user' as const,text:turn.question},{role:'assistant' as const,text:answer.slice(0,1600)}]:[];
  }).slice(-6);
 }
-export const canRetry=(attempt:ResearchAttempt)=>['deadline','provider_incomplete','check_failed','research_failed','busy','stopped'].includes(attempt.errorCode??attempt.status);
+export const canRetry=(attempt:ResearchAttempt)=>['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped'].includes(attempt.errorCode??attempt.status);
 export function recoveryMessage(attempt:ResearchAttempt){
  const code=attempt.errorCode??attempt.status;
  const prepared=attempt.steps.some(s=>s.stage==='researching');
@@ -44,6 +44,7 @@ export function recoveryMessage(attempt:ResearchAttempt){
  const messages:Record<string,string>={
   deadline:`${prefix}Research reached its time limit while ${activity}. No new brief was published. Try again or narrow your question.`,
   provider_incomplete:`${prefix}This attempt did not receive a complete model response, so no new answer could be checked and published. Try again or narrow your question.`,
+  provider_whitespace_loop:'The response stalled while formatting. No new answer was published. You can try again.',
   check_failed:'The answer was generated, but its takeaway did not pass reference and dependency checks. No new brief was published. You can try again or revise your question.',
   research_failed:`${prefix}This attempt could not finish. The available diagnostics do not establish a more specific cause. Try again.`,
   stopped:'You stopped this attempt. No new brief was published.',

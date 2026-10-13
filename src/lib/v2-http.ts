@@ -1,8 +1,8 @@
-import {runV2ControlledTurn,type V2Provider} from './v2-controller.ts';
+import {runV2ControlledTurn,type V2Provider,type V2Timing} from './v2-controller.ts';
 import {exactKeys,validateV2Request,V2PolicyError,V2_LIMITS} from './v2-safety.ts';
 import {packetCoverage,presentV2Result} from './v2-presentation.ts';
 import {plainArtifactText,type ResearchStage,type TurnIdentity} from './v2-display.ts';
-type Dependencies={packet:unknown;configured:()=>boolean;provider:()=>V2Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void};
+type Dependencies={packet:unknown;configured:()=>boolean;provider:(identity:TurnIdentity)=>V2Provider;maxConcurrent?:number;onDiagnostics?:(data:unknown)=>void};
 export function createV2Handler(deps:Dependencies){
  let active=0;return async function POST(request:Request){
   const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
@@ -30,9 +30,11 @@ export function createV2Handler(deps:Dependencies){
   const stream=new ReadableStream({async start(controller){
    const send=(data:unknown)=>{if(closed)return;try{controller.enqueue(encoder.encode(JSON.stringify(data)+'\n'));}catch{closed=true;abort.abort();}};
    try{
-    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(),{signal:abort.signal,onStage:stage=>send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity})});
-    deps.onDiagnostics?.({status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
+    const timings:V2Timing[]=[];
+    const result=await runV2ControlledTurn(input,deps.packet,deps.provider(identity),{signal:abort.signal,onTiming:timing=>timings.push(timing),onStage:stage=>send({type:'stage',stage:stage as ResearchStage,elapsed_ms:elapsed(),identity})});
+    const presenting=performance.now();
     const artifact=presentV2Result(result,packetCoverage(deps.packet),input.question,identity.revision);
+    deps.onDiagnostics?.({identity,elapsed_ms:elapsed(),timings,presentation_ms:Math.max(0,Math.round(performance.now()-presenting)),status:result.status,counts:result.counts,...('output' in result?{drops:result.output?.drops}:{}),...('error_code' in result?{error_code:result.error_code}:{})});
     // DESIGN-DECISION: Coverage/clarification answers belong in the thread and preserve
     // the last useful brief. Mechanical success is not semantic task completion.
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);

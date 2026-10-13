@@ -11,7 +11,7 @@ export type V2Artifact={
  unanswered:string[];next:{question:string;label:string;finding_ids:string[]}|null;
  sources:SourceRef[];cutoff:string;
 };
-export type ResearchStage='preparing'|'researching'|'investigating'|'checking';
+export type ResearchStage='preparing'|'researching'|'investigating'|'checking'|'recovering';
 export type TurnIdentity={session_id:string;turn_id:string;revision:number};
 export type V2RunSummary={elapsed_ms:number;provider_calls:number;tool_calls:number;tool_rounds:number};
 export type V2TurnResult={status:string;artifact?:V2Artifact;error_code?:string;message?:string;identity:TurnIdentity;run?:V2RunSummary};

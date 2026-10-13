@@ -313,3 +313,10 @@ Helen requests removing the repeated composer helper copy and header evidence ba
 - **Variants/states:** sending, preparing, generating, inspecting, checking, complete/partial, failed and stopped. Historical attempts keep their own frozen summary, expanded only by selection.
 - **Reuses:** StepLog, Text meta, StatusSquare, Button link, native list/disclosure controls and existing A3 tokens. Timer text remains outside the single live status announcement; reduced-motion and cleanup remain unchanged.
 - **Override:** D78's two simultaneous current-action/attempt-total values and visible per-action durations are superseded. Internal timing records remain for debugging.
+
+
+### StepLog · bounded formatting recovery (D81)
+
+- **Use case:** generation whitespace stalls and uninterrupted same-turn recovery.
+- **Variant/state:** “Retrying response formatting” becomes the sole active stage; the abandoned generation action is failed, then existing checking/completed states apply. One timer and one Q/A turn remain.
+- **Reuses:** StepLog, Text meta, StatusSquare, existing stage history and Outcome. No new tokens/components or raw streamed claims. Generic user Retry remains explicit; this stage records a real bounded internal formatting request within the existing two-call maximum.

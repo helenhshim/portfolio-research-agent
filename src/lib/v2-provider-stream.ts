@@ -1,6 +1,6 @@
 // Provider streaming stays server-side. Never publish partial, unchecked claims.
 import {V2PolicyError} from './v2-safety.ts';
-export type V2StreamFailure='missing_body'|'transfer_limit'|'event_limit'|'event_error'|'missing_terminal'|'malformed_event'|'transport_error'|'missing_terminal_response';
+export type V2StreamFailure='missing_body'|'transfer_limit'|'event_limit'|'event_error'|'missing_terminal'|'malformed_event'|'transport_error'|'missing_terminal_response'|'output_whitespace_loop';
 export type V2StreamDiagnostics={received_bytes:number;event_count:number;last_event_type:string|null;terminal_event:string|null;failure:V2StreamFailure|null};
 export class V2StreamError extends V2PolicyError {
  readonly failure:V2StreamFailure;
@@ -42,6 +42,6 @@ export async function readV2ProviderStream(response:Response,onEvent:(event:any)
   }
   pending+=decoder.decode();const terminal=parse(pending.replaceAll('\r\n','\n'));if(terminal)return terminal;
   throw new V2StreamError('missing_terminal');
- }catch(error){diagnostics.failure=error instanceof V2StreamError?error.failure:'transport_error';throw error;}
+ }catch(error){diagnostics.failure=error instanceof V2StreamError?error.failure:error instanceof V2PolicyError&&error.code==='provider_whitespace_loop'?'output_whitespace_loop':'transport_error';throw error;}
  finally{onDiagnostics?.(diagnostics);await reader.cancel().catch(()=>{});reader.releaseLock();}
 }

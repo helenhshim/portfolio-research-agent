@@ -7,6 +7,7 @@ import {createV2Handler} from '../src/lib/v2-http.ts';
 import {V2PolicyError} from '../src/lib/v2-safety.ts';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
 let attempt=0;
+const formatRecovery=process.argv.slice(2).includes('--format-recovery');
 const draft={answer_kind:'analysis',takeaway:{text:'Scripted UI test: current profitability improved; persistence remains unresolved.',finding_ids:['finding_1']},
  findings:[{id:'finding_1',text:'Operating margin is {{fact:NVDA:operating_margin:current}}.',fact_ids:['NVDA:operating_margin:current'],evidence:[{paragraph_id:'NVDA:p41',quote:'ramping into full production with racks running at partners'}]}],
  financial_rows:[{fact_id:'NVDA:operating_margin:current',implication:'Current profitability does not establish persistence.',finding_ids:['finding_1']}],unanswered:['Future product economics remain unresolved.'],next_investigation:null};
@@ -18,6 +19,7 @@ const handler=createV2Handler({packet,configured:()=>true,provider:()=>{
    const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},number===3?20000:2500);
    signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();
   });
+  if(formatRecovery){if(calls++===0)throw new V2PolicyError('provider_whitespace_loop');return {kind:'answer',draft};}
   if(number===1)throw new V2PolicyError('deadline');
   if(number===2&&calls++===0)return {kind:'tools',calls:[{name:'get_checked_metrics',arguments:{metric_ids:['operating_margin']}}]};
   return {kind:'answer',draft:number===4?{...draft,takeaway:{...draft.takeaway,finding_ids:['missing']}}:draft};

@@ -8,6 +8,6 @@ export const maxDuration=150;
 const ledger=new V2SpendLedger(1);
 export const POST=createV2Handler({packet,
  configured:()=>Boolean(process.env.OPENAI_API_KEY)&&process.env.VERCEL_ENV!=='production',
- provider:()=>createV2Provider(process.env.OPENAI_API_KEY!,{ledger,onTrace:trace=>console.info(JSON.stringify({event:'v2_provider',...trace}))}),
+ provider:identity=>createV2Provider(process.env.OPENAI_API_KEY!,{ledger,onProgress:progress=>console.info(JSON.stringify({event:'v2_provider_progress',identity,...progress})),onTrace:trace=>console.info(JSON.stringify({event:'v2_provider',identity,...trace}))}),
  onDiagnostics:data=>console.info(JSON.stringify({event:'v2_checks',data})),
 });
