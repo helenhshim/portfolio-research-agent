@@ -10,6 +10,8 @@ Prototype 1 is frozen at Git tag `prototype-1` and its original protected Previe
 
 Requires Node.js 24. Run `npm ci`, set `OPENAI_API_KEY` in ignored `.env.local`, then `npm run dev`. Open http://127.0.0.1:3000. Never commit or paste credentials. The checked example works without a key.
 
+For the current **Prototype 3 UI iteration**, run `npm run dev:v3` and open [the V3 development preview](http://127.0.0.1:3006/v3?preview=live). This uses isolated build output and Fast Refresh. An already-open production-loaded tab must load a fresh page to receive the new UI; generating another answer does not update its frontend. Keep useful old answers open because sessions are memory-only. Current V3 scope and checkpoints are in [the V3 plan](docs/prototypes/prototype-3/PLAN.md); the release details below describe the earlier advisor-first prototype.
+
 The web release supports NVIDIA only, with frozen public SEC snapshots for FY2027 Q2 and Q1, released August 26 and May 20, 2026. Goals, rationale, holding period and risk are editable. Code owns fiscal comparisons and source lineage; the model selects supporting and qualifying evidence.
 
 ## Verification

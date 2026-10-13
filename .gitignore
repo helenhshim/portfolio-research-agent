@@ -5,6 +5,7 @@
 
 node_modules/
 .next/
+.next-v3-dev/
 .research-runs/
 .vercel/
 *.tsbuildinfo

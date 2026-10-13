@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D90.
+Owner: Helen Shim. Updated: 2026-10-13. Decisions: D60–D91.
 
-Prototype numbers identify product experiments. PRD v0.60 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.61 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -48,3 +48,5 @@ D88 applies reported-first financial evidence to V3 without altering V2 or the s
 D89 improves V3's reading hierarchy: grouped headings, visible cited analysis and one unanswered/next-investigation section. `prototype-3-candidate-2` retains the D88 layout; `prototype-3-candidate-3` records the reading-hierarchy checkpoint. Model/source/fact contracts remain identical; presentation checks do not score live research quality or latency.
 
 D90 replaces V3 numeral tiles with inline Source links, relocates context under Verdict and removes the key-value underline and two generic closing lines. `prototype-3-candidate-3` preserves the preceding layout; `prototype-3-candidate-4` records this presentation checkpoint. Existing live user-run completion is an observation, not a semantic/pilot pass.
+
+D91 fixes local preview delivery with `npm run dev:v3` and isolated Fast Refresh output. It is an operational correction to candidate-4, not a new answer/model experiment. The stale user's production-loaded tab is preserved; further UI tests use a fresh development-loaded preview. Do not infer a frontend update from a successful model response alone.

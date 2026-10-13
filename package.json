@@ -10,6 +10,7 @@
     "research": "node --env-file=.env.local scripts/research.ts",
     "typecheck": "tsc --noEmit",
     "dev": "next dev --hostname 127.0.0.1",
+    "dev:v3": "PORTFOLIO_NEXT_DIST_DIR=.next-v3-dev next dev --hostname 127.0.0.1 --port 3006",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1"
   },
