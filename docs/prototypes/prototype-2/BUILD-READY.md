@@ -51,3 +51,8 @@ No further general scope/architecture approval is needed before coding within th
 A3 is implemented at `/v2` with all three layouts, the reusable kit, actual frozen facts, saved-reference disclosure, source tabs, cash-bridge/margin detail and same-session Stop/recovery. V1 stays at `/` with a separate root layout. Provider/HTTP integration now exists; D72’s “no hookup” status above is historical. A small outcome classification preserves the current brief on outside-coverage/clarification replies. The submitted question is shown; a separately inferred working-question field is still absent.
 
 See [A3 implementation and trial record](../../checkpoints/A3-FRONTEND-2026-10-12.md) for actual browser/tests/model failures. Scripted tests and the saved authored reference do not establish live answer reliability. Keep the protected-pilot gate closed until E1–E5/control/semantic evaluation passes; no deployment or release tag in D73.
+
+
+## D79 thread-first implementation update
+
+Checked answers now remain directly in the originating research turn, including selected comparisons, surviving findings, details, unanswered criteria and next CTA. Completion does not navigate to inspection. Open brief/source links select the originating answer for optional desktop split or dismissible narrow inspection. Remove global Thread/Brief switching and footer layout navigation; the header/index is still subsequent work. The same checked body renders both surfaces, with existing provider/data/verification contracts and no extra model call. See [thread-first checkpoint](../../checkpoints/V2-THREAD-FIRST-2026-10-12.md) for browser validation.

@@ -1,6 +1,6 @@
 # V2 UX iteration priorities
 
-2026-10-12 · D77 · Helen feedback captured; scope aligned. Priority 1 implemented under D78; remaining priorities planned.
+2026-10-12 · D77 · Helen feedback captured; scope aligned. Priority 1 implemented under D78. Thread-first answers/optional inspection and finding-level inline source placement implemented under D79; semantic citation completeness and header/index remain planned.
 
 ## Product direction
 
@@ -37,3 +37,8 @@ Real stage events, elapsed time and confirmed source availability may appear imm
 ## D78 progress
 
 Priority 1 is implemented and verified with deterministic state/HTTP tests and a scripted browser harness. See [attempt recovery checkpoint](../../checkpoints/V2-ATTEMPT-RECOVERY-2026-10-12.md). The in-thread answer redesign, inline evidence and site navigation/history remain subsequent work. Helen has aligned with the proposed scope; this checkpoint does not require repeating general scope approval.
+
+
+## D79 implementation progress
+
+Priority 2 is implemented: completion and saved references stay in the thread; the shared checked answer includes all selected rows/findings plus collapsed details, limits and continuation. Explicit brief/source inspection opens its own turn’s artifact. Closing preserves draft/disclosures and restores focus/position. Narrow inspection includes Stop while running and Close/Escape; no top-level Thread/Brief switch. Footer layout controls are removed. Finding-level source links appear beside the finding, while semantic citation-completeness work from Priority 3 remains pending. Header/index/history from Priority 4 are not implemented. [Validation checkpoint](../../checkpoints/V2-THREAD-FIRST-2026-10-12.md).

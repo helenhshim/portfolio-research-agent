@@ -8,7 +8,7 @@ export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inp
   <Text style="meta" className="a3-composer-q">Q</Text><span className="a3-caret" aria-hidden="true"/>
   <label htmlFor={id} className="a3-sr">Research question or follow-up</label>
   <textarea id={id} ref={inputRef} value={value} disabled={running} aria-describedby={description} aria-invalid={Boolean(error)} placeholder="Ask a question about NVIDIA’s operating profitability…" rows={2} maxLength={2000} onChange={e=>onChange(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();if(!running)onSubmit();}}}/>
-  {running?<Button variant="outline" onClick={onStop}>Stop</Button>:<Button variant="primary" type="submit" disabled={!value.trim()}>Run <span aria-hidden="true">↵</span></Button>}
+  {running?<Button variant="outline" data-research-stop onClick={onStop}>Stop</Button>:<Button variant="primary" type="submit" disabled={!value.trim()}>Run <span aria-hidden="true">↵</span></Button>}
  </form>{scope&&<div id={`${id}-scope`} className="a3-scope text-meta">{scope}</div>}{error&&<Text as="p" style="secondary" id={`${id}-error`} role="alert">{error}</Text>}</div>;
 }
 // DESIGN-DECISION: P0 has one issuer and no slash-command tools. This variant accepts

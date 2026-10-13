@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.48. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
+Owner: Helen Shim · Status: v0.49. Prototype 1 frozen; V2 A3 frontend and provider route implemented; live output reliability/pilot gates pending · Last updated: 2026-10-12
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. Current local experiments are on `prototype-2`; they are not a second released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -633,3 +633,12 @@ Helen aligns with D77’s scope and explicitly requests implementing Priority 1.
 Retry stays under its question and states that question/conversation context are unchanged; the actual model may choose a different allowed tool path, shown by recorded stages. Previous attempts remain expandable. One failure response explains the known failure and feasible next action; unknown provider causes are not invented. Failed operational messages are excluded from research context. Stop/late events cannot reopen terminal attempts. An older brief remains owned by its original answer and is never attached to a failed follow-up.
 
 The broader thread-first answer, inline citations, header navigation and device-local history remain subsequent priorities; Helen’s scope alignment is recorded, and this change implements only Priority 1. Deterministic state/HTTP tests and a localhost-only scripted browser harness verify recovery without paid calls. See `docs/checkpoints/V2-ATTEMPT-RECOVERY-2026-10-12.md`.
+
+
+### Thread-first checked answers and optional inspection (D79, 2026-10-12)
+
+Helen requests fixing completion navigation: remain in the research thread, with high-level supporting evidence directly in the answer. Successful completion and saved-reference selection no longer open the brief automatically. Each turn shows the same checked artifact body: interpretation, up to three selected financial comparisons and implications, all surviving supporting/qualifying findings, collapsed calculation basis and complete cash bridge, unanswered criteria and zero/one supported next-investigation CTA. Do not trim away qualifying evidence or create a separate model summary for presentation.
+
+“Open brief” and source links explicitly open inspection of that answer's own artifact. Desktop uses an optional right pane; narrow screens show a dismissible full-width inspection with Close brief/Escape instead of the global Thread/Brief switch. Closing restores the opener, draft, disclosures and thread position. Incoming results never replace an explicitly selected historical brief; starting new research returns to the thread. Brief/source tabs exist only inside the opened inspection. Remove the global Thread/Brief bar and footer layout chooser. Header thread-index navigation and persistent history remain subsequent work.
+
+Finding-level source links sit at the finding's end and open its exact reported passage. No sentence-level support mapping is invented; moving links does not resolve the outstanding semantic citation-coverage evaluation. The shared body preserves source-limited/partial notices, authored-reference provenance and source dates. Only the most recent valid thread answer may highlight a key fact; the optional pane does not add a second highlight. This is presentation/navigation work with existing frozen data, provider, budgets and checks.

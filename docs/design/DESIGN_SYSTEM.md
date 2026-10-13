@@ -225,7 +225,7 @@ Desktop-first. The flex-wrap layouts above already stack at narrow widths: the r
 
 ## 9. Alignment with this repo (read before building)
 
-The canvas designs used placeholder content. In `portfolio-research-agent`, the **product scope comes from `docs/PRD.md` (v0.42) and `docs/prototypes/prototype-2/BUILD-READY.md`**. Where this doc and the PRD disagree on *what* exists, the PRD wins. This doc governs *how it looks*.
+The canvas designs used placeholder content. In `portfolio-research-agent`, the **product scope comes from `docs/PRD.md` (current revision) and `docs/prototypes/prototype-2/BUILD-READY.md`**. Where this doc and the PRD disagree on *what* exists, the PRD wins. This doc governs *how it looks*.
 
 **Visual precedence.** A3 replaces the D57 visual layer (Inter + IBM Plex Mono, paper/ink receipt palette) for Prototype 2. The constraints in `docs/DESIGN-BRIEF.md` still apply: no emoji, no em dashes in UI copy, no color-only status, no streaming unverified claims, accessible contrast and focus.
 
@@ -239,7 +239,7 @@ The canvas designs used placeholder content. In `portfolio-research-agent`, the 
 | Watchlist in 06c rail | One issuer, no prices | Replace with a "Coverage" section: NVDA available with source dates, other tickers listed as not covered, or omit. |
 | `/compare`, `/chart`, `/filing`, `/export`, `$` tickers | Only NVIDIA; export is P1 | Only show commands that map to real supported actions. The single next-investigation CTA (D65/D67) is a Quiet button under the answer. |
 | Threads list in 06c rail | Active session only, lost on reload | Show the current session's turns or omit; display the reload-loss notice (F7). |
-| 06b right pane "workspace" | Thread + brief artifact (D61) | Right pane is the **latest checked brief**: working question, direct answer, 1–3 metric rows (label / value / implication), supporting and qualifying evidence, unanswered questions, source and check status. Tabs: Brief, then one tab per source. On narrow screens use an accessible Thread / Brief switch. |
+| 06b right pane "workspace" | Thread + brief artifact (D61) | Right pane is the **explicitly selected answer’s checked brief**: working question, direct answer, 1–3 metric rows (label / value / implication), supporting and qualifying evidence, unanswered questions, source and check status. Tabs appear only inside opened inspection: Brief, then one tab per source. Narrow inspection is full-width and dismissible with Close brief/Escape; no global Thread/Brief switch (D79). |
 | Mock `[00.0]%` values | Real frozen NVDA packet and code-owned facts exist | Render values from existing `src/lib` contracts and data. Never display model-supplied numbers. |
 
 **States the PRD requires (design these with A3 parts)**
@@ -274,9 +274,9 @@ Approved by Helen after the pre-code use-case mapping on 2026-10-12. Product sco
 
 ### Implementation decisions
 
-- 06a starts research; a successful turn opens 06b. 06c is an optional current-session layout, without broad ticker search, live prices, durable threads or placeholder commands. Export is omitted. The canvas's two follow-up rows become the PRD's zero/one action.
+- 06a starts research and retains checked answers on completion. Explicit brief/source inspection opens 06b; the original automatic transition is superseded by D79. 06c remains a reference layout rather than a user-facing footer option, without broad ticker search, live prices, durable threads or placeholder commands. Export is omitted. The canvas's two follow-up rows become the PRD's zero/one action.
 - Token additions encode A3's previously untokenized dimensions, focus, sparkline and pulse values, plus hit-target/accessibility constants. Sketch paddings and gaps outside the spacing scale use the nearest existing scale value. Fonts are bundled locally with `public/fonts/GEIST-LICENSE.txt`; no Google CSS import.
-- Responsive layout uses a ResizeObserver threshold derived from pane-width tokens, because CSS variables cannot supply media-query conditions. Desktop keeps the composer visible while the brief scrolls. Narrow screens use Thread/Brief tabs and contained table scrolling.
+- Responsive layout uses a ResizeObserver threshold derived from pane-width tokens, because CSS variables cannot supply media-query conditions. Desktop keeps the composer visible while the brief scrolls. Narrow screens use dismissible full-width inspection and contained table scrolling (D79).
 - Source text is verbatim evidence. Original em dashes in SEC quotations remain unchanged to preserve quote fidelity; newly authored interface copy has no em dashes or emoji. This resolves the quote-integrity versus UI-copy conflict.
 - The core does not expose an inferred working-question or detailed claim-kind classification. Display the submitted research question, label synthesis as Interpretation, and identify source excerpts as Reported issuer statements. Do not invent semantic classifications. A small optional `answer_kind` field distinguishes analysis, source-limited, out-of-scope and clarification responses; live provider output requires it. Coverage/clarification replies preserve the previous useful artifact.
 - Top-level financial rows remain at most three; complete cash components are disclosed separately. No sparkline is forced onto a two-quarter comparison. No additional agent, source, export or persistence is introduced.
@@ -293,3 +293,14 @@ Helen requests removing the repeated composer helper copy and header evidence ba
 - **Reuses:** StepLog, StatusSquare, Text meta/data, FigureText, Quiet/Link Button, QABlock, existing native disclosures and Outcome panel. All existing A3 tokens and reduced-motion rules apply; no new visual tokens or animation dependencies.
 - **Accessibility/performance:** elapsed text stays outside live announcements; announce stage/status changes only. Clock updates are local to an active StepLog and cleaned up on terminal state/unmount. Historical timers remain fixed. Keyboard controls retain visible focus and native disclosure behavior.
 - **Scope:** the current success navigation remains until Priority 2. Per-turn brief selection fixes provenance ownership without introducing thread persistence or the new header/index.
+
+
+### ResearchAnswer and optional inspection (D79)
+
+- **Use cases:** E1/E3 evidence and comparison, E2 accounting details, E4 continuation, E5 limits; D77 Priority 2 and finding-level source placement.
+- **Anatomy:** one shared checked answer body with interpretation, selected DataTable rows, all surviving findings, inline source controls, native calculation/bridge disclosures, unanswered criteria, optional next CTA and source/check status. It appears directly in each successful Q/A; the optional brief adds issuer/question/revision/duration metadata.
+- **Variants/states:** live, authored reference, complete, partial, source-limited; centered thread by default, user-opened desktop split or dismissible narrow inspection. No global Thread/Brief navigation or footer layout chooser. Close/Escape returns to the opener; draft, native disclosures and thread scroll remain intact.
+- **Reuses:** Text/FactProse, QABlock, DataTable, Quiet Button, SourceList, Tabs, SourcePassage, Outcome and the existing layout widths. Inline source controls use accent source-link styling and existing hit-area/focus tokens; no new visual values.
+- **Overrides:** the original successful-turn transition to 06b and mandatory mobile Thread/Brief switch are superseded. The thread stays the primary surface. Internal Brief/source tabs appear only after explicit inspection. The optional pane is bound to the chosen turn and does not follow incoming completions.
+- **Signal/accessibility:** only the most recent valid thread answer gets the key-fact underline; inspection has none. Pane regions use section labels rather than tabpanel labels referencing removed navigation. Source tabs retain keyboard controls; close restores focus without losing input or disclosure state.
+- **Evidence limits:** links support findings as a whole, not automatically each clause. Existing qualitative citation-completeness evaluation remains open; this UI change makes no new semantic verification claim.
