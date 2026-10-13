@@ -246,7 +246,7 @@ The canvas designs used placeholder content. In `portfolio-research-agent`, the 
 
 **States the PRD requires (design these with A3 parts)**
 
-- Run status: preparing → researching → checking, shown in the step log with text labels. Stop button (Outline) while running; Retry (Quiet) after failure, user-initiated only.
+- Run status: actual preparing/researching/investigating/checking and supported generation milestones, shown in the step log with text labels. D84 makes the single current-action/status row a chevron disclosure into chronological recorded subtasks, including the live active step. One timer/final total; no separate Show/Hide actions CTA or first-attempt heading. Stop button (Outline) while running; Retry (Quiet) after failure, user-initiated only apart from D81's bounded internal formatting recovery.
 - Terminal states: complete, partial, unresolved, out of scope, failed, stopped. Each gets a one-line `text-meta` status label plus plain-language copy. Failed uses `--down` square plus text. Signal orange is never used for errors.
 - Limitation notice for partial results and excluded claims: hairline panel, 4px radius, `text-secondary`. No warning colors or icons beyond a status square.
 - Claim types must be distinguishable without color: label `Reported`, `Calculated`, `Interpretation`, `Assumption`, `Management outlook` in `text-meta` before or beside the claim.
@@ -259,7 +259,7 @@ Log any decision that changes this mapping in `docs/DECISIONS.md` as the repo's 
 
 ## Components added after v1 (D73)
 
-Approved by Helen after the pre-code use-case mapping on 2026-10-12; later authorized variants are recorded below through D82. Product scope follows the current PRD/build contract. Implementation is under `src/components/a3/`; `/v2` uses a separate root layout so the legacy route keeps its stylesheet. Eight text styles, palette, square geometry, one fact highlight and light-only behavior remain fixed. The original register records component history; later entries supersede earlier presentation requirements.
+Approved by Helen after the pre-code use-case mapping on 2026-10-12; later authorized variants are recorded below through D84. Product scope follows the current PRD/build contract. Implementation is under `src/components/a3/`; `/v2` uses a separate root layout so the legacy route keeps its stylesheet. Eight text styles, palette, square geometry, one fact highlight and light-only behavior remain fixed. The original register records component history; later entries supersede earlier presentation requirements.
 
 | Component / variant | Spec use case | Anatomy | Variants and states | Existing pieces reused |
 |---|---|---|---|---|
@@ -343,3 +343,14 @@ Helen requests removing the repeated composer helper copy and header evidence ba
 - **Scope:** this improves feedback, not model completion latency. No second timer, per-action duration repetition or live-announced clock ticks. Header/index/history remain deferred.
 
 D82 implementation checks also preserve keyboard focus when a developing citation is reconciled or Stop removes source inspection. Row implication placeholders resolve from the row's checked fact and keep numerical spans mono. The real stage sequence can include remaining-findings and final-synthesis milestones; it never invents private reasoning or delays.
+
+
+### StepLog · compact chevron action disclosure (D84)
+
+- **Use case:** Helen's compact L1 progress/terminal-status request and click-to-inspect actual subtasks.
+- **Anatomy:** one native clickable row containing status square, actual current action or terminal status, one elapsed timer/final total and chevron. Retry attempt number appears inline only after the first attempt. Clicking anywhere in the row expands its controlled chronological action list, including the explicitly live active stage; terminal steps retain done/failed/stopped labels.
+- **Variants/states:** collapsed/expanded; preparing, generating, remaining findings, final synthesis, approved investigation, checking, recovery, complete/partial, failed and stopped. No first-attempt heading or standalone Show/Hide actions control. Existing previous-attempt history and producing-turn ownership remain intact.
+- **Reuses:** StepLog, StatusSquare, existing Text data/meta, native button/list, existing icon geometry/focus/hit-area and motion tokens. There is no new visual token or library. A3 colors, eight text styles, mono numerical values, square geometry, signal-once and light-only behavior stay fixed.
+- **Motion:** label transitions reflect actual recorded stage changes at L1; opacity/transform and chevron/disclosure transitions use existing `--dur`, `--ease` and spacing tokens. `prefers-reduced-motion` suppresses animation while preserving readable state and expansion. No private reasoning, simulated stage sequence, spinner or typing dots.
+- **Accessibility:** button has `aria-expanded` and `aria-controls`, native Enter/Space operation, visible focus and a hit area at least `--hit-area`. Keep stage/status announcements separate from timer ticks; do not repeat durations in substep rows. Expanded live status is explicit text rather than color alone.
+- **Overrides:** D80/D82's secondary Show/Hide actions row and omission of the active action from expanded history are superseded by Helen's explicit update. One active timer/final total remains; no model/source/checking or D83 protocol change. Actual verification is recorded separately from motion intent or model latency.

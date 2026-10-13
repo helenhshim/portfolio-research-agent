@@ -15,7 +15,7 @@ export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inp
 // only explicitly supplied, supported actions, never the canvas's placeholder commands.
 export function CommandComposer({actions,...props}:React.ComponentProps<typeof Composer>&{actions:{label:string;run:()=>void}[]}){return <><Composer {...props}/>{actions.length>0&&<div className="a3-command-hints">{actions.map(a=><Button key={a.label} variant="link" onClick={a.run}>{a.label}</Button>)}</div>}</>;}
 export function QABlock({question,children,id}:{question:string;children:ReactNode;id?:string}){return <section id={id} className="a3-qa"><div className="a3-q"><Text style="meta">Q</Text><Text style="strong"><FigureText text={question}/></Text></div><div className="a3-a"><Text style="meta">A</Text><div className="a3-answer-content">{children}</div></div></section>;}
-export function StepLog({attempt}:{attempt:ResearchAttempt}){
+export function StepLog({attempt,attemptNumber=1}:{attempt:ResearchAttempt;attemptNumber?:number}){
  const actionsId=useId();
  const [open,setOpen]=useState(false),[clock,setClock]=useState(attempt.startedAt);
  const running=attempt.status==='running';
@@ -24,18 +24,16 @@ export function StepLog({attempt}:{attempt:ResearchAttempt}){
  const state:SquareState=running?'live':attempt.status==='stopped'?'idle':['failed','check_failed'].includes(attempt.status)?'failed':'done';
  const label=running?(last?stageLabels[last.stage]:'Sending research request'):attempt.status==='stopped'?'Stopped':state==='failed'?'Failed':attempt.status==='partial'?'Completed with exclusions':'Completed';
  const elapsed=attempt.run?.elapsed_ms??now-attempt.startedAt;
- // Keep one active action and one timer visible. The optional history excludes
- // the current action while running and never repeats the elapsed duration.
- const history=running?attempt.steps.filter(step=>step.state!=='live'):attempt.steps;
+ const hasActions=attempt.steps.length>0,retry=attemptNumber>1;
+ // The single L1 action is the disclosure control. Expanded history includes the
+ // actual live step and never adds another timer or simulated model reasoning.
+ const row=<><StatusSquare state={state}/><span id={`${actionsId}-label`} className="a3-step-task">{retry&&<Text style="meta" className="a3-step-attempt">Attempt <FigureText text={String(attemptNumber)}/> · </Text>}<span key={label} className="a3-step-task-label text-strong">{label}</span></span><span className="a3-step-duration text-meta" aria-live="off">{formatDuration(elapsed)} {running?'elapsed':'total'}</span>{hasActions&&<svg className="a3-step-chevron" aria-hidden="true" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4"/></svg>}</>;
  return <div className="a3-step-log">
-  {/* DESIGN-DECISION: The requested L1 action uses the existing strong style;
-      only genuine task changes animate. The single timer stays outside the live region. */}
-  <div className="a3-step-summary text-meta"><StatusSquare state={state}/><span role="status" className="a3-step-task"><span key={label} className="a3-step-task-label text-strong">{label}</span></span>
-   <span className="a3-step-duration" aria-live="off">{formatDuration(elapsed)} {running?'elapsed':'total'}</span>
-  </div>
-  {history.length>0&&<div className="a3-step-actions"><Button variant="link" aria-expanded={open} aria-controls={actionsId} onClick={()=>setOpen(v=>!v)}>{open?'Hide actions':'Show actions'}</Button>
-   <ol id={actionsId} className="a3-steps" hidden={!open}>{history.map((step,i)=><li key={i} className="text-meta"><StatusSquare state={step.state}/><span>{stageLabels[step.stage]} · {step.state==='done'?'finished':step.state==='failed'?'failed':'stopped'}</span></li>)}</ol>
-  </div>}
+  {/* DESIGN-DECISION: Reuse the link Button as an un-underlined disclosure variant.
+      Its stable label names the control; timer ticks never enter its live region. */}
+  <span className="a3-sr" role="status" aria-atomic="true">{retry?`Attempt ${attemptNumber}. `:''}{label}</span>
+  {hasActions?<Button variant="link" className="a3-step-summary a3-step-disclosure" aria-labelledby={`${actionsId}-label`} aria-expanded={open} aria-controls={actionsId} onClick={()=>setOpen(v=>!v)}>{row}</Button>:<div className="a3-step-summary a3-step-disclosure">{row}</div>}
+  <ol id={actionsId} className="a3-steps" aria-label="Research actions" hidden={!open}>{attempt.steps.map((step,i)=><li key={i} className="text-meta"><StatusSquare state={step.state}/><span>{stageLabels[step.stage]} · {step.state==='live'?'in progress':step.state==='done'?'finished':step.state==='failed'?'failed':'stopped'}</span></li>)}</ol>
  </div>;
 }
 export function Citation({index,source,onOpen}:{index:number;source:SourceRef;onOpen?:()=>void}){

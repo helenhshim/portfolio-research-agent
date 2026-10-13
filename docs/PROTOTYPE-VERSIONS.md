@@ -1,8 +1,8 @@
 # Prototype versions
 
-Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D83.
+Owner: Helen Shim. Updated: 2026-10-12. Decisions: D60–D84.
 
-Prototype numbers identify product experiments. PRD v0.53 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
+Prototype numbers identify product experiments. PRD v0.54 identifies a document revision; package.json 0.1.0 is a package version. These are separate from each other.
 
 | Version | Question | Code and deployment | Status |
 |---|---|---|---|
@@ -16,6 +16,8 @@ Prototype 2: [iteration plan](prototypes/prototype-2/PLAN.md). The [decision mem
 D82 implements complete independently checked findings during the existing model request, followed by the final checked answer in the same thread. Compact inline source inspection replaces Open brief and bottom source-list rows; actual stage changes animate with one timer. This is an iteration within Prototype 2, not a new prototype, deployment or release gate pass. [Progressive-findings checkpoint](checkpoints/V2-PROGRESSIVE-FINDINGS-2026-10-12.md) records implementation verification separately from live latency, semantic quality and user benefit.
 
 D83 corrects a preview regression where an already-open older client could not process D82's new finding events. Explicit progressive-protocol negotiation preserves the original stage/result stream for older callers; current clients tolerate unknown event types and cancel interrupted processing. The corresponding model run completed successfully, so do not count this browser failure as a model/reference-check failure. [Compatibility checkpoint](checkpoints/V2-STREAM-COMPATIBILITY-2026-10-12.md) records 119 passing tests, same-tab live completion and scripted progressive/cancellation verification. This remains Prototype 2 with unchanged research scope/model/budgets. Sessions remain memory-only and are lost on reload.
+
+D84 implements a compact animated current-action/status disclosure row with chevron, one timer, inline retry attempt numbers and chronological real subtask history. It replaces the separate first-attempt heading and Show/Hide actions link without changing research or protocol scope. [Action-disclosure checkpoint](checkpoints/V2-ACTION-DISCLOSURE-2026-10-12.md) records verification separately; this remains Prototype 2 rather than a new prototype or release. Already-open older pages receive new UI behavior only after loading the updated frontend.
 
 ## How we will work
 
