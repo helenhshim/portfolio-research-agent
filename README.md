@@ -89,7 +89,7 @@ npm run typecheck
 npm run build
 ```
 
-Some older source-acquisition/integration cases depend on ignored local fixtures; read their skip conditions when reproducing historical checks. Bundled report text and prepared facts support the current V3 workflow without a new SEC download. Optional acquisition scripts require an identifying `SEC_USER_AGENT` and obey the documented SEC source policy.
+A fresh public clone passes 176 tests and skips three older NVDA/JPM/COST source-acquisition integration cases because their ignored local SEC snapshots are absent. Typecheck passes. All current V3 checks run; the 179-pass release checkpoint above used the local fixtures. Bundled report text and prepared facts support the current V3 workflow without a new SEC download. Optional acquisition scripts require an identifying `SEC_USER_AGENT` and obey the documented SEC source policy.
 
 For Vercel deployment, configure server-only `OPENAI_API_KEY`, `KV_REST_API_URL` and `KV_REST_API_TOKEN`. Production live research also requires `V3_PRODUCTION_LIVE_ENABLED=true`. Keep the flag off until your own release checks pass. Default deployed allowances are separate $10 totals per environment, with atomic reservations; unknown usage remains charged conservatively and Redis failures block new paid calls. The allowance is separate from OpenAI credit balance and is not a cap on hosting costs.
 

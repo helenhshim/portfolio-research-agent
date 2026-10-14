@@ -24,3 +24,7 @@ Raw scanner/OCR output stays in local temporary storage. This document publishes
 ## Limits
 
 Automated scanners, exact-value checks, OCR and targeted review reduce exposure risk but do not prove the absence of every secret or confidential statement. OCR can miss text; the exact-value check cannot detect unknown historical secrets. Source/report reference checks do not certify financial interpretation. Historical evaluation documents describe their original checkpoints, not fresh participant scores or current production guarantees.
+
+## Post-publication verification
+
+Anonymous GitHub API and raw README access confirm public visibility and main as the default branch. The rendered README includes the live demo, working Mermaid architecture diagram and evaluation notes. A fresh anonymous clone installs without private local configuration, passes 176 tests and skips three explicitly fixture-dependent legacy NVDA/JPM/COST integration cases; TypeScript validation passes. The original release checkout passes all 179 with its local fixtures.
