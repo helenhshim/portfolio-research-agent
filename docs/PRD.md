@@ -990,3 +990,11 @@ Helen explicitly approves Vercel Authentication All Deployments for portfolio-re
 Live V3 URL: https://portfolio-research-agent-two.vercel.app/v3 . Canonical alias inspection confirms the candidate. Unauthenticated GET returns 302 after promotion; authenticated page loads approved onboarding. Real post-promotion default research completes in 30.392s, one provider call, zero tools, five checked findings before the complete result. Production keeps its independent $10 shared counter. Credentials remain server-only. This deployment retains its explicit live override; global Production live flag remains false for future unapproved builds.
 
 Project-wide protection now covers production and Preview; existing participant share-link behavior has not been retested. Prior production rollback target: `dpl_3Fob1oCp7AfNPJVKWKQ2hDJafSbu`. Pilot quality feedback remains the previously supplied feedback; no fresh independent score is invented. D117's failed access gate is resolved by the explicitly approved setting change.
+
+## D120 Public portfolio demo
+
+Helen explicitly authorizes anonymous production access for recruiters and hiring managers. Vercel Authentication scope changes from All Deployments to Standard Protection (`prod_deployment_urls_and_all_previews`): canonical production is public, staged/Preview remain protected. Anonymous production page returns 200 with real app content; Preview returns 302. Preserve independent $10 production budget, all resource limits, server-only credentials and current tested build. This supersedes D118 protected-production access policy; baseline source tag stays unchanged.
+
+## D121 Portfolio custom domain
+
+Production demo: https://research.helenshim.me (host-specific root redirect to /v3). Existing Porkbun zone has A research 76.76.21.21 as returned by Vercel; DNS verification and automatic HTTPS pass. Portfolio production links to this address. Anonymous custom-domain research completed in 29.800s with five checked findings, one call/no tools. Existing budget and server-only configuration retained; no new domain purchase, hosting subscription or service. App release dpl_EkWQCzpEWcBLVfSvELdE1SSsz77W; source V3 baseline tag remains unchanged.
