@@ -1,6 +1,6 @@
 # PRD: Portfolio Research Agent (working name)
 
-Owner: Helen Shim · Status: v0.70. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; authenticated hosted journey checked; shared Preview budget implemented; credential-rotation confirmation and actual pilot gates remain open · Last updated: 2026-10-13
+Owner: Helen Shim · Status: v0.70. Prototype 1 frozen; V2 local baseline preserved; Helen accepts V3 reasoning/follow-up usefulness after testing. Navigation and privacy/control checks take priority; completion-time tuning deferred. V3 browser history and protected Preview implemented; authenticated hosted journey checked; shared Preview budget implemented; Helen confirms exposed-key revocation/replacement; completion-time experiment and participant pilot are next · Last updated: 2026-10-13
 Build tool: Codex, on OpenAI models.
 Decision log: `docs/DECISIONS.md`. Every decision is logged there, and the affected PRD section is updated in the same change.
 Prototype history: `docs/PROTOTYPE-VERSIONS.md`. Prototype numbers describe product experiments, independently of PRD revision numbers. Prototype 1 is preserved at Git tag `prototype-1` with its exact deployed source and original protected Preview. V2 is preserved at `prototype-2-baseline-2026-10-12`; current local experiments are on `prototype-3`, not a released prototype. Start the next iteration with the learning review and task validation in `docs/prototypes/prototype-2/PLAN.md` before expanding scope.
@@ -856,3 +856,137 @@ Helen approves Upstash Redis free plan and completes terms. Preview now uses an 
 ## D100 Preview allowance increase
 
 Helen explicitly raises the total shared research allowance from $1 to $5. Keep the same Redis counter key and all accumulated spending/reservations; this adds $4 of headroom, not a fresh $5 balance. No automatic reset, paid Redis upgrade, Production enablement or model-policy change.
+
+## Credential confirmation and first pilot participant, 2026-10-13
+
+Helen confirms the previously exposed API key was revoked and replaced. This closes the user-confirmation gate, not an independent account audit. Helen has one participant available; run that first session before recruiting the second role. The participant is a buy-side analyst who will use the protected link independently. Access preflight and actual observations remain pending; use `evals/prototype-3/PILOT-P1-BUY-SIDE.md`.
+
+## D101 Latency checkpoint and independent pilot
+
+Do not promote the concise prompt or compact-reference experiment on the current measurements. Both preserve checked results, but neither establishes a reliable completion-time improvement across the two questions. The protected Preview remains unchanged. Use `evals/prototype-3/LATENCY-2026-10-13.md` for evidence and `evals/prototype-3/PILOT-P1-BUY-SIDE.md` for the independent analyst session. Pilot access and returned observations are still pending.
+
+## October 13 pilot preflight: relevance before presentation polish
+
+Helen observed stale adjacent facts for management attribution of product mix/pricing/manufacturing costs/Rubin ramp economics, repeated thesis formatting, a generic unresolved banner and duplicate context headings. Prioritize explicit source-scoped answerability and relevant feasible follow-up prompts, then bounded intent-aware text structure and nonduplicative limitation rendering. Rich dynamic visualizations remain later scope. These are proposed fixes, not implemented behavior. Regression cases and grading: `evals/prototype-3/USER-FAILURES-2026-10-13.md`. Internal preflight should precede the independent analyst pilot.
+
+## D102 Question-first answers
+
+Implemented locally: the existing model call classifies source coverage, states missing attribution explicitly and selects directly relevant findings with descriptive topic headings. Internal supports/challenges/context roles are not displayed as headings. Adjacent findings sharing a topic render under one heading in arrival order; generation is instructed to finish a topic before moving on. No post-completion regrouping. Legacy saved findings use their descriptive summary as the heading.
+
+Synthesis is nullable; narrow questions need no thesis assessment. Financial rows remain optional. The answer header is “Answer”; the duplicated context disclosure and generic source-limited banner are removed. Reference-check failures retain their separate notice. Source-limited responses can suggest one feasible approved-metric alternative with user-triggered execution; no new tools or sources. Qualitative-only executable suggestions remain outside the existing metric-backed action contract.
+
+Validation: 164 tests, typecheck and build passed. Final live attribution case: complete in 7.5s, explicit missing management attribution, no table/synthesis, margin-outlook follow-up. Comparison control: complete in 6.0s, reported versus expected distinction, no synthesis. Each used one provider call/no tool calls. These isolated timings are not a general speed claim. Semantic judgment and topic consistency remain evaluation requirements; reference checks do not prove either. Hosted Preview has not been updated in this change.
+
+## D103 Follow-up continuity and typography
+
+Follow-up requests now carry a compact prior-answer summary including finding summaries, evidence IDs and unresolved questions, bounded to 1900 characters per assistant history entry and the existing six-entry window. This is untrusted conversation context, never a substitute for the approved source packet. The existing model call should use only a short necessary refresher and advance the question through new relevant evidence, deeper supported interpretation, resolved uncertainty or an explicit source boundary. More output is not a goal. Suggestions must add information beyond the current answer and supplied history; otherwise return null. Code additionally suppresses normalized exact matches to current/prior user questions. Semantic paraphrase duplication still requires evaluation.
+
+Financial placeholders retain their exact display wording, but explanatory words now use body typography and numeric spans alone use mono. No evidence/number changes or new sources/model calls.
+
+Multi-turn public check: attribution after an already-discussed margin/outlook comparison returned a specific evidence gap and no suggested repeat. Completed in 11.3s; comparison control in 6.9s. Each was one provider call with no tool calls; reference checks passed. 166 tests, typecheck and build passed. Results are isolated observations, not latency guarantees. Captures: `.research-runs/latency-1791923242885`.
+
+Pilot access: Vercel project protection remains all_except_custom_domains. Helen reports an external participant requested access. Await matching request identity; do not disable protection or infer recipient identity. Grant per-deployment access through Share > Access Requests once identified. No grant recorded yet.
+
+D103 deployment verification: protected Preview `portfolio-research-agent-9iccxbrct-helenhshims-projects.vercel.app` loads through authenticated CLI. Hosted attribution follow-up after a prior margin comparison completed in 9.4s with one provider call, no tools, explicit unavailable attribution and next:null. Stable V3 alias updated after this check. Production unchanged; participant access is still pending identity/approval.
+
+## D104 Sources and actionable investigation
+
+Sources are compiled at the end of the answer, including during progressive findings. Each contributing report appears once as an expandable section with the findings, exact quoted passages/table rows, original-location links and excerpt inspection. Financial-row comparison inputs retain their source lineage. Routine analysis bullets no longer carry repeated inline links; discrepancy and detailed cash-bridge inspection retain their specific inspection links.
+
+“What the reports don’t establish” is a separate collapsed disclosure for relevant missing evidence. It is not a list of actions. “Investigate next” appears only for a valid suggested question; the question itself is the clickable CTA. Retain one optional suggestion in this iteration (within the proposed maximum of two). It executes through the existing checked conversational workflow only on user action.
+
+The next-investigation contract now supports approved paragraph IDs as well as metrics, enabling grounded accounting explanations and business-evidence questions. Live output must describe internally what new information the suggestion adds. Reference validation rejects unavailable paragraph/metric IDs or empty evidence selection. Semantic relevance and novelty still require evaluation; evidence existence alone does not establish usefulness. No new source scope, tools, model calls or autonomous execution. History revalidation preserves the action's evidence selection and supports older metric-only actions.
+
+D104 verification: 168 tests, typecheck and build pass. Protected Preview `portfolio-research-agent-6xhdriqng-helenhshims-projects.vercel.app` successfully built and authenticated page smoke passed; stable V3 pilot alias updated. Public live cash-flow test completed with relevant grouped findings, one relevant evidence gap and no redundant CTA. No new paid model call was made on the hosted endpoint in this checkpoint; no manual visual browser check. Production and deployment protection unchanged.
+
+## D105 Concise inspection and visible continuation
+
+Supersedes D104 source presentation: Sources is a flat, deduplicated list of referenced report links, with no per-finding expansion or Excerpt controls. Reference lineage stays in the verified artifact. Inspect evidence basis shows only model-selected financial rows (at most three), current/prior comparison and reported/calculated basis using the existing compact table; it no longer enumerates every intermediate fact. Complete cash-flow bridge remains separately inspectable.
+
+“What to investigate next” remains visible. A valid suggestion is a clickable question. If none is identified, state that explicitly and point to the existing composer; do not invent a fallback investigation. Prompt v3-question-research-6 explicitly considers deeper grounded mechanisms or comparisons before returning null, and permits reusing evidence for genuinely different analysis. New facts are not required for new insight. Semantic usefulness is still evaluated, not mechanically guaranteed.
+
+D105 release: 168 tests, typecheck/build and protected page smoke pass. Stable V3 pilot alias points to `portfolio-research-agent-dbepiu14p-helenhshims-projects.vercel.app`. Local public cash-flow test produced a grounded next question about total cash versus operating cash flow; execution of that follow-up was not tested in this checkpoint. Production/protection unchanged.
+
+## D106 Nonduplicative calculations and continuation evaluation
+
+Remove Inspect evidence basis. Reported figures appear in the main table only, with report links in Sources. A collapsed How this was calculated section appears only for derived selected values/comparisons and exposes formula and inputs without another comparison table. Existing cash bridge remains separate.
+
+Prompt v3-question-research-7 compares several possible follow-up directions internally against the current answer and conversation, selects the strongest relevant answerable addition, and returns null only when none qualifies. Do not withhold a direct answer to manufacture a CTA. No extra selection call. Acceptance includes executing the proposed revenue follow-up and evaluating whether it adds insight, not merely whether a button appears. See evals/prototype-3/CONTINUATION-2026-10-13.md for measured results.
+
+D106 release: 168 tests, typecheck/build and authenticated protected-page smoke pass. Stable V3 pilot alias now points to `portfolio-research-agent-716hxxy8y-helenhshims-projects.vercel.app`. Four local live evaluation cases passed reference checks, including execution of the revenue follow-up. No manual browser visual check or paid hosted API run in this checkpoint. Production and deployment protection unchanged.
+
+## D107 Answer-level novelty, not topic exclusion
+
+Previously discussed topics, metrics and sources remain eligible for next investigations. Reject a suggestion when its substantive answer repeats an established comparison or conclusion, not merely because its topic appeared before. A new supported comparison, mechanism, implication or meaningful detail can deepen an existing topic. The internal new_information rationale identifies what is already established and what the proposed answer adds. No additional model call or source expansion.
+
+Current answers remain independently useful: a broad revenue overview retains approved total and dominant-segment revenue and growth even when previously discussed. Keep background concise without dropping essential facts; narrow questions do not require a full overview.
+
+Acceptance cases: profitability → revenue → repeated revenue retains essential segment facts; current concentration already discussed permits a supported unexplained change-in-concentration question; rewording an already answered comparison is rejected; unavailable causal attribution is not offered as answerable. Null remains valid when no useful grounded addition exists. Prompt v3-question-research-8 implemented locally; these semantic cases need live evaluation before claiming a pass.
+
+Investigation action presentation update: show the suggested question as ordinary wrapping text, followed immediately by a compact “Ask” button below it. The button submits that exact question through the existing workflow and is disabled while research runs. The no-suggestion state is unchanged.
+
+V3 onboarding preview: replace the thesis-oriented empty-session heading with “Ask a question. Understand the business.” Explain asking in plain language and continuing with simpler explanations, challenges or suggested questions. Show the current NVIDIA report coverage separately and provide clickable starter questions. V3 composer asks “What would you like to understand about NVIDIA?” Existing V2 copy is preserved.
+
+V3 onboarding release: deployed protected Preview `portfolio-research-agent-3w0li73iw-helenhshims-projects.vercel.app`, with the stable V3 pilot alias updated. Local and hosted builds pass; authenticated hosted HTML confirms the new headline and continuation instructions. Includes D107 follow-up rules, separate Ask action and sticky navigation. No production or deployment-protection changes. No paid model evaluation or manual visual browser check in this release.
+
+## D108 Release-check correction and status
+
+The provider adapter completes finding fact-reference metadata from approved placeholders in summary/detail before unchanged source/value/dependency checks. Unknown placeholders remain rejected; unknown declared IDs are retained for rejection. Finding references are bounded at twenty, other bounds unchanged. This addresses a live failure where thirteen used facts could not fit the twelve-entry declaration list. No new source, arithmetic or provider call.
+
+Release evidence: evals/prototype-3/RELEASE-GATES-2026-10-13.md. 171 tests/typecheck/build pass; corrected live multi-turn continuation and scripted browser recovery/mobile/keyboard checks pass within documented sample limits. Protected Preview deployment a3q4u7zrs. Production remains disabled and lacks API/Redis environment configuration. Independent participant usefulness feedback and production access/abuse policy remain open; this checkpoint does not authorize public production activation.
+
+D109 local testing: align the local process ledger with the approved $5 allowance. Localhost without VERCEL_ENV uses a process-local ledger; deployed Preview uses Redis and retains its existing shared counter. These are separate allowances, not one aggregate local-plus-hosted cap. Local process accounting resets on restart/reload of the server module and is not the deployed spending control. Spending-limit copy explicitly distinguishes app allowance from OpenAI credits and inability to reserve another call from actual account credit exhaustion. Diagnostic shared total on October 13: $3.684984 reserved/estimated; no shared reset or cap increase.
+
+D110 navigation: back/sidebar/new-session controls sit above the left session-history rail. Remove the Prototype 3 header label. V3 answer content and history scroll independently; the composer remains below the answer scroller rather than moving out of view or overlaying text. Preserve drafts, source-inspection focus and session scroll positions. Existing V2 remains in document flow. Desktop/mobile checks verify visible composer, rail-only controls, collapse, Escape and no horizontal page overflow. Local change, not yet deployed. The proposed pressure-testing introduction is pending Helen's copy approval.
+
+D110 onboarding copy approved: directly below “Ask a question. Understand the business.” show “Pressure-test your investment thesis—the reasons you believe in a company—against its earnings reports and company disclosures. Explore what supports your view, what challenges it and what deserves a closer look.” Keep usage instructions and the explicit NVIDIA report coverage note. This replaces the pending introduction proposal; implementation is local.
+
+Navigation/home simplification: remove the V3 View saved reference CTA from onboarding and error states, remove the back arrow, and group the sidebar/new-session icons with the existing compact spacing token. Existing stored answers remain accessible through history. Error copy no longer points to the removed saved-reference action. V2 controls are unchanged. Local implementation only.
+
+D111 session rail: default V3 width is 268px, adjustable through a draggable keyboard-focusable separator. Left/Right resize; Home/End select bounds. Preserve at least the minimum answer-pane width and clamp rail width to 220–360px. Remember the numeric width in this browser; independent of research history. Collapse retains preference. Compact mobile uses the existing drawer without a resize handle. Existing V2 rail width unchanged. Local implementation only.
+
+D111 width revision: Helen requests approximately two-thirds of the current rail width. Default becomes 180px (rounded to the spacing grid from 268px), minimum 160px; maximum remains 360px with answer-width protection. Version the numeric width preference so the former wider saved setting does not override the new default. Resizing remains available.
+
+Home-page copy revision: remove the standalone “This prototype compares NVIDIA’s FY2027 Q2 and Q1 reports.” sentence at Helen's request. Actual source scope remains bounded to the approved report pair; answers and source links retain their evidence and dates. Home-page introduction is unchanged.
+
+V3 UI release October 13: protected Preview `portfolio-research-agent-q8ip30dof-helenhshims-projects.vercel.app`, stable V3 pilot alias updated. Includes the approved thesis introduction, removal of scope sentence/saved-reference CTA/back arrow/Prototype label, compact rail controls, 180px resizable rail and docked composer. Optimized build, isolated local browser checks and authenticated hosted copy/navigation smoke pass. No paid model calls, production deployment, access-policy change or shared-budget reset in this release.
+
+D112: answer scrollbar sits at the page's right edge in thread mode while answer text remains centered at its existing reading width. Composer stays docked and uses a subtle surface background without the strong outer border; remove the footer separator to integrate the bottom area. Split source inspection retains independent pane scrolling. Local change only.
+
+D112 preview release: protected deployment `portfolio-research-agent-4qccheb0c-helenhshims-projects.vercel.app`, stable V3 pilot alias updated. Optimized build, authenticated hosted page and deployed stylesheet checks pass for the page-edge scroll container and softened composer. Production, access policy and shared allowance unchanged. No model calls in this release.
+
+D113 allowance update: Helen approves $10 for both the local process ledger and the shared hosted Preview ledger. Preserve the existing Redis key, recorded spending and outstanding reservations. Reservations still precede calls; unknown usage remains charged and storage failures fail closed. These remain separate allowances rather than one aggregate cap. No production activation or credit purchase.
+
+D113 release: protected Preview `portfolio-research-agent-ojjs7cwhn-helenhshims-projects.vercel.app`, stable V3 pilot alias updated. 171 tests/typecheck/build and authenticated hosted page check pass. Redis read confirms $4.655833 recorded reserved/estimated spending remains on the original key; new cap $10. No new model call or production change in this release.
+
+## D114 Bounded citation repair
+
+If the initial takeaway fails on dependencies rejected solely for quote mismatch, use the remaining existing second provider call to correct only those findings' exact source citations. No tools on repair; response is evidence patches or null for unsupported findings. Preserve all authored claims, financial values, fact references, takeaway and other sections; rerun unchanged source/quantity/dependency checks. Unsupported removal does not rescue a dependent verdict. No additional call on normal success, no third call, no new sources; Stop, deadline and shared budget stay enforced. Repair output limit 1536 tokens. Evaluation: evals/prototype-3/NON-GAAP-FAILURE-2026-10-13.md.
+
+D114 release: protected Preview `portfolio-research-agent-jmxam8g6f-helenhshims-projects.vercel.app`, stable pilot alias updated. 176 tests/typecheck/build and authenticated hosted page check pass. Forced local real citation repair completed with zero drops in 5.0s, using one scripted initial draft and one real repair call. No production or allowance changes.
+
+## D115 Protected production preparation and final checks
+
+Helen selects a separate $10 production allowance, not the existing Preview pool. Production uses `portfolio-research:v3:production:budget:1`; Preview retains its original key and spending. Both limits remain $10. Server-only `V3_PRODUCTION_LIVE_ENABLED` must equal `true` for production research; default and configured Production value are `false` pending live smoke and launch authorization. Production credentials were copied from existing local configuration only after Helen's explicit approval of OPENAI_API_KEY, KV_REST_API_URL and KV_REST_API_TOKEN to helenhshims-projects/portfolio-research-agent. No credentials printed or committed.
+
+Final readiness evidence: evals/prototype-3/PRODUCTION-READINESS-2026-10-13.md. Hosted non-GAAP answer, real suggested follow-up and disconnect cancellation pass. 178 tests/typecheck/build pass; expanded privacy scan includes Redis credentials. Existing protection is all_except_custom_domains; no custom domain exists. Production live smoke and independent analyst feedback remain open; no production promotion in this checkpoint.
+
+D115 preparation release: protected Preview `portfolio-research-agent-n0rbydn7j-helenhshims-projects.vercel.app`, stable V3 alias updated. Build and authenticated page check pass. Production variables verified by name/environment only; live execution remains false, no production deployment/promotion. Production live smoke and independent participant assessment remain open.
+
+## D116 Protected production smoke checkpoint
+
+Protected, unpromoted production candidate `dpl_4c2P8cLWaSjmF6PAfMX4fvWX3kjS` passes default profitability, its executed suggested follow-up and the exact non-GAAP regression in 29.042s/19.633s/16.139s. Checked findings arrive before final answers. Disconnect stops at approximately 2.9s. Configured-private-value scan: fifteen hosted files, eight values, zero matches; private paths 404, unauthenticated access 302. Independent production accounting records $0.761433 of its $10 allowance; Preview remains $6.216481 of its separate $10 allowance.
+
+Initial secret transfer appended a newline that broke Redis initialization; exact-value transfer corrected it. Budget setup failures return safe typed errors and content-free diagnostics. 179 tests, typecheck and hosted build pass. Both original production aliases remain on the original deployment; global Production live flag stays false. Helen waived repeating already-provided analyst feedback, which does not create a new human evaluation score. No production promotion. Full evidence/limits: evals/prototype-3/PRODUCTION-SMOKE-2026-10-13.md.
+
+## D117 Production release protection gate
+
+Authorized promotion of the tested D116 candidate exposed a scope difference: canonical production returned unauthenticated HTTP 200 under `all_except_custom_domains`, while the staged candidate had returned 302. Rolled back to the prior production deployment. Automatic approval review rejected changing project protection to `all` because it applies across production and Preview, beyond the earlier authorization. Explicit project-wide approval is pending; existing protection remains unchanged. The tested candidate remains available for protected testing, not a completed production release. Rollback disables automatic domain assignment until a later promotion restores it.
+
+## D118 Protected production release
+
+Helen explicitly approves Vercel Authentication All Deployments for portfolio-research-agent and promotion. Updated project `prj_ljgUQ5SVZbnSM0V0wopAjv3kvuAs` to `ssoProtection.deploymentType=all`, then promoted the same tested production candidate `dpl_4c2P8cLWaSjmF6PAfMX4fvWX3kjS` without rebuilding.
+
+Live V3 URL: https://portfolio-research-agent-two.vercel.app/v3 . Canonical alias inspection confirms the candidate. Unauthenticated GET returns 302 after promotion; authenticated page loads approved onboarding. Real post-promotion default research completes in 30.392s, one provider call, zero tools, five checked findings before the complete result. Production keeps its independent $10 shared counter. Credentials remain server-only. This deployment retains its explicit live override; global Production live flag remains false for future unapproved builds.
+
+Project-wide protection now covers production and Preview; existing participant share-link behavior has not been retested. Prior production rollback target: `dpl_3Fob1oCp7AfNPJVKWKQ2hDJafSbu`. Pilot quality feedback remains the previously supplied feedback; no fresh independent score is invented. D117's failed access gate is resolved by the explicitly approved setting change.

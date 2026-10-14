@@ -10,9 +10,10 @@ import {createV3FindingStream} from '../src/lib/v3-finding-stream.ts';
 import {createV3Handler} from '../src/lib/v3-http.ts';
 import {loadV3Reference} from '../src/lib/v3-reference.ts';
 import {createV3Provider,V3SpendLedger} from '../src/lib/v3-provider.ts';
+import {createV3ReferenceCodec} from '../src/lib/v3-reference-codec.ts';
 import {Ajv} from 'ajv';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
-const finding=(index=1)=>({id:`finding_${index}`,role:'supports',summary:'Operating leverage supports current profitability, not proof of persistence.',text:'Revenue grew {{fact:NVDA:revenue:yoy}} while operating expenses grew {{fact:NVDA:operating_expenses:yoy}}. This supports operating leverage at the current scale, without establishing repeat demand.',fact_ids:['NVDA:revenue:yoy','NVDA:operating_expenses:yoy'],evidence:[]});
+const finding=(index=1)=>({topic:'Operating leverage',id:`finding_${index}`,role:'supports',summary:'Operating leverage supports current profitability, not proof of persistence.',text:'Revenue grew {{fact:NVDA:revenue:yoy}} while operating expenses grew {{fact:NVDA:operating_expenses:yoy}}. This supports operating leverage at the current scale, without establishing repeat demand.',fact_ids:['NVDA:revenue:yoy','NVDA:operating_expenses:yoy'],evidence:[]});
 const draft=()=>({answer_kind:'analysis',findings:[finding()],takeaway:{text:'The report strengthens current profitability; durability remains unresolved.',finding_ids:['finding_1']},assessment:{text:'Operating leverage supports the thesis, but repeat demand and cash conversion require further evidence.',finding_ids:['finding_1']},financial_rows:[],unanswered:['Will repeat demand and realized cash sustain the reported performance?'],next_investigation:null});
 test('V3 exposes source-owned operating leverage, rounded concentration and attributed outlook without changing V2',()=>{
  const v2=prepareV2Facts(packet),v3=prepareV3Facts(packet);
@@ -171,4 +172,44 @@ test('D87: exact financial-table quotations cannot bypass a withheld comparison'
  const attempted={...finding(),text:'Reported growth supports current profitability.',fact_ids:[],evidence:[{paragraph_id:'NVDA:p16',quote}]};
  assert.equal(verifyV3Finding(attempted,box),null);
  const result=verifyV3Draft({...draft(),findings:[attempted]},box);assert.equal(result.status,'check_failed');assert.equal(result.drops[0].reason,'disputed_source_comparison');
+});
+
+test('Compact wire references restore canonical streamed and final findings before checks',async()=>{
+ let source:any;
+ await runV3ControlledTurn({question:'Pressure-test profitability.'},packet,async(input)=>{source=input.source_context;return {kind:'answer',draft:draft()};});
+ const codec=createV3ReferenceCodec(source),encoded=codec.encode(draft()),seen:any[]=[];
+ const provider=createV3Provider('test-key',{compactReferences:true,fetch:async(_url,init)=>{
+  const wire=JSON.parse(String(init?.body));
+  const check=new Ajv({strict:false}).compile(wire.text.format.schema);assert.ok(check(encoded),JSON.stringify(check.errors));
+  const text=JSON.stringify(encoded);
+  const events=[{type:'response.output_text.delta',delta:text},{type:'response.completed',response:{status:'completed',output:[{type:'message',content:[{type:'output_text',text}]}]}}];
+  return new Response(events.map(e=>'data: '+JSON.stringify(e)+'\n\n').join(''),{headers:{'Content-Type':'text/event-stream'}});
+ }});
+ const result=await runV3ControlledTurn({question:'Pressure-test profitability.'},packet,provider,{onFinding:f=>seen.push(f)});
+ assert.equal(result.status,'complete');assert.equal(seen.length,1);
+ assert.doesNotMatch(JSON.stringify(result),/\{\{fact:f\d/);
+ assert.match(JSON.stringify(seen),/NVDA:revenue:yoy/);
+});
+
+test('Narrow source-limited responses can omit synthesis and rows without failing checks',()=>{
+ const d={...draft(),answer_kind:'source_limited',assessment:null,financial_rows:[]};
+ const result=verifyV3Draft(d,createV3Toolbox(packet));
+ assert.equal(result.status,'complete');assert.equal(result.assessment,null);
+ assert.equal(result.findings[0].topic,'Operating leverage');
+ assert.equal(verifyV3Finding({...finding(),topic:'Profit is 99%'},createV3Toolbox(packet)),null);
+});
+
+test('Suggestions already asked in the conversation are suppressed without another provider call',async()=>{
+ const q='Compare operating margins';const d={...draft(),next_investigation:{question:q+'?',finding_ids:['finding_1'],metric_ids:['operating_margin']}};
+ const result=await runV3ControlledTurn({question:'What remains unknown?',history:[{role:'user',text:q},{role:'assistant',text:'Previously compared.'}]},packet,async()=>({kind:'answer',draft:d}));
+ assert.equal(result.status,'complete');assert.equal(result.counts.provider_calls,1);
+ assert.equal('output' in result&&result.output?.next_investigation,null);
+});
+
+test('Explanatory investigations require approved evidence and reject unavailable passages',()=>{
+ const box=createV3Toolbox(packet);
+ const next={question:'What does reported production progress establish about execution?',finding_ids:['finding_1'],metric_ids:[],paragraph_ids:['NVDA:p41'],new_information:'Distinguishes operational progress from product economics.'};
+ assert.ok(verifyV3Draft({...draft(),next_investigation:next},box).next_investigation);
+ assert.equal(verifyV3Draft({...draft(),next_investigation:{...next,paragraph_ids:['unavailable-transcript']}},box).next_investigation,null);
+ assert.equal(verifyV3Draft({...draft(),next_investigation:{...next,paragraph_ids:[]}},box).next_investigation,null);
 });

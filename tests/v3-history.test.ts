@@ -58,3 +58,11 @@ test('Request abort cancels upstream research and emits only content-free cancel
  controller.abort();const events=(await response.text()).trim().split('\n').map(line=>JSON.parse(line));
  assert.equal(upstreamAborted,true);assert.equal(events.at(-1).result.status,'stopped');assert.equal(diagnostics.length,1);assert.match(diagnostics[0].run_id,/^[a-f0-9]{64}$/);assert.doesNotMatch(JSON.stringify(diagnostics),/private-marker/);
 });
+
+test('Passage-backed explanatory actions survive reload without converting into metric lookups',async()=>{
+ const reference=await loadV3Reference();
+ reference.next={question:'What does production progress establish about execution?',label:'Investigate this question',finding_ids:[reference.findings[0].id],metric_ids:[],paragraph_ids:['NVDA:p41'],new_information:'Distinguishes deployment progress from profitability.'};
+ const restored=verify(reference);
+ assert.ok(restored);assert.deepEqual(restored.next,reference.next);
+ reference.next.paragraph_ids=['missing-transcript'];assert.equal(verify(reference),null);
+});

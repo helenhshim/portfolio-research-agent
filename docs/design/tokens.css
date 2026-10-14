@@ -45,6 +45,9 @@
   /* Layout */
   --header-h: 44px;
   --rail-w: 220px;
+  --rail-v3-default-w: 180px;
+  --rail-v3-min-w: 160px;
+  --rail-v3-max-w: 360px;
   --pane-min-w: 360px;
   --answer-max-w: 680px;
   --control-h: 28px;

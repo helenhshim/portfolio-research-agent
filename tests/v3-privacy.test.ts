@@ -66,3 +66,9 @@ test('Session summaries preserve ownership, sort by activity and do not mutate a
  const updated=updateV3Session(originals,'a',{title:'Profitability question',updatedAt:3,outcome:'Completed'});
  assert.equal(updated[1],originals[1]);assert.equal(originals[0].title,'New research');assert.deepEqual(sortedV3Sessions(updated).map(s=>s.id),['a','b']);
 });
+test('provider initialization failures retain safe budget errors and log no credential-bearing exception text',async()=>{
+ const logs:any[]=[];
+ const handler=createV3Handler({packet,configured:()=>true,provider:()=>{throw new Error(marker);},onDiagnostics:d=>logs.push(d)});
+ const response=await handler(post({question:'Pressure-test NVIDIA profitability.',identity}));const body=await response.text();
+ assert.doesNotMatch(body,new RegExp(marker));assert.doesNotMatch(JSON.stringify(logs),new RegExp(marker));assert.equal(logs[0].phase,'initialization');
+});

@@ -3,11 +3,11 @@ import {useEffect,useId,useRef,useState,type ReactNode} from 'react';
 import {Button,Chip,FigureText,StatusSquare,Text,type SquareState} from './primitives';
 import {formatDuration,stageLabels,type ResearchAttempt} from '../../lib/v2-attempts.ts';
 import {factSegments,type Coverage,type MetricRow,type Passage,type SourceRef} from '../../lib/v2-display.ts';
-export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inputRef}:{value:string;onChange:(text:string)=>void;onSubmit:()=>void;running:boolean;onStop:()=>void;scope?:ReactNode;error?:string;inputRef?:React.RefObject<HTMLTextAreaElement|null>}){
+export function Composer({value,onChange,onSubmit,running,onStop,scope,error,inputRef,placeholder="Ask a question about NVIDIA’s operating profitability…"}:{value:string;onChange:(text:string)=>void;onSubmit:()=>void;running:boolean;onStop:()=>void;scope?:ReactNode;error?:string;placeholder?:string;inputRef?:React.RefObject<HTMLTextAreaElement|null>}){
  const id=useId();const description=[scope?`${id}-scope`:null,error?`${id}-error`:null].filter(Boolean).join(' ')||undefined;return <div className="a3-composer-wrap"><form className="a3-composer" onSubmit={e=>{e.preventDefault();if(!running)onSubmit();}}>
   <Text style="meta" className="a3-composer-q">Q</Text><span className="a3-caret" aria-hidden="true"/>
   <label htmlFor={id} className="a3-sr">Research question or follow-up</label>
-  <textarea id={id} ref={inputRef} value={value} disabled={running} aria-describedby={description} aria-invalid={Boolean(error)} placeholder="Ask a question about NVIDIA’s operating profitability…" rows={2} maxLength={2000} onChange={e=>onChange(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();if(!running)onSubmit();}}}/>
+  <textarea id={id} ref={inputRef} value={value} disabled={running} aria-describedby={description} aria-invalid={Boolean(error)} placeholder={placeholder} rows={2} maxLength={2000} onChange={e=>onChange(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();if(!running)onSubmit();}}}/>
   {running?<Button variant="outline" data-research-stop onClick={onStop}>Stop</Button>:<Button variant="primary" type="submit" disabled={!value.trim()}>Run <span aria-hidden="true">↵</span></Button>}
  </form>{scope&&<div id={`${id}-scope`} className="a3-scope text-meta">{scope}</div>}{error&&<Text as="p" style="secondary" id={`${id}-error`} role="alert">{error}</Text>}</div>;
 }

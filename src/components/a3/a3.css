@@ -26,6 +26,9 @@ ul { padding: 0; margin: 0; list-style: none; }
 /* D93: 06c's session rail alongside the existing, mounted 06a/06b content. */
 .a3-v3-shell { display: grid; grid-template-columns: var(--rail-w) minmax(0,1fr); grid-template-rows: auto 1fr auto; }
 .a3-v3-shell > .a3-header, .a3-v3-shell > .a3-footer { grid-column: 1 / -1; }
+.a3-v3-shell > .a3-header { position: sticky; top: 0; z-index: 3; background: var(--bg); }
+.a3-v3-shell > .a3-session-sidebar { top: var(--header-h); }
+.a3-v3-shell:has(.a3-nav-running) > .a3-session-sidebar { top: calc(var(--header-h) + var(--hit-area) + var(--space-4)); }
 .a3-v3-shell > .a3-session-view, .a3-v3-shell > .a3-session-index { grid-column: 2; grid-row: 2; }
 .a3-session-sidebar { grid-column: 1; grid-row: 2; min-width: 0; padding: var(--space-4) var(--space-2); border-right: var(--hairline); display: flex; flex-direction: column; gap: var(--space-3); position: sticky; top: 0; align-self: start; height: calc(100dvh - var(--header-h) - var(--space-6) - var(--space-4)); overflow-y: auto; }
 .a3-session-sidebar[hidden] { display: none; }
@@ -198,3 +201,36 @@ ul { padding: 0; margin: 0; list-style: none; }
 .a3-verdict-reserve { display: flex; flex-direction: column; gap: var(--space-2); }
 .a3-verdict-text { height: calc(var(--space-8) * 2); overflow-y: auto; }
 .a3-context-disclosure { min-height: var(--hit-area); }
+
+/* DESIGN-DECISION: rail-only controls and a persistent composer supersede the
+   full-width sticky V3 header. V2 layouts retain their original document flow. */
+.a3-v3-shell { height: 100dvh; min-height: 0; grid-template-rows: auto minmax(0,1fr) auto; overflow: hidden; }
+.a3-v3-shell > .a3-v3-header { grid-column: 1; grid-row: 1; padding-inline: var(--space-2); border-right: var(--hairline); }
+.a3-v3-header > .a3-brand { width: 100%; justify-content: flex-start; gap: var(--space-1); flex-wrap: nowrap; }
+.a3-v3-shell > .a3-session-view, .a3-v3-shell > .a3-session-index { grid-column: 2; grid-row: 1 / 3; min-height: 0; overflow: hidden; }
+.a3-v3-shell > .a3-session-sidebar { position: static; height: auto; min-height: 0; align-self: stretch; }
+.a3-v3-shell .a3-session-app, .a3-v3-shell .a3-research-layout { min-height: 0; }
+.a3-v3-shell .a3-docked-thread { min-height: 0; height: 100%; padding: 0; gap: 0; position: static; overflow: hidden; align-self: stretch; }
+.a3-thread-scroll { min-height: 0; flex: 1; overflow-y: auto; padding: var(--space-7) var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-6); scroll-padding-block: var(--space-4); }
+.a3-composer-dock { flex-shrink: 0; background: var(--bg); padding: 0 var(--space-4) var(--space-3); }
+.a3-composer-dock .a3-composer-wrap { margin-top: 0; padding-top: var(--space-2); }
+.a3-v3-shell > .a3-session-index { overflow-y: auto; }
+.a3-v3-shell:has(> .a3-session-sidebar[hidden]) > .a3-session-view,
+.a3-v3-shell:has(> .a3-session-sidebar[hidden]) > .a3-session-index,
+.a3-v3-shell:has(> .a3-session-sidebar[data-compact='true']) > .a3-session-view,
+.a3-v3-shell:has(> .a3-session-sidebar[data-compact='true']) > .a3-session-index { grid-column: 1; grid-row: 2; }
+.a3-v3-shell:has(> .a3-session-sidebar[hidden]) > .a3-v3-header,
+.a3-v3-shell:has(> .a3-session-sidebar[data-compact='true']) > .a3-v3-header { width: var(--rail-w); }
+.a3-v3-shell > .a3-session-sidebar[data-compact='true'] { position: fixed; top: var(--header-h); height: calc(100dvh - var(--header-h)); }
+.a3-v3-shell .a3-brief-pane { min-height: 0; overflow-y: auto; }
+
+.a3-v3-shell { position: relative; --rail-w: var(--rail-v3-default-w); }
+.a3-rail-resizer { position: absolute; top: 0; bottom: var(--space-8); left: calc(var(--rail-w) - var(--space-1)); width: var(--space-2); cursor: col-resize; touch-action: none; z-index: 4; }
+.a3-rail-resizer::after { content: ''; position: absolute; left: var(--space-1); top: 0; bottom: 0; border-left: var(--hairline); }
+.a3-rail-resizer:hover::after, .a3-rail-resizer:focus-visible::after { border-color: var(--ink-2); }
+
+/* D112: full-width scrolling region; only prose and composer have a reading width. */
+.a3-v3-shell .a3-docked-thread { max-width: none; margin-inline: 0; }
+.a3-v3-shell .a3-thread-scroll > *, .a3-v3-shell .a3-composer-dock > * { width: 100%; max-width: calc(var(--answer-max-w) - var(--space-4) * 2); margin-inline: auto; flex-shrink: 0; }
+.a3-v3-shell .a3-composer-dock .a3-composer { border: 0; background: var(--surface); border-radius: var(--radius-panel); }
+.a3-v3-shell > .a3-footer { border-top: 0; }

@@ -2,7 +2,7 @@
 import {createV3Toolbox,validateV3Request,V3RunBudget,V3PolicyError,exactKeys,type V3ToolCall,type V3Request} from './v3-safety.ts';
 import {verifyV3Draft,verifyV3Finding,v3DraftSchema,type VerifiedV3Finding} from './v3-verifier.ts';
 import type {V3Fact,V3Discrepancy} from './v3-financials.ts';
-export type V3ProviderInput={request:V3Request;source_context:ReturnType<ReturnType<typeof createV3Toolbox>['sourceContext']>;tool_results:unknown[];schema:typeof v3DraftSchema};
+export type V3ProviderInput={request:V3Request;source_context:ReturnType<ReturnType<typeof createV3Toolbox>['sourceContext']>;tool_results:unknown[];schema:typeof v3DraftSchema;quote_repair?:{draft:any;finding_ids:string[]}};
 export type V3ProviderObserver={onFinding:(candidate:unknown)=>void;onFindingsReset:()=>void;onFindingsComplete?:()=>void};
 export type V3Provider=(input:V3ProviderInput,signal:AbortSignal,observer?:V3ProviderObserver)=>Promise<unknown>;
 export type V3Timing={step:'preparing'|'provider'|'tools'|'checking';elapsed_ms:number;provider_call?:number;result_kind?:'answer'|'tools'|'failed';tool_names?:string[];error_code?:string};
@@ -27,14 +27,14 @@ export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Pr
  try{
   const request=validateV3Request(input);budget.assertActive();options.onStage?.('preparing');const preparing=performance.now(),toolbox=createV3Toolbox(packet);timing('preparing',preparing);
   discrepancies=toolbox.discrepancies;
-  let toolResults:unknown[]=[];let formatRetry=false;
+  let toolResults:unknown[]=[];let formatRetry=false;let quoteRepair:V3ProviderInput['quote_repair'];
   for(let attempt=0;attempt<2;attempt++){
    budget.reserveProvider();
-   options.onStage?.(formatRetry?'recovering':'researching');
+   options.onStage?.(formatRetry||quoteRepair?'recovering':'researching');
    const started=performance.now();let result:any,errorCode:string|undefined;
    let callOpen=true,progressive=true,developing=false,synthesizing=false,candidates=0;const seen=new Set<string>();
    const reset=()=>{if(!progressive)return;progressive=false;seen.clear();options.onFindingsReset?.();};
-   try{result=await controlledWait(signal=>provider({request:structuredClone(request),source_context:toolbox.sourceContext(),tool_results:structuredClone(toolResults),schema:structuredClone(v3DraftSchema)},signal,{
+   try{result=await controlledWait(signal=>provider({request:structuredClone(request),source_context:toolbox.sourceContext(),tool_results:structuredClone(toolResults),schema:structuredClone(v3DraftSchema),...(quoteRepair?{quote_repair:quoteRepair}:{})},signal,{
     onFinding(candidate){
      if(!callOpen||!progressive||signal.aborted||options.signal?.aborted)return;
      try{budget.assertActive();}catch{return;}
@@ -66,6 +66,15 @@ export async function runV3ControlledTurn(input:unknown,packet:any,provider:V3Pr
     options.onStage?.('checking');
     const checking=performance.now();let output:ReturnType<typeof verifyV3Draft>;
     try{output=verifyV3Draft(result.draft,toolbox);}catch(error){reset();throw error;}
+    const rejected=output.drops.filter(d=>d.kind==='finding');
+    if(attempt===0&&output.status==='check_failed'&&rejected.length>0&&rejected.every(d=>d.reason==='quote_mismatch')&&output.drops.some(d=>d.kind==='takeaway_dependency'&&d.reason==='invalid_dependency')){
+     quoteRepair={draft:structuredClone(result.draft),finding_ids:rejected.map(d=>d.id)};
+     timing('checking',checking);continue;
+    }
+    // Suppress exact/rephrased punctuation duplicates without another model call.
+    // Semantic novelty is evaluated by the provider against richer history.
+    const normalizeQuestion=(text:string)=>text.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    if(output.next_investigation&&[request.question,...request.history.filter(h=>h.role==='user').map(h=>h.text)].some(q=>normalizeQuestion(q)===normalizeQuestion(output.next_investigation.question)))output.next_investigation=null;
     if(['out_of_scope','clarification'].includes(output.answer_kind))reset();
     timing('checking',checking);
     const status=output.status==='complete'&&toolbox.discrepancies.length?'partial':output.status;

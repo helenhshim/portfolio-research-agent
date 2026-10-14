@@ -2,6 +2,7 @@
 import {createServer} from 'node:http';
 import {readFileSync} from 'node:fs';
 import {createV3Handler} from '../src/lib/v3-http.ts';
+import {createV3HistoryHandler} from '../src/lib/v3-history-validation.ts';
 import {V3PolicyError} from '../src/lib/v3-safety.ts';
 const packet=JSON.parse(readFileSync(new URL('../src/data/nvda-quarter-pair.json',import.meta.url),'utf8'));
 // Use a production-mode localhost frontend for this HTTP-only proxy. A dev
@@ -18,6 +19,7 @@ const discrepancyTest=process.argv.slice(2).includes('--discrepancy');
 const fast=process.argv.slice(2).includes('--fast');
 if(discrepancyTest){packet.comparisons.find((c:any)=>c.id==='NVDA:revenue:yoy').percentage_change=90;draft.findings[0].text='Revenue growth is withheld for a cached-comparison conflict. Expense growth of {{fact:NVDA:operating_expenses:yoy}} remains available; persistence is unresolved.';draft.findings[0].fact_ids=['NVDA:operating_expenses:yoy'];}
 let attempts=0,requests=0;
+const historyHandler=createV3HistoryHandler(packet);
 const handler=createV3Handler({packet,configured:()=>true,provider:()=>{
  const attempt=++attempts;
   return async(_input,signal,observer)=>{
@@ -33,13 +35,14 @@ const handler=createV3Handler({packet,configured:()=>true,provider:()=>{
  };
 }});
 createServer(async(req,res)=>{
+ const path=new URL(req.url??'/', 'http://127.0.0.1:3007').pathname;
  const abort=new AbortController();res.on('close',()=>abort.abort());
  try{
   if(req.url==='/__scripted/stats'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({requests,provider_calls:attempts}));return;}
-  if(req.url==='/api/v3/research')requests++;
+  if(path==='/api/v3/research')requests++;
   const body=req.method==='POST'?await new Promise<Buffer>((resolve,reject)=>{const chunks:Buffer[]=[];req.on('data',chunk=>chunks.push(chunk));req.on('end',()=>resolve(Buffer.concat(chunks)));req.on('error',reject);}):undefined;
   const headers=new Headers();for(const [key,value] of Object.entries(req.headers))if(value)headers.set(key,Array.isArray(value)?value.join(','):value);
-  const response=req.url==='/api/v3/research'?await handler(new Request('http://127.0.0.1:3007/api/v3/research',{method:'POST',headers,body:body?.toString('utf8'),signal:abort.signal})):await fetch(upstream+req.url,{headers,signal:abort.signal});
+  const response=path==='/api/v3/history'?await historyHandler(new Request('http://127.0.0.1:3007/api/v3/history',{method:req.method,headers,body:body?.toString('utf8'),signal:abort.signal})):path==='/api/v3/research'?await handler(new Request('http://127.0.0.1:3007/api/v3/research',{method:'POST',headers,body:body?.toString('utf8'),signal:abort.signal})):await fetch(upstream+req.url,{method:req.method,headers,body:body?.toString('utf8'),signal:abort.signal});
   // fetch returns decoded bytes; forwarded compression/length would corrupt the
   // browser response. This affects the test proxy only, not the production route.
   const outgoing=new Headers(response.headers);outgoing.delete('content-encoding');outgoing.delete('content-length');outgoing.delete('transfer-encoding');

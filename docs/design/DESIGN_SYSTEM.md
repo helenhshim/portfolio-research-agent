@@ -423,3 +423,49 @@ D94 removes the All sessions link beneath the Sessions heading; direct session r
 - States: pending verdict, checked findings, complete/partial answer, long scrollable verdict, empty context, original source highlight or exact excerpt fallback.
 - Reuses FactProse, ResearchFindings, SourcePassage, FactBasis and existing source-panel focus restoration. No new color/type/spacing token.
 - Authorized override: supersedes D89 role regrouping and D90 automatic context relocation. Context summaries may be repeated in the user-opened verdict disclosure; detailed evidence is not moved on completion. Invalid withdrawn evidence is not kept for visual stability.
+
+### Question-first topic group variant (D102)
+
+Use case: attribution, comparison and narrow follow-up answers that do not need a thesis template. Reuses ResearchFindings, Text title/strong/body, analysis lines, inline Source/Excerpt links and the existing action button. Anatomy: descriptive topic heading once for adjacent related findings, individual finding summaries and cited supporting lines. States: incrementally checked findings, completed answer and legacy summary-heading fallback. Internal role labels do not render. The Answer region retains its reserved streaming space; optional synthesis renders as “What this means.” No new visual tokens, colors or layouts.
+
+### Inline financial prose variant (D103)
+
+FactProse reuses FigureText for resolved placeholders as well as normal prose. Only numeric spans use the data style; units, attribution and uncertainty words use the surrounding body style. Preserves the exact source-backed display string. Applies to answer, summaries and supporting lines; tabular values retain their existing data styling.
+
+### Compiled Sources and investigation variants (D104)
+
+Use case: readable research with traceable evidence and actionable continuation. CompiledSources reuses native details, Text, FigureText, FactProse and InlineCitation. Anatomy: Sources disclosure → unique report disclosure → supported finding and exact evidence locations. Streams append checked content; final financial comparisons add their lineage. The investigation uses the existing Button with the complete question as its label, disabled while running. Missing evidence is a separate collapsed disclosure. No additional tokens or layout systems.
+
+### Concise basis and report list (D105)
+
+Reuses DataTable for selected evidence-basis comparisons with provenance in the implication column. Sources reuses title/body/link styles in a flat list with one link per referenced report; no excerpt controls or nested finding breakdowns. Investigation section has actionable and no-supported-suggestion states, using existing Button/Text. These replace D104's expanded source anatomy at Helen's request.
+
+### Derived calculation disclosure (D106)
+
+Replaces evidence-basis table duplication. Reuses FactBasis in a native details disclosure labeled How this was calculated, limited to derived selected figures/comparisons. Reported figures do not produce this disclosure. No additional table or tokens.
+
+### Separate investigation question and action
+
+At Helen's request, the suggested next question renders as body text above a compact quiet “Ask” button, using the existing a3-investigation-action stack and spacing tokens. This supersedes D104's full-question button label. The button's accessible label includes the question; it remains disabled during research. Reuses Text, FigureText and Button; no new tokens or visual styles.
+
+### Sticky V3 navigation
+
+The V3 header stays at the viewport top with the existing opaque background and rule, above the session drawer. The sticky session rail starts below the header, including the active-research action row when present. Reuses header/spacing tokens; no shadow or new color.
+
+### Rail-only navigation and persistent composer (D110)
+
+At Helen's request, back/sidebar/new-session controls occupy the header above the left session rail only; remove the Prototype 3 header label. Supersedes the full-width sticky-header variant. V3 uses a viewport-height grid with separately scrolling session history and answer content. The composer is a sibling below the answer scroller, staying visible without overlaying evidence. Existing Text/Button/Composer and token geometry remain unchanged. Responsive drawer and focus restoration remain; session switches retain answer-scroll position. V2 document-flow layouts are preserved.
+
+### Compact two-action rail header
+
+Supersedes D110's three-control header at Helen's request: sidebar toggle followed by new-session icon, left aligned with space-1 between accessible hit areas. Remove the back arrow and V3 saved-reference CTA. Reuses icon Button and existing tokens; keyboard labels and hit areas remain intact. Existing saved answers are still available in session history.
+
+### Adjustable session rail (D111)
+
+Use case: skim longer session titles without squeezing the answer. V3 default width is 268px, bounded by 220px/360px tokens and available viewport space after preserving the pane-min-w answer area. These V3 width tokens leave V2's 220px rail unchanged. A vertical focusable separator reuses the existing hairline/focus colors and space tokens: drag to resize, Left/Right adjust by space-2, Home/End choose bounds. Hidden when the rail is collapsed or displayed as the compact drawer. Persist only a numeric local width preference; storage failure leaves resizing functional. Dynamic width is a user-controlled token override, not component-owned fixed geometry.
+
+D111 width revision: at Helen's request, use 180px default and 160px minimum, superseding the 268px/220px settings above. Retain drag/keyboard behavior and the existing maximum. Reset the previous width preference through a versioned preference key so the new default appears on refresh.
+
+### Page-edge scrollbar and integrated composer (D112)
+
+Use the full answer-pane width for the scroll container and center its children at the established reading width, putting the scrollbar at the right page edge in thread mode. In split mode it belongs at the right edge of the thread pane. The docked composer uses the surface background, panel radius and no outer ink border; remove the V3 footer's separating rule. Reuses existing tokens and focus styles. No shadows, pills, new colors or type styles. V2 remains unchanged.

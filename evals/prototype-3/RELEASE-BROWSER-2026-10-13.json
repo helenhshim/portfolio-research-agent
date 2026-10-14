@@ -1,0 +1,63 @@
+[
+  {
+    "name": "onboarding",
+    "ok": true
+  },
+  {
+    "name": "incremental finding before final",
+    "ok": true
+  },
+  {
+    "name": "complete checked answer",
+    "ok": true
+  },
+  {
+    "name": "reload preserves checked answer",
+    "ok": true
+  },
+  {
+    "name": "stop gives manual retry",
+    "ok": true
+  },
+  {
+    "name": "reload does not auto retry",
+    "ok": true
+  },
+  {
+    "name": "stopped reload no provider call",
+    "ok": true,
+    "detail": {
+      "requests": 2,
+      "provider_calls": 2
+    }
+  },
+  {
+    "name": "reference failure offers retry",
+    "ok": true
+  },
+  {
+    "name": "manual retry recovers",
+    "ok": true
+  },
+  {
+    "name": "header stays at viewport top",
+    "ok": true
+  },
+  {
+    "name": "mobile no horizontal overflow",
+    "ok": true
+  },
+  {
+    "name": "mobile sidebar toggle",
+    "ok": true
+  },
+  {
+    "name": "separate browser context has no other history",
+    "ok": true
+  },
+  {
+    "name": "no browser runtime errors",
+    "ok": true,
+    "detail": []
+  }
+]

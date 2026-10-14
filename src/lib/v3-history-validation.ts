@@ -14,15 +14,15 @@ export function historyArtifactChecker(packet:any){
   // Recheck cached prose/references and reconstitute every numerical value,
   // source URL and lineage from the server-owned frozen packet. This checks
   // source compatibility, not authorship or the investment interpretation.
-  const checked=verifyV3Draft({answer_kind:a.answer_kind,takeaway:{text:a.takeaway,finding_ids:ids},assessment:{text:a.assessment??a.takeaway,finding_ids:ids},
-   findings:a.findings.map((f:any)=>({id:f.id,role:f.role,summary:f.summary,text:f.text,fact_ids:f.fact_ids,evidence:f.passages.map((p:any)=>({paragraph_id:p.id,quote:p.quote}))})),
+  const checked=verifyV3Draft({answer_kind:a.answer_kind,takeaway:{text:a.takeaway,finding_ids:ids},assessment:a.assessment===null?null:{text:a.assessment??a.takeaway,finding_ids:ids},
+   findings:a.findings.map((f:any)=>({... (f.topic?{topic:f.topic}:{}),id:f.id,role:f.role,summary:f.summary,text:f.text,fact_ids:f.fact_ids,evidence:f.passages.map((p:any)=>({paragraph_id:p.id,quote:p.quote}))})),
    financial_rows:a.rows.map((r:any)=>({fact_id:r.current.id,implication:r.implication,finding_ids:a.findings.filter((f:any)=>f.fact_ids.includes(r.current.id)).map((f:any)=>f.id)})),
-   unanswered:a.unanswered,next_investigation:a.next?{question:a.next.question,finding_ids:a.next.finding_ids,metric_ids:[labels[a.next.label]]}:null},box);
+   unanswered:a.unanswered,next_investigation:a.next?{question:a.next.question,finding_ids:a.next.finding_ids,metric_ids:a.next.metric_ids??[labels[a.next.label]],...(a.next.paragraph_ids?{paragraph_ids:a.next.paragraph_ids}:{}),...(a.next.new_information?{new_information:a.next.new_information}:{})}:null},box);
   if(checked.status!=='complete'||!checked.takeaway)return null;
   const facts=[...box.facts.values()];
   return {question:a.question,revision:a.revision,origin:a.origin,status:a.status,answer_kind:a.answer_kind,takeaway:checked.takeaway.text,assessment:a.assessment===null?null:checked.assessment?.text??null,
    findings:checked.findings.map((f:any)=>presentV3Finding(f,coverage.sources)),rows:checked.financial_rows.map((r:any)=>relatedRow(r.fact,facts,r.implication)),facts,
-   unanswered:checked.unanswered,next:checked.next_investigation?{question:checked.next_investigation.question,finding_ids:checked.next_investigation.finding_ids,label:a.next.label}:null,sources:coverage.sources,cutoff:coverage.cutoff,discrepancies:box.discrepancies};
+   unanswered:checked.unanswered,next:checked.next_investigation?{question:checked.next_investigation.question,finding_ids:checked.next_investigation.finding_ids,metric_ids:checked.next_investigation.metric_ids,paragraph_ids:checked.next_investigation.paragraph_ids??[],new_information:checked.next_investigation.new_information,label:a.next.label}:null,sources:coverage.sources,cutoff:coverage.cutoff,discrepancies:box.discrepancies};
  }catch{return null;}};
 }
 export function createV3HistoryHandler(packet:any){

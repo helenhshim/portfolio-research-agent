@@ -23,12 +23,12 @@ export default function V3Workspace(props:Props){
  const releaseRun=useCallback((id:string)=>{if(active.current?.id===id){active.current=null;setRunningId(null);}},[]);
  useEffect(()=>{const el=host.current;if(!el)return;const observer=new ResizeObserver(entries=>{const css=getComputedStyle(el);setNarrow(entries[0].contentRect.width<parseFloat(css.getPropertyValue('--pane-min-w'))+parseFloat(css.getPropertyValue('--workspace-min-w')));});observer.observe(el);return()=>observer.disconnect();},[]);
  function open(id:string|null,isNew=false){
-  if(selected)scroll.current.set(selected,window.scrollY);
+  if(selected)scroll.current.set(selected,host.current?.querySelector<HTMLElement>(`[data-session-id="${CSS.escape(selected)}"] .a3-thread-scroll`)?.scrollTop??0);
   setSelected(id);setNotice(previous=>/could not|another tab|storage is unavailable/.test(previous)?previous:'');
   requestAnimationFrame(()=>{
    const target=id?host.current?.querySelector<HTMLElement>(`[data-session-id="${CSS.escape(id)}"]`):indexTitle.current;
    if(isNew)target?.querySelector<HTMLTextAreaElement>('textarea')?.focus({preventScroll:true});else target?.focus({preventScroll:true});
-   window.scrollTo({top:id?scroll.current.get(id)??0:0,behavior:'auto'});
+   const pane=target?.querySelector<HTMLElement>('.a3-thread-scroll');if(pane)pane.scrollTop=id?scroll.current.get(id)??0:0;
   });
  }
  function createSession(){

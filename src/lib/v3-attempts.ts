@@ -1,10 +1,10 @@
-import {plainArtifactText,type ResearchStage,type V3Artifact,type V3RunSummary,type V3TurnResult,type V3Event,type V3Evidence,type TurnIdentity} from './v3-display.ts';
+import {researchContextText,type ResearchStage,type V3Artifact,type V3RunSummary,type V3TurnResult,type V3Event,type V3Evidence,type TurnIdentity} from './v3-display.ts';
 import type {V3Discrepancy} from './v3-financials.ts';
 export type HistoryEntry={role:'user'|'assistant';text:string};
 export type TimedStep={stage:ResearchStage;startedMs:number;endedMs?:number;receivedAt:number;state:'live'|'done'|'failed'|'idle'};
 export type ResearchAttempt={id:string;startedAt:number;endedAt?:number;status:string;steps:TimedStep[];message?:string;errorCode?:string;artifact?:V3Artifact;run?:V3RunSummary;developing?:V3Evidence;discrepancies?:V3Discrepancy[]};
 export type ResearchTurn={id:string;question:string;history:HistoryEntry[];attempts:ResearchAttempt[];reference?:V3Artifact};
-export const stageLabels:Record<ResearchStage,string>={preparing:'Preparing report evidence',researching:'Generating the research answer',investigating:'Inspecting approved evidence or metrics',developing:'Developing the remaining findings',synthesizing:'Writing the takeaway and remaining details',checking:'Checking references and dependencies',recovering:'Retrying response formatting'};
+export const stageLabels:Record<ResearchStage,string>={preparing:'Preparing report evidence',researching:'Generating the research answer',investigating:'Inspecting approved evidence or metrics',developing:'Developing the remaining findings',synthesizing:'Writing the takeaway and remaining details',checking:'Checking references and dependencies',recovering:'Repairing answer formatting or references'};
 export const latestAttempt=(turn:ResearchTurn)=>turn.attempts.at(-1);
 export const turnArtifact=(turn:ResearchTurn)=>latestAttempt(turn)?.artifact??(turn.attempts.length===0?turn.reference:undefined);
 export function startAttempt(turns:ResearchTurn[],turnId:string,question:string,attemptId:string,now:number):ResearchTurn[]{
@@ -48,8 +48,8 @@ export function researchHistory(turns:ResearchTurn[]):HistoryEntry[]{
  // the original history snapshot instead of feeding its failure back to the model.
  return turns.flatMap(turn=>{
   const artifact=turnArtifact(turn),attempt=latestAttempt(turn);
-  const answer=artifact?plainArtifactText(artifact):attempt&&['out_of_scope','clarification'].includes(attempt.status)?attempt.message:undefined;
-  return answer?[{role:'user' as const,text:turn.question},{role:'assistant' as const,text:answer.slice(0,1600)}]:[];
+  const answer=artifact?researchContextText(artifact):attempt&&['out_of_scope','clarification'].includes(attempt.status)?attempt.message:undefined;
+  return answer?[{role:'user' as const,text:turn.question},{role:'assistant' as const,text:answer.slice(0,1900)}]:[];
  }).slice(-6);
 }
 const retryCodes=new Set(['deadline','provider_incomplete','provider_whitespace_loop','check_failed','research_failed','busy','stopped','interrupted']);
@@ -76,10 +76,10 @@ export function recoveryMessage(attempt:ResearchAttempt){
   interrupted:'This research was interrupted when the page closed or reloaded. It has not resumed. Retry to start a new attempt.',
   stopped:'You stopped this attempt. No new answer was published.',
   busy:'Another research request is running. Wait for it to finish, then try again.',
-  unavailable:'Live research is not configured for this preview. You can view the saved reference.',
+  unavailable:'Live research is not configured for this preview. Existing checked answers remain available.',
   budget_unavailable:'The research budget check is temporarily unavailable. No new model call was started. Please try again later.',
-  spend_limit:'This preview’s research budget has been reached. You can view the saved reference.',
-  provider_quota:'The API reports that this preview has no research credits remaining. Existing checked answers remain available. Live research can resume after credits are added; you can view the saved reference now.',
+  spend_limit:'This app’s remaining research allowance cannot cover another call. This limit is separate from your OpenAI API credit balance. Existing checked answers remain available.',
+  provider_quota:'The API reports that this preview has no research credits remaining. Existing checked answers remain available. Live research can resume after credits are added.',
   origin:'Reload this page before submitting from the same app address.',
   sensitive_input:'Remove client identity, contact details, account identifiers or credentials before submitting a public-company question.',
   invalid_text:'Enter a public-company question within the input limit.',

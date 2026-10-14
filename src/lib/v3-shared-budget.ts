@@ -1,11 +1,12 @@
 import {randomUUID} from 'node:crypto';
+import {V3_PREVIEW_BUDGET_KEY} from './v3-deployment-policy.ts';
 import {V3PolicyError} from './v3-safety.ts';
 import type {V3Usage} from './v3-provider.ts';
 
 // Integer microdollars. Standard-tier upper estimate, including cache-write input.
 // Version the pricing policy independently of deployments; never rotate the key
 // automatically, expire it, or use an evicting store to reset the allowance.
-export const V3_BUDGET_KEY='portfolio-research:v3:preview:budget:1';
+export const V3_BUDGET_KEY=V3_PREVIEW_BUDGET_KEY;
 export const RESERVE_SCRIPT=`
 local total = tonumber(redis.call('HGET', KEYS[1], 'total') or '0')
 local amount = tonumber(ARGV[2])
@@ -26,7 +27,7 @@ return 1`;
 type Evaluator={eval:(script:string,keys:string[],args:(string|number)[])=>Promise<unknown>};
 export class V3SharedBudget {
  private redis:Evaluator; private key:string; private capMicroUsd:number;
- constructor(redis:Evaluator,key=V3_BUDGET_KEY,capMicroUsd=5_000_000){this.redis=redis;this.key=key;this.capMicroUsd=capMicroUsd;}
+ constructor(redis:Evaluator,key=V3_BUDGET_KEY,capMicroUsd=10_000_000){this.redis=redis;this.key=key;this.capMicroUsd=capMicroUsd;}
  async reserve(inputBytes:number){
   if(!Number.isSafeInteger(inputBytes)||inputBytes<0||inputBytes>240000)throw new V3PolicyError('input_limit');
   const amount=Math.ceil(inputBytes*2.5+5120*10),id=randomUUID();

@@ -4,13 +4,13 @@ import type {V3Fact,V3Discrepancy} from './v3-financials.ts';
 export const V3_RESEARCH_PROTOCOL='findings-v3';
 export type SourceRef={id:'current'|'prior';label:string;date:string;url:string};
 export type Passage={id:string;quote:string;source:'current'|'prior'};
-export type DisplayFinding={id:string;role:'supports'|'challenges'|'context';summary:string;text:string;fact_ids:string[];passages:Passage[]};
+export type DisplayFinding={topic?:string;id:string;role:'supports'|'challenges'|'context';summary:string;text:string;fact_ids:string[];passages:Passage[]};
 export type V3Evidence={findings:DisplayFinding[];facts:V3Fact[];sources:SourceRef[];cutoff:string;discrepancies?:V3Discrepancy[]};
 export type MetricRow={id:string;label:string;current:V3Fact;prior?:V3Fact;change?:V3Fact;implication:string};
 export type V3Artifact={
  question:string;revision:number;answer_kind:'analysis'|'source_limited'|'out_of_scope'|'clarification';origin:'live'|'saved_reference';status:'complete'|'partial';
  takeaway:string;assessment:string|null;findings:DisplayFinding[];rows:MetricRow[];facts:V3Fact[];
- unanswered:string[];next:{question:string;label:string;finding_ids:string[]}|null;
+ unanswered:string[];next:{question:string;label:string;finding_ids:string[];metric_ids?:string[];paragraph_ids?:string[];new_information?:string}|null;
  sources:SourceRef[];cutoff:string;
  discrepancies?:V3Discrepancy[];
 };
@@ -41,3 +41,28 @@ export function factSegments(text:string,facts:V3Fact[]):{text:string;numeric:bo
  });
 }
 export function plainArtifactText(artifact:V3Artifact){return factSegments(artifact.takeaway,artifact.facts).map(s=>s.text).join('');}
+
+// Adjacent grouping preserves streamed arrival order. No completed finding moves.
+export function findingGroups(findings:DisplayFinding[]){
+ const groups:{topic:string;findings:DisplayFinding[]}[]=[];
+ for(const finding of findings){
+  const topic=finding.topic??finding.summary;
+  const last=groups.at(-1);
+  if(last?.topic===topic)last.findings.push(finding);
+  else groups.push({topic,findings:[finding]});
+ }
+ return groups;
+}
+
+// Bounded conversational memory, never authoritative evidence. Preserve each
+// finding and open question instead of sending only the previous verdict.
+export function researchContextText(artifact:V3Artifact){
+ const plain=(text:string)=>factSegments(text,artifact.facts).map(s=>s.text).join('');
+ const clip=(text:string,n:number)=>text.length<=n?text:text.slice(0,n-1)+'…';
+ return [
+  'Prior answer (conversation context only): '+clip(plain(artifact.takeaway),300),
+  'Already discussed: '+artifact.findings.map(f=>clip(plain(f.summary),140)).join(' | '),
+  'Evidence used: '+[...new Set(artifact.findings.flatMap(f=>[...f.fact_ids,...f.passages.map(p=>p.id)]))].join(', ').slice(0,250),
+  'Unresolved: '+artifact.unanswered.map(t=>clip(plain(t),110)).join(' | '),
+ ].join('\n').slice(0,1900);
+}

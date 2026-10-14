@@ -53,7 +53,7 @@ export function createV3Handler(deps:Dependencies){
     const preserve=artifact&&['out_of_scope','clarification'].includes(artifact.answer_kind);
     send({type:'result',result:{status:preserve?artifact.answer_kind:result.status,identity,run:{elapsed_ms:elapsed(),...result.counts},discrepancies:'output' in result?result.output?.discrepancies:result.discrepancies,
      ...(!preserve&&artifact?{artifact}:{}),...(preserve?{message:plainArtifactText(artifact)}:{}),...('error_code' in result?{error_code:result.error_code}:{})}});
-   }catch{send({type:'result',result:{status:'failed',error_code:'research_failed',identity}});}
+   }catch(error){const error_code=error instanceof V3PolicyError?error.code:'research_failed';deps.onDiagnostics?.({run_id:createHash('sha256').update(JSON.stringify(identity)).digest('hex'),elapsed_ms:elapsed(),status:'failed',phase:'initialization',error_code});send({type:'result',result:{status:'failed',error_code,identity}});}
    finally{active--;request.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;controller.close();}}
   },cancel(){closed=true;disconnect();}});
   return new Response(stream,{headers:{...headers,'Content-Type':'application/x-ndjson','Content-Encoding':'identity'}});

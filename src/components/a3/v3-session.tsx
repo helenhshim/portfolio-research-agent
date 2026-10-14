@@ -54,10 +54,6 @@ export default function V3ResearchSession({id,summary,historyLoading,visible,cov
   session().stop(current.token);current.abort.abort();active.current=null;runningRef.current=false;setRunning(false);releaseRun(id);closeInspection(visibleRef.current);
   const now=performance.now();setTurns(t=>updateAttempt(t,current.turnId,current.token.turn_id,a=>finishAttempt(a,{status:'stopped',error_code:'stopped'},now)));
  }
- function showReference(){
-  if(runningRef.current||busyElsewhere||historyLoading)return;const g=session(),token=g.begin(crypto.randomUUID()),saved={...reference,revision:token.revision};g.commit(token,saved);
-  setTurns(t=>[...t,{id:token.turn_id,question:saved.question,history:researchHistory(t),attempts:[],reference:saved}]);closeInspection(false);
- }
  async function run(question=value,retryTurnId?:string){
   if(runningRef.current||busyElsewhere||historyLoading)return;const q=question.trim();if(!q){setInputError('Enter a research question.');return;}
   const retryTurn=retryTurnId?turns.find(t=>t.id===retryTurnId):undefined;
@@ -107,17 +103,16 @@ export default function V3ResearchSession({id,summary,historyLoading,visible,cov
  }
  // Source provenance remains inspectable; D75's removed scope/banner copy stays removed.
  const composerProps={value,onChange:(v:string)=>{setValue(v);setInputError('');},onSubmit:()=>void run(),running,onStop:stop,error:inputError,inputRef:input};
- const composer=historyLoading?<Text as="p" style="secondary">Restoring saved research…</Text>:busyElsewhere?<div className="a3-composer-wrap"><Text as="p" style="secondary">Another session is researching. Your draft stays here.</Text><Button variant="link" onClick={onActiveResearch}>Return to active research</Button></div>:<Composer {...composerProps}/>;
- const thread=<>{turns.length===0?<div className="a3-empty"><Text as="h1" style="display">A question. The evidence. A sharper thesis.</Text><Text as="p" style="secondary">Pressure-test NVIDIA’s operating profitability using two frozen SEC reports. Ask what supports your premise, what challenges it and what remains unanswered.</Text><div className="a3-examples"><Text style="meta">Start with a question</Text>{[reference.question,'Why did cash flow fall? Does that mean margins are deteriorating?'].map(q=><Button variant="link" key={q} disabled={busyElsewhere} onClick={()=>{setValue(q);input.current?.focus();}}>{q}</Button>)}<Button variant="quiet" disabled={busyElsewhere} onClick={showReference}>View saved reference</Button></div></div>:turns.map(turn=>{
+ const composer=historyLoading?<Text as="p" style="secondary">Restoring saved research…</Text>:busyElsewhere?<div className="a3-composer-wrap"><Text as="p" style="secondary">Another session is researching. Your draft stays here.</Text><Button variant="link" onClick={onActiveResearch}>Return to active research</Button></div>:<Composer {...composerProps} placeholder="What would you like to understand about NVIDIA?"/>;
+ const thread=<>{turns.length===0?<div className="a3-empty"><Text as="h1" style="display">Ask a question. Understand the business.</Text><Text as="p" style="secondary">Pressure-test your investment thesis—the reasons you believe in a company—against its earnings reports and company disclosures. Explore what supports your view, what challenges it and what deserves a closer look.</Text><div><Text as="h2" style="strong">Start with what you want to understand</Text><Text as="p" style="secondary">Ask about growth, profits, cash flow or a business development. You don’t need to know financial terminology or write a detailed prompt.</Text></div><div><Text as="h2" style="strong">Keep the conversation going</Text><Text as="p" style="secondary">Ask for a simpler explanation, challenge a conclusion or choose a suggested follow-up to dig deeper.</Text></div><div className="a3-examples"><Text style="meta">Start with a question</Text>{['How is NVIDIA’s revenue performing?','Why did cash flow fall while profits increased?',reference.question].map(q=><Button variant="link" key={q} disabled={busyElsewhere} onClick={()=>{setValue(q);input.current?.focus();}}>{q}</Button>)}</div></div>:turns.map(turn=>{
   const attempt=latestAttempt(turn),saved=turnArtifact(turn),failed=attempt&&['failed','check_failed','stopped'].includes(attempt.status);
   return <QABlock key={turn.id} id={`turn-${turn.id}`} question={turn.question}>
    {attempt&&<StepLog key={attempt.id} attempt={attempt} attemptNumber={turn.attempts.length}/>}
    {attempt?.status==='running'||(saved&&!failed)?<ResearchAnswer artifact={attempt?.status==='running'?undefined:saved??undefined} evidence={attempt?.developing} running={running||busyElsewhere} onSource={(source,passage)=>{const evidence=attempt?.status==='running'?attempt.developing:saved;if(evidence)inspect(evidence,source,passage);}} onInvestigate={q=>void run(q)}/>
    :failed?<><Outcome showStatus={false} status={attempt.status} message={recoveryMessage(attempt)} retry={!running&&!busyElsewhere&&canRetry(attempt)?()=>void run(turn.question,turn.id):undefined}/><EvidenceDiscrepancies discrepancies={attempt.discrepancies} sources={coverage.sources} onSource={id=>inspect({findings:[],facts:[],sources:coverage.sources,cutoff:coverage.cutoff},id)}/></>:<Text as="p"><FigureText text={attempt?.message??''}/></Text>}
-   {failed&&['unavailable','spend_limit','provider_quota'].includes(attempt.errorCode??'')&&<Button variant="quiet" disabled={running} onClick={showReference}>View saved reference</Button>}
    {turn.attempts.length>1&&<details className="a3-detail"><summary className="text-secondary">Previous attempts <FigureText text={`(${turn.attempts.length-1})`}/></summary><div className="a3-detail-content">{turn.attempts.slice(0,-1).map((prior,index)=><div key={prior.id}><Text style="meta"><FigureText text={`Attempt ${index+1}`}/></Text><StepLog attempt={prior}/><Text as="p" style="secondary">{recoveryMessage(prior)}</Text></div>)}</div></details>}
   </QABlock>;
- })}{composer}</>;
+ })}</>;
  const tabs=coverage.sources.map((s,i)=>({id:s.id,label:s.label,citation:i+1}));
  const workspace=inspection?<div id={`${id}-research-inspection`} className="a3-inspection" ref={inspectionPane} tabIndex={-1} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();closeInspection();}}}>
   <div className="a3-inspection-toolbar"><Text style="strong">Sources</Text><div className="a3-header-actions">{running&&<Button variant="outline" onClick={stop}>Stop research</Button>}<Button variant="quiet" onClick={()=>closeInspection()}>Close source</Button></div></div>
@@ -125,6 +120,6 @@ export default function V3ResearchSession({id,summary,historyLoading,visible,cov
  return <div className="a3-session-app" ref={host} data-narrow={narrow}>
   {/* DESIGN-DECISION: No global Thread/Brief or layout navigation. The pane exists only after explicit inspection. */}
   <SessionHistoryBridge id={id} summary={summary} draft={value} turns={turns} onRestore={saved=>{setValue(saved.draft);setTurns(saved.turns);}}/>
-  <WorkspaceLayout thread={thread} brief={workspace} narrow={narrow} threadRef={threadPane}/>
+  <WorkspaceLayout thread={thread} composer={composer} brief={workspace} narrow={narrow} threadRef={threadPane}/>
  </div>;
 }

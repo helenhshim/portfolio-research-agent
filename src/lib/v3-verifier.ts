@@ -8,16 +8,20 @@ const object=(properties:any)=>({type:'object',properties,required:Object.keys(p
 const array=(items:any,maxItems:number)=>({type:'array',items,maxItems});
 const linked=object({text,finding_ids:strings});
 export const v3FindingSchema=object({id:{type:'string',enum:['finding_1','finding_2','finding_3','finding_4','finding_5','finding_6']},role:{type:'string',enum:['supports','challenges','context']},summary:{...text,maxLength:500},text:{...text,maxLength:2200},fact_ids:strings,evidence:array(object({paragraph_id:{type:'string'},quote:{...text,maxLength:800}}),3)});
-export type VerifiedV3Finding={id:string;role:'supports'|'challenges'|'context';summary:string;text:string;fact_ids:string[];evidence:{paragraph_id:string;quote:string}[]};
+v3FindingSchema.properties.fact_ids={...strings,maxItems:20};
+v3FindingSchema.properties.topic={type:'string',minLength:1,maxLength:120};
+export type VerifiedV3Finding={topic?:string;id:string;role:'supports'|'challenges'|'context';summary:string;text:string;fact_ids:string[];evidence:{paragraph_id:string;quote:string}[]};
 type Toolbox={facts:Map<string,V3Fact>;paragraphs:Map<string,any>;discrepancies?:V3Discrepancy[]};
 export const v3DraftSchema=object({
  takeaway:linked,
- assessment:linked,
+ assessment:{anyOf:[{type:'null'},linked]},
  findings:array(v3FindingSchema,6),
  financial_rows:array(object({fact_id:{type:'string'},implication:text,finding_ids:strings}),3),
  unanswered:array(text,3),
  next_investigation:{anyOf:[{type:'null'},object({question:text,finding_ids:strings,metric_ids:strings})]},
 });
+v3DraftSchema.properties.next_investigation.anyOf[1].properties.paragraph_ids=strings;
+v3DraftSchema.properties.next_investigation.anyOf[1].properties.new_information={...text,maxLength:400};
 // Optional for existing scripted fixtures; required in live strict-provider output.
 v3DraftSchema.properties.answer_kind={type:'string',enum:['analysis','source_limited','out_of_scope','clarification']};
 const shape=new Ajv({strict:false}).compile<any>(v3DraftSchema);
@@ -27,6 +31,7 @@ const safeText=(value:string,toolbox:Toolbox,allowedFacts:string[]=[])=>!hasFree
   [...value.matchAll(/\{\{fact:([^}]+)\}\}/g)].every(m=>toolbox.facts.has(m[1])&&allowedFacts.includes(m[1]));
 const textReason=(value:string,toolbox:Toolbox)=>hasFreeQuantity(value)?'free_quantity':hasIdentifiedSensitiveInput(value)?'sensitive_text':/[<>]|https?:|javascript:|data:/i.test(value)?'unsafe_markup_or_url':[...value.matchAll(/\{\{fact:([^}]+)\}\}/g)].some(m=>!toolbox.facts.has(m[1]))?'unknown_placeholder':'undeclared_fact_reference';
 function findingReason(f:VerifiedV3Finding,toolbox:Toolbox):string|null {
+ if(f.topic&&!safeText(f.topic,toolbox,[]))return 'unsafe_topic';
  if(!safeText(f.summary,toolbox,f.fact_ids))return textReason(f.summary,toolbox);
  if(!/[.!?]["'”’)]*\s*$/.test(f.summary))return 'unfinished_summary';
  if(!safeText(f.text,toolbox,f.fact_ids))return textReason(f.text,toolbox);
@@ -61,9 +66,9 @@ export function verifyV3Draft(draft:any,toolbox:Toolbox){
  const linkedFacts=[...new Set<string>(findings.filter((f:any)=>draft.takeaway.finding_ids.includes(f.id)).flatMap((f:any)=>f.fact_ids))];
  const takeaway=validLinks(draft.takeaway.finding_ids)&&safeText(draft.takeaway.text,toolbox,linkedFacts)?draft.takeaway:null;
  if(!takeaway)drops.push({kind:'takeaway_dependency',id:'takeaway',reason:!validLinks(draft.takeaway.finding_ids)?'invalid_dependency':hasFreeQuantity(draft.takeaway.text)?'free_quantity':'unsafe_text_or_fact_reference'});
- const assessmentFacts=[...new Set<string>(findings.filter((f:any)=>draft.assessment.finding_ids.includes(f.id)).flatMap((f:any)=>f.fact_ids))];
- const assessment=validLinks(draft.assessment.finding_ids)&&safeText(draft.assessment.text,toolbox,assessmentFacts)?draft.assessment:null;
- if(!assessment)drops.push({kind:'assessment_dependency',id:'assessment'});
+ const assessmentFacts=[...new Set<string>(findings.filter((f:any)=>draft.assessment?.finding_ids.includes(f.id)).flatMap((f:any)=>f.fact_ids))];
+ const assessment=draft.assessment&&validLinks(draft.assessment.finding_ids)&&safeText(draft.assessment.text,toolbox,assessmentFacts)?draft.assessment:null;
+ if(draft.assessment&&!assessment)drops.push({kind:'assessment_dependency',id:'assessment'});
  const financial_rows=draft.financial_rows.filter((row:any)=>{
   const f=toolbox.facts.get(row.fact_id),okay=f?.period==='current'&&validLinks(row.finding_ids)&&
    findings.some((finding:any)=>row.finding_ids.includes(finding.id)&&finding.fact_ids.includes(row.fact_id))&&safeText(row.implication,toolbox,[row.fact_id]);
@@ -73,7 +78,7 @@ export function verifyV3Draft(draft:any,toolbox:Toolbox){
  if(unanswered.length!==draft.unanswered.length)drops.push({kind:'unanswered',id:'unanswered'});
  const next=draft.next_investigation;
  const availableMetrics=new Set([...toolbox.facts.values()].map(f=>f.metric));
- const next_investigation=next&&validLinks(next.finding_ids)&&safeText(next.question,toolbox)&&next.metric_ids.length>0&&next.metric_ids.every((id:string)=>availableMetrics.has(id))?next:null;
+ const next_investigation=next&&validLinks(next.finding_ids)&&safeText(next.question,toolbox)&&(next.metric_ids.length>0||(next.paragraph_ids?.length??0)>0)&&next.metric_ids.every((id:string)=>availableMetrics.has(id))&&(next.paragraph_ids??[]).every((id:string)=>toolbox.paragraphs.has(id))&&(next.new_information===undefined||safeText(next.new_information,toolbox))?next:null;
  if(next&&!next_investigation)drops.push({kind:'next_investigation',id:'next'});
  return {status:takeaway?(drops.length?'partial':'complete'):'check_failed',answer_kind:draft.answer_kind??'analysis',takeaway,assessment,findings,financial_rows,unanswered,next_investigation,
   drops,checks:{number_source_dependency:'mechanical_checks_only',interpretation_support:'requires_semantic_evaluation'}};

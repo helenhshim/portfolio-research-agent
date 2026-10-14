@@ -4,7 +4,7 @@ import {isV3LiveConfigured,v3ServerProvider} from '../../../../lib/v3-server.ts'
 export const runtime='nodejs';
 export const maxDuration=150;
 // Preview uses a shared atomic budget reservation before each provider call.
-// Public/production research remains disabled.
+// Production requires an explicit server-only opt-in and its separate shared budget.
 export const POST=createV3Handler({packet,
  configured:isV3LiveConfigured,
  provider:v3ServerProvider,
